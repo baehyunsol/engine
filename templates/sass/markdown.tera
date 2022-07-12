@@ -1,0 +1,101 @@
+@import "colors"
+
+/* Colors */
+.markdown {
+
+    {{% for color in colors %}}
+    .color_{{color}} {
+        color: ${{color}};
+    }
+
+    .color_{{color}}::selection {
+        color: ${{color}}_compl;
+    }
+
+    .highlight_{{color}} {
+        background-color: ${{color}};
+    }
+
+    .highlight{{color}}::selection {
+        background-color: ${{color}}_compl;
+    }
+
+    {{% endfor %}}
+
+}
+
+/* Fenced Code Block */
+.markdown {
+
+    pre {
+        background-color: $black;
+
+        td {
+            height: 18px;  /* So that it renders empty lines */
+            white-space: pre;
+        }
+
+        td.index {
+            border-right: 3px solid $emerald;
+        }
+
+        tr:hover, tr.highlight {
+            background-color: $gray;
+        }
+
+    }
+
+}
+
+/* Code Spans */
+.markdown {
+
+    code.short {
+        color: $gold;
+        background-color: $black;
+        border-radius: 3px;
+        padding: 3px 6px 3px;
+    }
+
+}
+
+/* Table */
+.markdown {
+
+    table {
+        border-collapse: collapse;
+    }
+
+    th {
+        background-color: $gray;
+        padding: 12px;
+        transition: padding 0.5s ease-out;
+    }
+
+    tr:nth-last-child(odd) {
+        background-color: $black;
+    }
+
+    tr:nth-last-child(even) {
+        background-color: $dark;
+    }
+
+    thead.collapsible {
+        cursor: pointer;
+    }
+
+    thead.collapsed th {
+        padding-top: 6px;
+        padding-bottom: 6px;
+        transition: padding 0.5s ease-out;
+    }
+
+    .invisible {
+
+        th, td {
+            display: none;
+        }
+
+    }
+
+}
