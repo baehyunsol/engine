@@ -1,4 +1,4 @@
-use tera::Context;
+use tera::{Context, Tera};
 use mdxt::{render_to_html, RenderOption, RenderResult};
 use yaml_rust::Yaml;
 use crate::file_io::*;
@@ -36,11 +36,20 @@ fn render_directory(
 
         EngineType::Tera => {
             let context = match tera_context {
-                Some(c) => c.clone()
+                Some(c) => c.clone(),
                 None => {return Err(());}
             };
 
-            for file in files.iter() {}
+            let mut tera = Tera::default();
+
+            for file in files.iter() {
+                let curr_file_name = match file_name(file) {
+                    Ok(f) =>f,
+                    _ => {return Err(());}
+                };
+
+                tera.add_template_file(file, Some(&curr_file_name));
+            }
 
         }
 
