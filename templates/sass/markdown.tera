@@ -1,9 +1,19 @@
-@import "colors"
+@import "colors";
+
+body {
+    background-color: $dark;
+    color: $white;
+
+    ::selection {
+        background-color: $dark_compl;
+        color: $white_compl;
+    }
+}
 
 /* Colors */
 .markdown {
 
-    {{% for color in colors %}}
+    {% for color in colors %}
     .color_{{color}} {
         color: ${{color}};
     }
@@ -20,7 +30,33 @@
         background-color: ${{color}}_compl;
     }
 
-    {{% endfor %}}
+    {% endfor %}
+
+}
+
+/* Links */
+.markdown {
+
+    a:link {
+        border-bottom: 3px solid $aqua;
+        color: $aqua;
+        text-decoration: none;
+        transition: border 0.3s;
+    }
+
+    a:visited {
+        color: $aqua;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: none;
+        border-bottom: 3px solid $emerald;
+    }
+
+    a::selection {
+        color: $aqua_compl;
+    }
 
 }
 
@@ -28,9 +64,15 @@
 .markdown {
 
     pre {
+        padding: 6px;
         background-color: $black;
 
         td {
+            padding: {
+                top: 0px;
+                bottom: 0px;
+            }
+            background-color: $black;
             height: 18px;  /* So that it renders empty lines */
             white-space: pre;
         }
@@ -39,9 +81,21 @@
             border-right: 3px solid $emerald;
         }
 
-        tr:hover, tr.highlight {
-            background-color: $gray;
+        tr:hover td {
+            background-color: $dark;
         }
+
+        tr.highlight td {
+            background-color: $black_compl;
+            color: $white_compl;
+        }
+
+        {% for color in colors %}
+        tr.highlight td .color_{{color}} {
+            color: ${{color}}_compl;
+        }
+
+        {% endfor %}
 
     }
 
@@ -64,12 +118,17 @@
 
     table {
         border-collapse: collapse;
+        margin: 12px;
     }
 
     th {
         background-color: $gray;
         padding: 12px;
         transition: padding 0.5s ease-out;
+    }
+
+    td {
+        padding: 12px;
     }
 
     tr:nth-last-child(odd) {
