@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    {% if title %}
+    <title>{{title}}</title>
+    {% else %}
+    <title>Test</title>
+    {% endif %}
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&display=swap" rel="stylesheet"> 
+    {% if csses %}
+    {% for css in csses %}<link href="{{css}}" rel="stylesheet">{% endfor %}
+    {% endif %}
+</head>
+
+<body>
+
+{% if header %}
+    <header>
+{{header}}
+    </header>
+{% endif %}
+
+{% if navigation %}
+    <nav>
+{{navigation}}
+    </nav>
+{% endif %}
+
+    <article class="markdown">
+        <a name="top"></a>
+{{article}}
+        <a name="bottom"></a>
+    </article>
+
+{% if sidebar %}
+    <aside class="markdown">
+{{sidebar}}
+    </aside>
+{% endif %}
+
+{% if footer %}
+    <footer class="markdown">
+{{footer}}
+    </footer>
+{% endif %}
+
+</body>
+
+</html>

@@ -25,7 +25,7 @@ pub fn insert(hash: Yaml, key: Yaml, value: Yaml) -> Yaml {
 
 pub fn get<'a, 'b>(hash: &'a Yaml, key: &'b Yaml) -> Option<&'a Yaml> {
 
-    let mut hash = match hash.as_hash() {
+    let hash = match hash.as_hash() {
         Some(h) => h,
         _ => panic!()
     };

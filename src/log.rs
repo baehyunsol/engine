@@ -1,6 +1,7 @@
 use yaml_rust::Yaml;
 use crate::yaml_hash;
 
+#[derive(Clone)]
 pub struct Log {
     file_from: String,
     file_to: String,

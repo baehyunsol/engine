@@ -1,13 +1,22 @@
 @import "colors";
+@import "units";
 
 body {
     background-color: $dark;
     color: $white;
+    font-size: $font_medium;
+    line-height: 1.5;
+    letter-spacing: 1px;
 
     ::selection {
         background-color: $dark_compl;
         color: $white_compl;
     }
+
+    hr.footnote_hr {
+        margin-top: $h1_margin;
+    }
+
 }
 
 /* Colors */
@@ -31,6 +40,24 @@ body {
     }
 
     {% endfor %}
+
+}
+
+/* Headers */
+.markdown {
+
+    {% for header_level in [1, 2] %}
+    h{{header_level}} {
+        font-size: $h{{header_level}}_font_size;
+        margin-top: $h{{header_level}}_margin;
+        margin-bottom: $h{{header_level}}_margin / 2;
+    }
+
+    {% endfor %}
+
+    h1, h2 {
+        border-bottom: 3px solid $gray;
+    }
 
 }
 
