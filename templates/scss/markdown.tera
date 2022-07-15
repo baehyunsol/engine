@@ -1,7 +1,7 @@
 @import "colors";
 @import "units";
 
-body {
+body .markdown {
     background-color: $dark;
     color: $white;
     font-size: $font_medium;
@@ -15,6 +15,18 @@ body {
 
     hr.footnote_hr {
         margin-top: $h1_margin;
+    }
+
+}
+
+/* Blockquote */
+.markdown {
+
+    blockquote {
+        background-color: $black_trans;
+        width: 75%;
+        border-left: $border_big solid $gray;
+        padding: $padding_medium;
     }
 
 }
@@ -35,7 +47,7 @@ body {
         background-color: ${{color}};
     }
 
-    .highlight{{color}}::selection {
+    .highlight_{{color}}::selection {
         background-color: ${{color}}_compl;
     }
 
@@ -43,20 +55,50 @@ body {
 
 }
 
+/* Sizes */
+.markdown {
+
+    .size_tiny {
+        font-size: $font_tiny;
+    }
+
+    .size_small {
+        font-size: $font_small;
+    }
+
+    .size_medium {
+        font-size: $font_medium;
+    }
+
+    .size_big {
+        font-size: $font_big;
+    }
+
+    .size_giant {
+        font-size: $font_giant;
+    }
+
+}
+
 /* Headers */
 .markdown {
 
-    {% for header_level in [1, 2] %}
+    {% for header_level in [1, 2, 3, 4, 5] %}
     h{{header_level}} {
         font-size: $h{{header_level}}_font_size;
         margin-top: $h{{header_level}}_margin;
         margin-bottom: $h{{header_level}}_margin / 2;
+        transition: color 0.3s;
     }
 
+    h{{header_level}}:hover {
+        color: $white_trans;
+        transition: color 0.3s;
+    }
     {% endfor %}
 
     h1, h2 {
-        border-bottom: 3px solid $gray;
+        border-bottom: $border_medium solid $gray;
     }
 
 }
@@ -65,7 +107,7 @@ body {
 .markdown {
 
     a:link {
-        border-bottom: 3px solid $aqua;
+        border-bottom: $border_medium solid $aqua_trans;
         color: $aqua;
         text-decoration: none;
         transition: border 0.3s;
@@ -78,7 +120,7 @@ body {
 
     a:hover {
         text-decoration: none;
-        border-bottom: 3px solid $emerald;
+        border-bottom: $border_medium solid $aqua;
     }
 
     a::selection {
@@ -91,21 +133,30 @@ body {
 .markdown {
 
     pre {
-        padding: 6px;
+        padding: $padding_small;
         background-color: $black;
+        width: 90%;
+        overflow: auto;
+
+        table {
+            width: 90%;
+        }
 
         td {
+            line-height: 1.2;
             padding: {
                 top: 0px;
                 bottom: 0px;
             }
             background-color: $black;
-            height: 18px;  /* So that it renders empty lines */
+            height: $font_medium * 1.2;  /* So that it renders empty lines */
             white-space: pre;
         }
 
         td.index {
-            border-right: 3px solid $emerald;
+            border-right: $border_medium solid $emerald;
+            text-align: right;
+            width: 24px;
         }
 
         tr:hover td {
@@ -135,7 +186,7 @@ body {
         color: $gold;
         background-color: $black;
         border-radius: 3px;
-        padding: 3px 6px 3px;
+        padding: $padding_tiny $padding_small $padding_tiny;
     }
 
 }
@@ -150,12 +201,11 @@ body {
 
     th {
         background-color: $gray;
-        padding: 12px;
         transition: padding 0.5s ease-out;
     }
 
-    td {
-        padding: 12px;
+    td, th {
+        padding: $padding_medium + $padding_small;
     }
 
     tr:nth-last-child(odd) {
@@ -171,8 +221,7 @@ body {
     }
 
     thead.collapsed th {
-        padding-top: 6px;
-        padding-bottom: 6px;
+        padding: $padding_small;
         transition: padding 0.5s ease-out;
     }
 
@@ -184,4 +233,53 @@ body {
 
     }
 
+}
+
+/*
+----- Checkbox for task lists -----
+*/
+
+div.unchecked_box, div.checked_box {
+    position: relative;
+    top: $font_medium / 4;
+    display: inline-block;
+    border-radius: 4px;
+    width: $font_medium;
+    height: $font_medium;
+}
+
+div.unchecked_box {
+    background-color: $gray;
+    margin-right: $padding_medium;
+}
+
+div.checked_box {
+    background-color: $black;
+    margin-right: $padding_medium;
+}
+
+span.checkmark {
+    display: block;
+    position: relative;
+    left: $font_medium / 4;
+    top: $font_medium / 8;
+    width: $font_medium / 3;
+    height: $font_medium / 2;
+    border: {
+        bottom: $border_medium solid $white;
+        right: $border_medium solid $white;
+    }
+    transform: rotate(45deg);
+}
+
+span.triangle {
+    display: block;
+    position: relative;
+    width: 0;
+    height: 0;
+    left: $font_medium / 6;
+    top: $font_medium / 3;
+    border-left: $font_medium / 3 solid #0000;
+    border-right: $font_medium / 3 solid #0000;
+    border-bottom: $font_medium / 3 solid $white;
 }

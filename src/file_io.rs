@@ -218,6 +218,33 @@ pub fn mkdir(path: &str) -> Result<(), ()> {
 
 }
 
+pub fn get_sub_directories(path: &str) -> Vec<String> {
+
+    match read_dir(path) {
+        Err(_) => vec![],
+        Ok(files) => files.into_iter().filter(|f| is_dir(f)).collect()
+    }
+
+}
+
+pub fn get_sub_directories_recursive(path: &str) -> Vec<String> {
+
+    match read_dir(path) {
+        Err(_) => vec![],
+        Ok(files) => {
+            let sub_dirs = files.into_iter().filter(|f| is_dir(f)).collect::<Vec<String>>();
+
+            let sub_sub = sub_dirs.iter().map(|dir| get_sub_directories_recursive(dir)).collect::<Vec<Vec<String>>>().concat();
+
+            vec![
+                sub_dirs,
+                sub_sub
+            ].concat()
+        }
+    }
+
+}
+
 #[cfg(test)]
 mod tests {
     use crate::file_io::*;

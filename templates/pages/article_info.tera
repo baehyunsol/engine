@@ -1,0 +1,9 @@
+[[right]]
+
+{% if date %}Last Updated: {{date}}{% endif %}
+
+{% if tags %}
+Tags: {% for tag in tags%}{% if loop.index != 1 %}, {% endif %}{{tag}}{% endfor %}
+{% endif %}
+
+[[/right]]

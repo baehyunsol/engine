@@ -1,0 +1,10 @@
+@import "colors";
+@import "units";
+
+html {
+    background-color: $dark;
+}
+
+body {
+    padding: $padding_medium;
+}

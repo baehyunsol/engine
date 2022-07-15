@@ -104,7 +104,7 @@ pub fn render_directory(
                 match tera.render(file, &context) {
                     Ok(result) => {
                         match write_to_file(&dest, result.as_bytes()) {
-                            Err(_) => {return Err(Error::PathError(format!("error at `render_directory({:?}, {:?}, ...)`\n`write_to_file({:?})` failed", dir_from, ext_from, dest)));}
+                            Err(_) => { return Err(Error::PathError(format!("error at `render_directory({:?}, {:?}, ...)`\n`write_to_file({:?})` failed", dir_from, ext_from, dest))); }
                             _ => { logs.push(Log::new(file, &dest, None)); }
                         }
                     },
@@ -153,13 +153,25 @@ pub fn render_directory(
             };
             mkdir(dir_to);    // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
 
+            let mut article_info = Tera::default();
+
+            match article_info.add_template_file("./templates/pages/article_info.tera", Some("article_info")) {
+                Err(e) => {
+                    return Err(Error::PathError(format!(
+                        "error at `render_directory({:?}, {:?}, ...)`\n`tera.add_template_file(./templates/pages/article_info.tera, ..)` failed\nerror message: {:?}",
+                        dir_from, ext_from, e
+                    )));
+                },
+                _ => {}
+            }
+
             for file in files.iter() {
                 let dest = get_dest_path(&file, dir_to, ext_to)?;
 
                 match read_string(file) {
                     Ok(mdxt) => {
                         let RenderResult {
-                            content,
+                            mut content,
                             has_math,
                             has_collapsible_table,
                             metadata
@@ -172,6 +184,13 @@ pub fn render_directory(
 
                         metadata = yaml_hash::insert(metadata, Yaml::from_str("has_math"), Yaml::Boolean(has_math));
                         metadata = yaml_hash::insert(metadata, Yaml::from_str("has_collapsible_table"), Yaml::Boolean(has_collapsible_table));
+
+                        match render_article_info(&metadata, &article_info) {
+                            Some(info) => {
+                                content = vec![info, content].concat();
+                            }
+                            _ => {}
+                        }
 
                         match write_to_file(&dest, content.as_bytes()) {
                             Err(_) => {return Err(Error::PathError(format!("error at `render_directory({:?}, {:?}, ...)`\n`write_to_file({:?})` failed", dir_from, ext_from, dest)));}
@@ -416,6 +435,53 @@ pub fn copy_all(
     }
 
     Ok(logs)
+}
+
+fn render_article_info(metadata: &Yaml, tera: &Tera) -> Option<String> {
+
+    let mut tera_context = Context::new();
+    let mut has_nothing = true;
+
+    match yaml_hash::get(metadata, &Yaml::from_str("date")) {
+        None => {}
+        Some(d) => {
+            let date = d.clone();
+
+            match date.into_string() {
+                None => {}
+                Some(d) => {
+                    tera_context.insert("date", &d);
+                    has_nothing = false;
+                }
+            }
+        }
+    };
+
+    match yaml_hash::get(metadata, &Yaml::from_str("tags")) {
+        None => {}
+        Some(t) => {
+            let tags = t.clone();
+
+            match tags.as_vec() {
+                None => {}
+                Some(t) => {
+                    tera_context.insert("date", &t);
+                    has_nothing = false;
+                }
+            }
+        }
+    };
+
+    if has_nothing {
+        None
+    }
+
+    else {
+
+        match tera.render("article_info", &tera_context) {}
+
+    }
+
 }
 
 fn get_dest_path(curr_path: &str, dir_to: &str, ext_to: &str) -> Result<String, Error> {

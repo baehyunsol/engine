@@ -1,4 +1,5 @@
 {% for color in colors%}
 ${{color}}: {{hex[loop.index0]}};
 ${{color}}_compl: {{compl_hex[loop.index0]}};
+${{color}}_trans: {{hex[loop.index0]}}80;
 {% endfor %}

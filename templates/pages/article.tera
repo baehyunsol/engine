@@ -23,9 +23,9 @@
     </header>
 {% endif %}
 
-{% if navigation %}
+{% if nav %}
     <nav>
-{{navigation}}
+{{nav}}
     </nav>
 {% endif %}
 

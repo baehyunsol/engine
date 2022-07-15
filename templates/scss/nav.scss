@@ -1,0 +1,41 @@
+@import "colors";
+@import "units";
+
+nav {
+    background-color: $black_trans;
+    transition: background-color 0.5s ease-out;
+
+    border: $border_medium solid $gray;
+    z-index: 1;
+    position: fixed;
+    right: 1%;
+    bottom: 5%;
+    font-size: $font_giant;
+
+    p {
+        padding: 0;
+        margin: 0;
+    }
+
+    a {
+        color: $white_trans;
+        text-decoration: none;
+        transition: color 0.5s ease-out;
+        padding: $padding_medium;
+    }
+
+    a:hover {
+        color: $white;
+        transition: color 0.5s ease-out;
+    }
+
+    ::selection {
+        background-color: none;
+    }
+
+}
+
+nav:hover {
+    background-color: $black;
+    transition: background-color 0.5s ease-out;
+}

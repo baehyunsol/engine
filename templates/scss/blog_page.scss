@@ -1,0 +1,14 @@
+@import "colors";
+@import "units";
+
+html {
+    scroll-behavior: smooth;
+
+    background-color: $dark;
+}
+
+article {
+    margin-top: $header_height + $padding_big;
+    margin-left: 8%;
+    width: 84%;
+}
