@@ -4,19 +4,23 @@ mod error;
 mod log;
 mod yaml_hash;
 
+use yaml_rust::{Yaml, YamlEmitter};
 use engine::*;
 use file_io::*;
+use log::Log;
 
 fn main() {
 
     render_directory(
-        "./mdxts", "md",
-        EngineType::MDxt,
-        "./htmls", "html",
+        "./templates/articles", "tera",
+        EngineType::Tera,
+        "./mdxts/articles", "md",
         &None,
         &None,
         true
     ).unwrap();
+
+    render_articles();
 
     render_directory(
         "./templates/pages", "md",
@@ -25,7 +29,7 @@ fn main() {
         &None,
         &None,
         true
-    );
+    ).unwrap();
 
     render_templates(
         "./templates/pages/article.tera",
@@ -66,6 +70,29 @@ fn get_colors() -> tera::Context {
     context
 }
 
+fn render_articles() {
+    let mdxts_logs = render_directory(
+        "./mdxts", "md",
+        EngineType::MDxt,
+        "./htmls", "html",
+        &None,
+        &None,
+        true
+    ).unwrap();
+
+    let mut logs_hash = yaml_hash::new();
+
+    for Log { file_from, file_to, metadata } in mdxts_logs.into_iter() {
+        logs_hash = yaml_hash::insert(logs_hash, Yaml::from_str(&file_from), metadata);
+    }
+
+    let mut yaml_hash_string = String::new();
+    let mut emitter = YamlEmitter::new(&mut yaml_hash_string);
+    emitter.dump(&logs_hash).unwrap();
+
+    write_to_file("./output/articles.txt", yaml_hash_string.as_bytes());
+}
+
 fn render_styles() {
 
     let color_context = get_colors();
@@ -83,7 +110,7 @@ fn render_styles() {
         "./templates/scss", "scss",
         "./output/styles", "scss",
         true
-    );
+    ).unwrap();
 
     render_directory(
         "./output/styles", "scss",
@@ -99,7 +126,7 @@ fn render_styles() {
             "./output/styles", "css",
             &sub_dir, "css",
             true
-        );
+        ).unwrap();
     }
 }
 
@@ -108,9 +135,11 @@ fn article_context() -> tera::Context {
     let mut context = tera::Context::new();
     let nav = read_string("./templates/pages/nav.html").unwrap();
     let header = read_string("./templates/pages/header.html").unwrap();
+    let footer = read_string("./templates/pages/footer.html").unwrap();
 
     context.insert("nav", &nav);
     context.insert("header", &header);
+    context.insert("footer", &footer);
     context.insert("csses", &vec!["markdown.css", "blog_page.css", "nav.css", "header.css"]);
 
     context

@@ -1,3 +1,8 @@
+---
+date: [2022, 7, 15]
+tags: [mdxt]
+---
+
 # MDxt Reference
 
 MDxt is an extended version of Markdown.

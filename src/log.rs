@@ -3,9 +3,9 @@ use crate::yaml_hash;
 
 #[derive(Clone)]
 pub struct Log {
-    file_from: String,
-    file_to: String,
-    metadata: Yaml
+    pub file_from: String,
+    pub file_to: String,
+    pub metadata: Yaml
 }
 
 impl Log {

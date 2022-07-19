@@ -174,7 +174,8 @@ pub fn render_directory(
                             mut content,
                             has_math,
                             has_collapsible_table,
-                            metadata
+                            metadata,
+                            fenced_code_contents: _
                         } = render_to_html(&mdxt, options.clone());
 
                         let mut metadata = match metadata {
@@ -187,7 +188,7 @@ pub fn render_directory(
 
                         match render_article_info(&metadata, &article_info) {
                             Some(info) => {
-                                content = vec![info, content].concat();
+                                content = vec![render_to_html(&info, options.clone()).content, content].concat();
                             }
                             _ => {}
                         }
@@ -445,15 +446,26 @@ fn render_article_info(metadata: &Yaml, tera: &Tera) -> Option<String> {
     match yaml_hash::get(metadata, &Yaml::from_str("date")) {
         None => {}
         Some(d) => {
-            let date = d.clone();
 
-            match date.into_string() {
-                None => {}
-                Some(d) => {
-                    tera_context.insert("date", &d);
-                    has_nothing = false;
+            match d.as_vec() {
+                Some(date) if date.len() == 3 => {
+                    let year = date[0].clone().into_i64();
+                    let month = date[1].clone().into_i64();
+                    let day = date[2].clone().into_i64();
+
+                    if year.is_some() && month.is_some() && day.is_some() {
+                        let year = year.unwrap();
+                        let month = month.unwrap();
+                        let day = day.unwrap();
+
+                        tera_context.insert("date", &format!("{}/{}/{}", year, month, day));
+                        has_nothing = false;
+                    }
+
                 }
+                _ => {},
             }
+
         }
     };
 
@@ -465,7 +477,12 @@ fn render_article_info(metadata: &Yaml, tera: &Tera) -> Option<String> {
             match tags.as_vec() {
                 None => {}
                 Some(t) => {
-                    tera_context.insert("date", &t);
+                    tera_context.insert("tags", &t.iter().filter_map(
+                        |tag| match tag.clone().into_string() {
+                            Some(tag) => Some(format!("[#{}]({})", tag, tag_page(&tag))),
+                            None => None
+                        }
+                    ).collect::<Vec<String>>());
                     has_nothing = false;
                 }
             }
@@ -477,11 +494,13 @@ fn render_article_info(metadata: &Yaml, tera: &Tera) -> Option<String> {
     }
 
     else {
-
-        match tera.render("article_info", &tera_context) {}
-
+        tera.render("article_info", &tera_context).ok()
     }
 
+}
+
+fn tag_page(tag_name: &str) -> String {
+    tag_name.to_string()  // not implemented yet
 }
 
 fn get_dest_path(curr_path: &str, dir_to: &str, ext_to: &str) -> Result<String, Error> {

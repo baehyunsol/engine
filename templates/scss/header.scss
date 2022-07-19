@@ -13,7 +13,7 @@ header {
     left: 0;
     top: 0;
     width: 100%;
-    height: $header_height;
+    height: $header_height - $border_medium;
     border-bottom: $border_medium solid $white;
 
     a {
