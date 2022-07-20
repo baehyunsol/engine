@@ -9,16 +9,17 @@ This blog uses [MDxt], my custom Markdown Extension. If you wanna know more abou
 
 [Seoul National University]: https://www.snu.ac.kr/
 [MDxt]: https://github.com/baehyunsol/MDxt
-[Reference]: reference.html
-[Showcase]: showcase.html
+[Reference]: MDxt-Reference.html
+[Showcase]: MDxt-Showcase.html
 [Rust]: https://www.rust-lang.org/
 
 ### Recent Articles
 
-- foo
-- bar
-- baz
+
+- [Search-Engine-Comparison](Search-Engine-Comparison.html)
+- [MDxt-Showcase](MDxt-Showcase.html)
+- [MDxt-Reference](MDxt-Reference.html)
 
 [[right]]
-[See more]()
+[See more](Recent-Articles.html)
 [[/right]]

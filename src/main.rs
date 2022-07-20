@@ -3,11 +3,16 @@ mod engine;
 mod error;
 mod log;
 mod yaml_hash;
+mod article;
+mod graph;
 
-use yaml_rust::{Yaml, YamlEmitter};
+use lazy_static::lazy_static;
+use yaml_rust::{Yaml, YamlEmitter, YamlLoader};
 use engine::*;
 use file_io::*;
 use log::Log;
+
+static mut BAD_PROGRAMMING_HABIT: bool = true;
 
 fn main() {
 
@@ -15,12 +20,69 @@ fn main() {
         "./templates/articles", "tera",
         EngineType::Tera,
         "./mdxts/articles", "md",
+        &Some(meta_article_content()),
+        &None,
+        true
+    ).unwrap();
+
+    render_articles_mdxt();
+    render_articles_html();
+    render_styles();
+
+    unsafe {
+
+        // runs the program twice
+        // so that the metadata is read correctly
+        if BAD_PROGRAMMING_HABIT {
+            BAD_PROGRAMMING_HABIT = false;
+            main();
+        }
+
+    }
+}
+
+use mdxt::COLORS;
+
+fn get_colors() -> tera::Context {
+
+    let mut context = tera::Context::new();
+
+    let color_names = COLORS.iter().map(|color| color.name.clone()).collect::<Vec<String>>();
+    context.insert("colors", &color_names);
+
+    let hex = COLORS.iter().map(|color| color.to_hex()).collect::<Vec<String>>();
+    context.insert("hex", &hex);
+
+    let compl_hex = COLORS.iter().map(|color| color.complement().to_hex()).collect::<Vec<String>>();
+    context.insert("compl_hex", &compl_hex);
+
+    context
+}
+
+fn render_articles_mdxt() {
+    let mdxts_logs = render_directory(
+        "./mdxts", "md",
+        EngineType::MDxt,
+        "./htmls", "html",
         &None,
         &None,
         true
     ).unwrap();
 
-    render_articles();
+    let mut logs_hash = yaml_hash::new();
+
+    for Log { file_from, file_to, metadata } in mdxts_logs.into_iter() {
+        logs_hash = yaml_hash::insert(logs_hash, Yaml::from_str(&file_from), metadata);
+    }
+
+    let mut yaml_hash_string = String::new();
+    let mut emitter = YamlEmitter::new(&mut yaml_hash_string);
+    emitter.dump(&logs_hash).unwrap();
+
+    write_to_file("./output/articles.txt", yaml_hash_string.as_bytes());
+}
+
+fn render_articles_html() {
 
     render_directory(
         "./templates/pages", "md",
@@ -48,49 +110,6 @@ fn main() {
         Some(document_context()),
         true
     ).unwrap();
-
-    render_styles();
-}
-
-use mdxt::COLORS;
-
-fn get_colors() -> tera::Context {
-
-    let mut context = tera::Context::new();
-
-    let color_names = COLORS.iter().map(|color| color.name.clone()).collect::<Vec<String>>();
-    context.insert("colors", &color_names);
-
-    let hex = COLORS.iter().map(|color| color.to_hex()).collect::<Vec<String>>();
-    context.insert("hex", &hex);
-
-    let compl_hex = COLORS.iter().map(|color| color.complement().to_hex()).collect::<Vec<String>>();
-    context.insert("compl_hex", &compl_hex);
-
-    context
-}
-
-fn render_articles() {
-    let mdxts_logs = render_directory(
-        "./mdxts", "md",
-        EngineType::MDxt,
-        "./htmls", "html",
-        &None,
-        &None,
-        true
-    ).unwrap();
-
-    let mut logs_hash = yaml_hash::new();
-
-    for Log { file_from, file_to, metadata } in mdxts_logs.into_iter() {
-        logs_hash = yaml_hash::insert(logs_hash, Yaml::from_str(&file_from), metadata);
-    }
-
-    let mut yaml_hash_string = String::new();
-    let mut emitter = YamlEmitter::new(&mut yaml_hash_string);
-    emitter.dump(&logs_hash).unwrap();
-
-    write_to_file("./output/articles.txt", yaml_hash_string.as_bytes());
 }
 
 fn render_styles() {
@@ -130,6 +149,59 @@ fn render_styles() {
     }
 }
 
+fn meta_article_content() -> tera::Context {
+
+    let mut context = tera::Context::new();
+
+    let articles = article::from_yaml((YamlLoader::load_from_str(&read_string("./output/articles.txt").unwrap()).unwrap())[0].clone());
+    let recent_articles = article::get_recent_articles(&articles, 5);
+
+    context.insert("recent_article_names", &recent_articles);
+
+    let articles_by_month = article::get_articles_by_month(&articles);
+
+    if articles_by_month.len() > 0 {
+        let mut articles_by_month_page = vec![];
+        let mut articles_by_month_page_tmp = vec![];
+        let mut curr_month = [0, 0];
+
+        for ([year, month], name) in articles_by_month.into_iter() {
+
+            if [year, month] != curr_month {
+
+                if articles_by_month_page_tmp.len() > 0 {
+                    articles_by_month_page.push(articles_by_month_page_tmp.join("\n"));
+                }
+
+                articles_by_month_page_tmp = vec![format!("### {} {}", MONTHS[month], year), String::new()];
+                curr_month = [year, month];
+            }
+
+            articles_by_month_page_tmp.push(format!("- [{}]({}.html)", name, name));
+        }
+
+        if articles_by_month_page_tmp.len() > 0 {
+            articles_by_month_page.push(articles_by_month_page_tmp.join("\n"));
+        }
+
+        context.insert("articles_by_month", &articles_by_month_page.join("\n\n"));
+    }
+
+    let tags_graph = article::get_tags(&articles);
+    let mut tags = Vec::with_capacity(tags_graph.len());
+    let mut tag_nums = Vec::with_capacity(tags_graph.len());
+
+    for (tag, count) in tags_graph.get_vertex_weights().into_iter() {
+        tags.push(tag);
+        tag_nums.push(count);
+    }
+
+    context.insert("tags", &tags);
+    context.insert("tag_nums", &tag_nums);
+
+    context
+}
+
 fn article_context() -> tera::Context {
 
     let mut context = tera::Context::new();
@@ -152,4 +224,26 @@ fn document_context() -> tera::Context {
     context.insert("csses", &vec!["markdown.css", "doc_page.css"]);
 
     context
+}
+
+lazy_static! {
+    pub static ref MONTHS: Vec<String> = {
+        let result = vec![
+            "NULL",
+            "January",
+            "Feburary",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        ];
+
+        result.into_iter().map(|m| m.to_string()).collect()
+    };
 }

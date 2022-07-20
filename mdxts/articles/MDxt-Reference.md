@@ -48,9 +48,17 @@ MDxt is an extended version of Markdown.
 
 ### Headers
 
-***Inline macros don't work in headers!***
+`### Headers` is rendered to `<h3>Headers</h3>`.
 
 ### Tables
+
+#### Column Alignments
+
+#### Multiline Table Head
+
+#### Colspan
+
+#### Collapsible Tables
 
 ### Lists
 
@@ -96,6 +104,22 @@ WIP
 ### Math
 
 ### Multiline Macro
+
+If a paragraph has a macro and no other contents at all, the paragraph is rendered to a multiline macro.
+
+```
+[[red]]
+
+These 3 paragraphs are
+
+rendered to
+
+red texts.
+
+[[/red]]
+```
+
+As you see above, the first and the last paragraph only consist of a macro. The macro will be rendered to `<div class="color_red">`.
 
 [multiline macro]: #multiline-macro
 

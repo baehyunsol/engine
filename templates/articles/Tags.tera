@@ -1,0 +1,4 @@
+# Tags
+
+{% if tags %}{% for tag in tags%}
+- [#{{tag}}](tag-{{tag}}.html) ({{tag_nums[loop.index0]}}){% endfor %}{% endif %}

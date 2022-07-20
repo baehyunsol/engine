@@ -5,6 +5,7 @@ use crate::file_io::*;
 use crate::error::Error;
 use crate::log::Log;
 use crate::yaml_hash;
+use crate::MONTHS;
 
 #[derive(Copy, Clone, Debug)]
 pub enum EngineType {
@@ -458,8 +459,11 @@ fn render_article_info(metadata: &Yaml, tera: &Tera) -> Option<String> {
                         let month = month.unwrap();
                         let day = day.unwrap();
 
-                        tera_context.insert("date", &format!("{}/{}/{}", year, month, day));
-                        has_nothing = false;
+                        if day > 0 && month > 0 && day < 32 && month < 13 {
+                            tera_context.insert("date", &format!("{}.{}.{}", day, MONTHS[month as usize], year));
+                            has_nothing = false;
+                        }
+
                     }
 
                 }
@@ -479,7 +483,7 @@ fn render_article_info(metadata: &Yaml, tera: &Tera) -> Option<String> {
                 Some(t) => {
                     tera_context.insert("tags", &t.iter().filter_map(
                         |tag| match tag.clone().into_string() {
-                            Some(tag) => Some(format!("[#{}]({})", tag, tag_page(&tag))),
+                            Some(tag) => Some(format!("[#{}](tag-{}.html)", tag, tag_page(&tag))),
                             None => None
                         }
                     ).collect::<Vec<String>>());
