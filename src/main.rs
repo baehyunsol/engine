@@ -20,7 +20,7 @@ fn main() {
         "./templates/articles", "tera",
         EngineType::Tera,
         "./mdxts/articles", "md",
-        &Some(meta_article_content()),
+        &Some(meta_article_context()),
         &None,
         true
     ).unwrap();
@@ -60,6 +60,13 @@ fn get_colors() -> tera::Context {
 }
 
 fn render_articles_mdxt() {
+
+    copy_all(
+        "./mdxts", "jpg",
+        "./output/htmls", "jpg",
+        true
+    ).unwrap();
+
     let mdxts_logs = render_directory(
         "./mdxts", "md",
         EngineType::MDxt,
@@ -149,7 +156,7 @@ fn render_styles() {
     }
 }
 
-fn meta_article_content() -> tera::Context {
+fn meta_article_context() -> tera::Context {
 
     let mut context = tera::Context::new();
 

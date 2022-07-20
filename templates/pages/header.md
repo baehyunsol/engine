@@ -1,1 +1,1 @@
-[Home](index.html) [Articles](Recent-Articles.html) [Tags](Tags.html)
+[Home](index.html) [Articles](Articles.html) [Tags](Tags.html)

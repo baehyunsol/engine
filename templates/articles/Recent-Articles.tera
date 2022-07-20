@@ -1,5 +1,0 @@
-# Recent Articles
-
-{% if articles_by_month %}
-{{articles_by_month}}
-{% endif %}

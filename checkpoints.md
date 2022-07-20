@@ -1,10 +1,11 @@
 | Checkpoints                                     | Firefox  | Chrome    | IE      | Safari     |
-|-------------------------------------------------|----------|-----------|---------|------------|
-| Smooth scroll                                   | O        | O         | X       | ?          |
+|-------------------------------------------------|:--------:|:---------:|:-------:|:----------:|
+| Smooth Scroll                                   | O        | O         | X       | ?          |
 | Link Hover Transition Effect                    | O        | O         | X       | ?          |
-| Collapsible Table with animations               | O        | O         | O       | ?          |
-| Transparent background                          | O        | O         | X       | ?          |
+| Collapsible Table with Animations               | O        | O         | O       | ?          |
+| Transparent Background Color                    | O        | O         | X       | ?          |
+| Transparent Element Color                       | O        | O         | X       | ?          |
 | `[[color]]`, including css `::selection`        | O        | O         | O       | ?          |
 | `[[highlight]]`, including css `::selection`    | O        | O         | O       | ?          |
-| `[[math]]`                                      | O        | O         | X       | ?          |
-| Copy button of fenced code blocks               | O        | O         | X       | ?          |
+| mathjax                                         | O        | O         | X       | ?          |
+| Copy Button of Fenced Code Blocks               | O        | O         | X       | ?          |

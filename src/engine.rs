@@ -323,12 +323,16 @@ pub fn render_templates(
         };
 
         if !has_title {
-            let title = match file_name(article) {
+            let mut title = match file_name(article) {
                 Ok(t) => t,
                 _ => {
                     return Err(Error::PathError(format!("error at `render_templates({:?}, {:?}, ...)`\n`file_name({:?})` failed", template_path, article_path, article)));
                 }
             };
+
+            if title == "index".to_string() {
+                title = "Blog".to_string();
+            }
 
             context.insert("title", &title);
         }

@@ -17,6 +17,11 @@ body .markdown {
         margin-top: $h1_margin;
     }
 
+    img {
+        max-width: $image_medium;
+        max-height: $image_medium;
+    }
+
 }
 
 /* Blockquote */
@@ -58,25 +63,16 @@ body .markdown {
 /* Sizes */
 .markdown {
 
-    .size_tiny {
-        font-size: $font_tiny;
-    }
+    {% for size in ["tiny", "small", "medium", "big", "giant"] %}
+    .size_{{size}} {
+        font-size: $font_{{size}};
 
-    .size_small {
-        font-size: $font_small;
+        img {
+            max-width: $image_{{size}};
+            max-height: $image_{{size}};
+        }
     }
-
-    .size_medium {
-        font-size: $font_medium;
-    }
-
-    .size_big {
-        font-size: $font_big;
-    }
-
-    .size_giant {
-        font-size: $font_giant;
-    }
+    {% endfor %}
 
 }
 

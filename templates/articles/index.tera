@@ -21,3 +21,12 @@ This blog uses [MDxt], my custom Markdown Extension. If you wanna know more abou
 [[right]]
 [See more](Recent-Articles.html)
 [[/right]]
+
+### Popular Tags
+
+{% for ind in [0, 1, 2] %}
+- [#{{tags[ind]}}](tag-{{tags[ind]}}.html) ({{tag_nums[ind]}}){% endfor %}
+
+[[right]]
+[See more](Tags.html)
+[[/right]]
