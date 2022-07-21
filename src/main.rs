@@ -11,20 +11,25 @@ use yaml_rust::{Yaml, YamlEmitter, YamlLoader};
 use engine::*;
 use file_io::*;
 use log::Log;
+use std::collections::HashMap;
 
 static mut BAD_PROGRAMMING_HABIT: bool = true;
 
 fn main() {
 
+    let articles = article::from_yaml((YamlLoader::load_from_str(&read_string("./output/articles.txt").unwrap()).unwrap())[0].clone());
+    let tags_graph = article::get_tags(&articles);
+
     render_directory(
         "./templates/articles", "tera",
         EngineType::Tera,
         "./mdxts/articles", "md",
-        &Some(meta_article_context()),
+        &Some(meta_article_context(&articles, &tags_graph)),
         &None,
         true
     ).unwrap();
 
+    render_tag_pages(&articles, &tags_graph);
     render_articles_mdxt();
     render_articles_html();
     render_styles();
@@ -75,6 +80,12 @@ fn render_articles_mdxt() {
         &None,
         true
     ).unwrap();
+
+    copy_all(
+        "./htmls/tag_pages", "html",
+        "./htmls/articles", "html",
+        true
+    );
 
     let mut logs_hash = yaml_hash::new();
 
@@ -156,11 +167,38 @@ fn render_styles() {
     }
 }
 
-fn meta_article_context() -> tera::Context {
+fn render_tag_pages(articles: &HashMap<String, article::Article>, tags_graph: &graph::Graph) {
+
+    let mut tera_instance = tera::Tera::default();
+    tera_instance.add_template_file("./templates/pages/tag.tera", Some("tag_page")).unwrap();
+
+    for tag in tags_graph.iter() {
+        let mut context = tera::Context::new();
+
+        context.insert("tag_name", &tag);
+        context.insert("articles", &tags_graph.get_articles(tag.clone()));
+
+        let mut related_tags = tags_graph.get_adjacent_vertexes(tag.clone());
+
+        if related_tags.len() > 3 {
+            related_tags = related_tags[0..3].to_vec();
+        }
+
+        if related_tags.len() > 0 {
+            context.insert("related_tags", &related_tags.into_iter().map(|(s, _)| s).collect::<Vec<String>>());
+        }
+
+        let rendered = tera_instance.render("tag_page", &context).unwrap();
+        let save_to = join("./mdxts/tag_pages", &format!("tag-{}.md", tag)).unwrap();
+        mkdir("./mdxts/tag_pages");
+        write_to_file(&save_to, rendered.as_bytes()).unwrap();
+    }
+
+}
+
+fn meta_article_context(articles: &HashMap<String, article::Article>, tags_graph: &graph::Graph) -> tera::Context {
 
     let mut context = tera::Context::new();
-
-    let articles = article::from_yaml((YamlLoader::load_from_str(&read_string("./output/articles.txt").unwrap()).unwrap())[0].clone());
     let recent_articles = article::get_recent_articles(&articles, 5);
 
     context.insert("recent_article_names", &recent_articles);
@@ -194,7 +232,6 @@ fn meta_article_context() -> tera::Context {
         context.insert("articles_by_month", &articles_by_month_page.join("\n\n"));
     }
 
-    let tags_graph = article::get_tags(&articles);
     let mut tags = Vec::with_capacity(tags_graph.len());
     let mut tag_nums = Vec::with_capacity(tags_graph.len());
 

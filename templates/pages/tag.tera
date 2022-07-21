@@ -1,0 +1,12 @@
+# #{{tag_name}}
+{% if related_tags %}
+## Related Tags
+
+{% for tag in related_tags %}
+- [#{{tag}}](tag-{{tag}}.html){% endfor %}
+{% endif %}
+
+## Articles
+
+{% for article in articles %}
+- [{{article}}]({{article}}.html){% endfor %}

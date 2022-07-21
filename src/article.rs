@@ -107,7 +107,7 @@ pub fn get_tags(articles: &HashMap<String, Article>) -> Graph {
     for article in articles.values() {
 
         for tag in article.tags.iter() {
-            graph.add_vertex(tag.clone());
+            graph.add_vertex(tag.clone(), file_name(&article.name).unwrap());
         }
 
         if article.tags.len() > 1 {

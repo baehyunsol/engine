@@ -28,8 +28,8 @@ This blog uses [MDxt], my custom Markdown Extension. If you wanna know more abou
 
 
 - [#mdxt](tag-mdxt.html) (2)
-- [#search_engine](tag-search_engine.html) (1)
 - [#comparison](tag-comparison.html) (1)
+- [#search_engine](tag-search_engine.html) (1)
 
 [[right]]
 [See more](Tags.html)

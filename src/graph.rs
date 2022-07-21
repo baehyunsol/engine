@@ -1,11 +1,12 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, hash_map::Keys};
 
 // matrix implementation
+// vertexes are the tags
 pub struct Graph {
     edges: Vec<Vec<usize>>,  // undirected weighted graph
     vertex_indexes: HashMap<String, usize>,  // use `String`s as indexes
     reverse_vertex_indexes: HashMap<usize, String>,
-    vertex_weights: Vec<usize>
+    tag_articles: Vec<Vec<String>>  // articles that have the tag
 }
 
 impl Graph {
@@ -19,7 +20,7 @@ impl Graph {
             edges: vec![vec![0; capacity]; capacity],
             vertex_indexes: HashMap::with_capacity(capacity),
             reverse_vertex_indexes: HashMap::with_capacity(capacity),
-            vertex_weights: Vec::with_capacity(capacity)
+            tag_articles: Vec::with_capacity(capacity)
         }
     }
 
@@ -27,18 +28,22 @@ impl Graph {
         self.vertex_indexes.len()
     }
 
-    pub fn add_vertex(&mut self, vertex: String) {
+    pub fn iter(&self) -> Keys<String, usize> {
+        self.vertex_indexes.keys()
+    }
 
-        if self.vertex_indexes.contains_key(&vertex) {
-            self.vertex_weights[*self.vertex_indexes.get(&vertex).unwrap()] += 1;
+    pub fn add_vertex(&mut self, tag_name: String, article_name: String) {
+
+        if self.vertex_indexes.contains_key(&tag_name) {
+            self.tag_articles[*self.vertex_indexes.get(&tag_name).unwrap()].push(article_name);
         }
 
         else {
             let index = self.vertex_indexes.len();
 
-            self.vertex_indexes.insert(vertex.clone(), index);
-            self.reverse_vertex_indexes.insert(index, vertex);
-            self.vertex_weights.push(1);
+            self.vertex_indexes.insert(tag_name.clone(), index);
+            self.reverse_vertex_indexes.insert(index, tag_name);
+            self.tag_articles.push(vec![article_name]);
 
             if self.edges.len() < index {
                 let mut new_edges = vec![vec![0; index * 2]; index * 2];
@@ -75,7 +80,7 @@ impl Graph {
     pub fn get_vertex_weights(&self) -> Vec<(String, usize)> {  // Vec<(vertex_name, vertex_weight)>
         let mut result = self.vertex_indexes.iter().map(
             |(name, index)|
-            (name.clone(), self.vertex_weights[*index])
+            (name.clone(), self.tag_articles[*index].len())
         ).collect::<Vec<(String, usize)>>();
 
         result.sort_unstable_by_key(|(_, weight)| usize::MAX - *weight);
@@ -83,9 +88,19 @@ impl Graph {
         result
     }
 
-    pub fn get_adjacent_vertexes(&self, vertex: String) -> Vec<(String, usize)> {  // Vec<(vertex_name, edge_weight)>
+    pub fn get_articles(&self, tag: String) -> Vec<String> {
+
+        match self.vertex_indexes.get(&tag) {
+            Some(tag_index) => self.tag_articles[*tag_index].clone(),
+            _ => vec![]
+        }
+
+    }
+
+    // it sorts the result in descending order
+    pub fn get_adjacent_vertexes(&self, tag: String) -> Vec<(String, usize)> {  // Vec<(vertex_name, edge_weight)>
         
-        match self.vertex_indexes.get(&vertex) {
+        match self.vertex_indexes.get(&tag) {
             None => vec![],
             Some(ind) => {
                 let mut result = vec![];
@@ -97,6 +112,8 @@ impl Graph {
                     }
 
                 }
+
+                result.sort_unstable_by_key(|(_, weight)| usize::MAX - *weight);
 
                 result
             }

@@ -55,7 +55,6 @@ body .markdown {
     .highlight_{{color}}::selection {
         background-color: ${{color}}_compl;
     }
-
     {% endfor %}
 
 }
@@ -206,7 +205,6 @@ body .markdown {
         tr.highlight td .color_{{color}} {
             color: ${{color}}_compl;
         }
-
         {% endfor %}
 
     }
