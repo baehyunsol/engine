@@ -59,6 +59,22 @@ body .markdown {
 
 }
 
+/* Box */
+.markdown {
+
+    div.box {
+        width: 80%;
+        padding: $padding_medium;
+        margin: $padding_medium;
+        border: $border_medium solid $gray;
+    }
+
+    div.box.no-border {
+        border: none;
+    }
+
+}
+
 /* Sizes */
 .markdown {
 
