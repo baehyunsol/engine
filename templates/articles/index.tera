@@ -5,12 +5,10 @@ I'm Baehyunsol. I'm a student at [Seoul National University]. I'm currently inte
 This blog uses [MDxt], my custom Markdown Extension. If you wanna know more about it, visit links below.
 
 - [Reference]
-- [Showcase]
 
 [Seoul National University]: https://www.snu.ac.kr/
 [MDxt]: https://github.com/baehyunsol/MDxt
 [Reference]: MDxt-Reference.html
-[Showcase]: MDxt-Showcase.html
 [Rust]: https://www.rust-lang.org/
 
 ### Recent Articles
@@ -24,8 +22,8 @@ This blog uses [MDxt], my custom Markdown Extension. If you wanna know more abou
 
 ### Popular Tags
 
-{% for ind in [0, 1, 2] %}
-- [#{{tags[ind]}}](tag-{{tags[ind]}}.html) ({{tag_nums[ind]}}){% endfor %}
+{% if tags %}{% for ind in [0, 1, 2] %}
+- [#{{tags[ind]}}](tag-{{tags[ind]}}.html) ({{tag_nums[ind]}}){% endfor %}{% endif %}
 
 [[right]]
 [See more](Tags.html)

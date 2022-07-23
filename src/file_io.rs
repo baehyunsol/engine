@@ -218,6 +218,15 @@ pub fn mkdir(path: &str) -> Result<(), ()> {
 
 }
 
+pub fn rmdir(path: &str) -> Result<(), ()> {
+
+    match fs::remove_dir_all(path) {
+        Ok(_) => Ok(()),
+        _ => Err(())
+    }
+
+}
+
 pub fn get_sub_directories(path: &str) -> Vec<String> {
 
     match read_dir(path) {

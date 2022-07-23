@@ -17,6 +17,8 @@ static mut BAD_PROGRAMMING_HABIT: bool = true;
 
 fn main() {
 
+    remove_results();
+
     let articles = article::from_yaml((YamlLoader::load_from_str(&read_string("./output/articles.txt").unwrap()).unwrap())[0].clone());
     let tags_graph = article::get_tags(&articles);
 
@@ -41,6 +43,10 @@ fn main() {
         if BAD_PROGRAMMING_HABIT {
             BAD_PROGRAMMING_HABIT = false;
             main();
+        }
+
+        else {
+            clean_up_results();
         }
 
     }
@@ -268,6 +274,19 @@ fn document_context() -> tera::Context {
     context.insert("csses", &vec!["markdown.css", "doc_page.css"]);
 
     context
+}
+
+fn remove_results() {
+    rmdir("./htmls");
+    rmdir("./output/htmls");
+    rmdir("./output/styles");
+    rmdir("./mdxts/tag_pages");
+}
+
+fn clean_up_results() {
+    rmdir("./htmls/tag_pages");
+    rmdir("./mdxts/tag_pages");
+    rmdir("./output/htmls/tag_pages");
 }
 
 lazy_static! {

@@ -50,6 +50,8 @@ Another html question.
 
 They all take me to [W3Schools]. Yeah, that's a great website. If you're interested in web developments, the site would be very helpful to you.
 
+[W3Schools]: https://w3schools.com
+
 ### 유재석 나이
 
 Let's see how global they are. I made the query in Korean. The query means 'how old is 유재석(korean comedian)'.
