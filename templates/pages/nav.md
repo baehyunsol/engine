@@ -1,1 +1,1 @@
-[ [[char=9650]] ](#top)[ [[char=9660]] ](#bottom)
+[[[char=9650]]](#top)[[[char=9660]]](#bottom)

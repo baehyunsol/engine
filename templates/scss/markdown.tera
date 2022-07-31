@@ -177,48 +177,62 @@ body .markdown {
 /* Fenced Code Block */
 .markdown {
 
+    {% for n in [0, 1, 2, 3, 4, 5, 6] %}
+    pre.line-num-width-{{n}} {
+        span.code-fence-index {
+            min-width: $padding_medium + $font_medium * ({{n}} + 1) / 2;
+        }
+    }
+    {% endfor %}
+
     pre {
-        padding: $padding_small;
+        padding: $padding_medium;
         background-color: $black;
         width: 90%;
         overflow: auto;
+        line-height: 1.0;
 
-        table {
-            width: 90%;
-        }
-
-        td {
-            line-height: 1.2;
-            padding: {
-                top: 0px;
-                bottom: 0px;
-            }
-            background-color: $black;
-            height: $font_medium * 1.2;  /* So that it renders empty lines */
-            white-space: pre;
-        }
-
-        td.index {
+        span.code-fence-index {
+            display: inline-block;
             border-right: $border_medium solid $emerald;
             text-align: right;
-            width: 24px;
+            padding-right: $padding_medium;
+            margin-right: $padding_medium;
+            padding-top: $padding_tiny;
+            padding-bottom: $padding_tiny;
         }
 
-        tr:hover td {
+        span.code-fence-row {
+            display: inline-block;
+            width: 100%;
+        }
+
+        span.code-fence-row:hover {
             background-color: $dark;
         }
 
-        tr.copy-button-row:hover td {
-            background-color: $black;
+        span.code-fence-code {
+            display: inline-block;
+            padding-top: $padding_tiny;
+            padding-bottom: $padding_tiny;
         }
 
-        tr.highlight td {
+        span.highlight.code-fence-row {
             background-color: $black_compl;
             color: $white_compl;
+
+            span.code-fence-index {
+                border-right: $border_medium solid $emerald_compl;
+            }
+
+        }
+
+        span.highlight.code-fence-row:hover {
+            background-color: $black_compl_trans;
         }
 
         {% for color in colors %}
-        tr.highlight td .color_{{color}} {
+        span.highlight span .color_{{color}} {
             color: ${{color}}_compl;
         }
         {% endfor %}
@@ -226,12 +240,13 @@ body .markdown {
     }
 
     button.copy-fenced-code {
-        background-color: #0000;
+        background-color: $dark;
         border: none;
         color: $white;
         font-size: $font_medium;
         padding: $padding_small;
         border-radius: 6px;
+        cursor: pointer;
         transition: background-color 0.5s ease-out;
     }
 

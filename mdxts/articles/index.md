@@ -14,6 +14,8 @@ This blog uses [MDxt], my custom Markdown Extension. If you wanna know more abou
 ### Recent Articles
 
 
+- [MDxt-Math-Reference](MDxt-Math-Reference.html)
+- [MDxt-Character-Reference](MDxt-Character-Reference.html)
 - [MDxt-Reference](MDxt-Reference.html)
 - [Search-Engine-Comparison](Search-Engine-Comparison.html)
 
@@ -24,9 +26,9 @@ This blog uses [MDxt], my custom Markdown Extension. If you wanna know more abou
 ### Popular Tags
 
 
-- [#reference](tag-reference.html) (1)
-- [#search_engine](tag-search_engine.html) (1)
-- [#mdxt](tag-mdxt.html) (1)
+- [#mdxt](tag-mdxt.html) (3)
+- [#reference](tag-reference.html) (3)
+- [#documentation](tag-documentation.html) (3)
 
 [[right]]
 [See more](Tags.html)

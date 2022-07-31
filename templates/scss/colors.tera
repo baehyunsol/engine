@@ -2,4 +2,5 @@
 ${{color}}: {{hex[loop.index0]}};
 ${{color}}_compl: {{compl_hex[loop.index0]}};
 ${{color}}_trans: {{hex[loop.index0]}}80;
+${{color}}_compl_trans: {{compl_hex[loop.index0]}}80;
 {% endfor %}

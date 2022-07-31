@@ -30,9 +30,9 @@
 {% endif %}
 
     <article class="markdown">
-        <a name="top"></a>
+        <a id="top"></a>
 {{article}}
-        <a name="bottom"></a>
+        <a id="bottom"></a>
     </article>
 
 {% if sidebar %}
