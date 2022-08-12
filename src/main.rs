@@ -13,43 +13,42 @@ use file_io::*;
 use log::Log;
 use std::collections::HashMap;
 
-static mut BAD_PROGRAMMING_HABIT: bool = true;
-
 fn main() {
+    render(false, true)
+}
+
+fn render(only_docs: bool, first_time: bool) {
 
     remove_results();
 
     let articles = article::from_yaml((YamlLoader::load_from_str(&read_string("./output/articles.txt").unwrap()).unwrap())[0].clone());
     let tags_graph = article::get_tags(&articles);
 
-    render_directory(
-        "./templates/articles", "tera",
-        EngineType::Tera,
-        "./mdxts/articles", "md",
-        &Some(meta_article_context(&articles, &tags_graph)),
-        &None,
-        true
-    ).unwrap();
+    if !only_docs {
+        render_directory(
+            "./templates/articles", "tera",
+            EngineType::Tera,
+            "./mdxts/articles", "md",
+            &Some(meta_article_context(&articles, &tags_graph)),
+            &None,
+            true
+        ).unwrap();
 
-    render_tag_pages(&articles, &tags_graph);
-    render_articles_mdxt();
-    render_articles_html();
+        render_tag_pages(&articles, &tags_graph);
+    }
+
+    render_articles_mdxt(only_docs);
+    render_articles_html(only_docs);
     render_styles();
 
-    unsafe {
-
-        // runs the program twice
-        // so that the metadata is read correctly
-        if BAD_PROGRAMMING_HABIT {
-            BAD_PROGRAMMING_HABIT = false;
-            main();
-        }
-
-        else {
-            clean_up_results();
-        }
-
+    if first_time && !only_docs {
+        render(only_docs, !first_time);
     }
+
+    else {
+        clean_up_results();
+    }
+
 }
 
 use mdxt::COLORS;
@@ -70,11 +69,17 @@ fn get_colors() -> tera::Context {
     context
 }
 
-fn render_articles_mdxt() {
+fn render_articles_mdxt(only_docs: bool) {
 
     copy_all(
         "./mdxts", "jpg",
         "./output/htmls", "jpg",
+        true
+    ).unwrap();
+
+    copy_all(
+        "./mdxts", "png",
+        "./output/htmls", "png",
         true
     ).unwrap();
 
@@ -87,26 +92,29 @@ fn render_articles_mdxt() {
         true
     ).unwrap();
 
-    copy_all(
-        "./htmls/tag_pages", "html",
-        "./htmls/articles", "html",
-        true
-    );
+    if !only_docs {
+        copy_all(
+            "./htmls/tag_pages", "html",
+            "./htmls/articles", "html",
+            true
+        );
 
-    let mut logs_hash = yaml_hash::new();
+        let mut logs_hash = yaml_hash::new();
 
-    for Log { file_from, file_to, metadata } in mdxts_logs.into_iter() {
-        logs_hash = yaml_hash::insert(logs_hash, Yaml::from_str(&file_from), metadata);
+        for Log { file_from, file_to, metadata } in mdxts_logs.into_iter() {
+            logs_hash = yaml_hash::insert(logs_hash, Yaml::from_str(&file_from), metadata);
+        }
+
+        let mut yaml_hash_string = String::new();
+        let mut emitter = YamlEmitter::new(&mut yaml_hash_string);
+        emitter.dump(&logs_hash).unwrap();
+
+        write_to_file("./output/articles.txt", yaml_hash_string.as_bytes());
     }
 
-    let mut yaml_hash_string = String::new();
-    let mut emitter = YamlEmitter::new(&mut yaml_hash_string);
-    emitter.dump(&logs_hash).unwrap();
-
-    write_to_file("./output/articles.txt", yaml_hash_string.as_bytes());
 }
 
-fn render_articles_html() {
+fn render_articles_html(only_docs: bool) {
 
     render_directory(
         "./templates/pages", "md",
@@ -117,14 +125,16 @@ fn render_articles_html() {
         true
     ).unwrap();
 
-    render_templates(
-        "./templates/pages/article.tera",
-        "./htmls/articles", "html",
-        "./output/htmls/articles", "html",
-        None,
-        Some(article_context()),
-        true
-    ).unwrap();
+    if !only_docs {
+        render_templates(
+            "./templates/pages/article.tera",
+            "./htmls/articles", "html",
+            "./output/htmls/articles", "html",
+            None,
+            Some(article_context()),
+            true
+        ).unwrap();
+    }
 
     render_templates(
         "./templates/pages/article.tera",

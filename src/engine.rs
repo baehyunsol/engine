@@ -173,7 +173,6 @@ pub fn render_directory(
                     Ok(mdxt) => {
                         let RenderResult {
                             mut content,
-                            has_math,
                             has_collapsible_table,
                             metadata,
                             fenced_code_contents: _
@@ -184,7 +183,6 @@ pub fn render_directory(
                             Some(m) => yaml_hash::from_yaml(m)
                         };
 
-                        metadata = yaml_hash::insert(metadata, Yaml::from_str("has_math"), Yaml::Boolean(has_math));
                         metadata = yaml_hash::insert(metadata, Yaml::from_str("has_collapsible_table"), Yaml::Boolean(has_collapsible_table));
 
                         match render_article_info(&metadata, &article_info) {

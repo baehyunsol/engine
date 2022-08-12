@@ -13,5 +13,7 @@
 | CSS Task List Triangle Marker                   | O  [^A]  | O  [^A]   | X  [^A] | ?          |
 | Border/Borderless Boxes                         | O  [^A]  | O  [^A]   | O  [^A] | ?          |
 | HTML entities (`[[char]]`)                      | O  [^A]  | O  [^A]   | O  [^A] | ?          |
+| MathML (without MathJax)                        | O  [^B]  | X  [^B]   | X  [^B] | ?          |
 
 [^A]: 2022/07/21
+[^B]: 2022/08/02

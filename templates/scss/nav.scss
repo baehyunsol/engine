@@ -2,15 +2,15 @@
 @import "units";
 
 nav {
-    background-color: $black_trans;
+    background-color: $black-trans;
     transition: background-color 0.5s ease-out;
 
-    border: $border_medium solid $gray;
+    border: $border-medium solid $gray;
     z-index: 1;
     position: fixed;
     right: 1%;
     bottom: 5%;
-    font-size: $font_giant;
+    font-size: $font-giant;
 
     p {
         padding: 0;
@@ -18,10 +18,10 @@ nav {
     }
 
     a {
-        color: $white_trans;
+        color: $white-trans;
         text-decoration: none;
         transition: color 0.5s ease-out;
-        padding: $padding_medium;
+        padding: $padding-medium;
     }
 
     a:hover {

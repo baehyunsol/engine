@@ -2,16 +2,16 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
     {% if title %}
     <title>{{title}}</title>
     {% else %}
     <title>Test</title>
     {% endif %}
-    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&amp;display=swap" rel="stylesheet"/> 
     {% if csses %}
-    {% for css in csses %}<link href="{{css}}" rel="stylesheet">{% endfor %}
+    {% for css in csses %}<link href="{{css}}" rel="stylesheet"/>{% endfor %}
     {% endif %}
 </head>
 

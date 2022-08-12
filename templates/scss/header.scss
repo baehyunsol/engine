@@ -2,7 +2,7 @@
 @import "units";
 
 html {
-    scroll-padding: $header_height
+    scroll-padding: $header-height
 }
 
 header {
@@ -12,23 +12,23 @@ header {
     left: 0;
     top: 0;
     width: 100%;
-    border-bottom: $border_medium solid $white;
+    border-bottom: $border-medium solid $white;
 
     p {
-        margin: $padding_big;
+        margin: $padding-big;
     }
 
     a {
-        border-bottom: $border_big solid $black;
+        border-bottom: $border-big solid $black;
         text-decoration: none;
         color: $white;
-        font-size: $font_big;
-        margin-right: $padding_giant;
+        font-size: $font-big;
+        margin-right: $padding-giant;
         transition: border 0.5s ease-out;
     }
 
     a:hover {
-        border-bottom: $border_big solid $white;
+        border-bottom: $border-big solid $white;
         transition: border 0.5s ease-out;
     }
 

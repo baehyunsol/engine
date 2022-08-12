@@ -4,22 +4,22 @@
 body .markdown {
     background-color: $dark;
     color: $white;
-    font-size: $font_medium;
+    font-size: $font-medium;
     line-height: 1.5;
     letter-spacing: 1px;
 
     ::selection {
-        background-color: $dark_compl;
-        color: $white_compl;
+        background-color: $dark-compl;
+        color: $white-compl;
     }
 
-    hr.footnote_hr {
-        margin-top: $h1_margin;
+    hr.footnote-hr {
+        margin-top: $h1-margin;
     }
 
     img {
-        max-width: $image_medium;
-        max-height: $image_medium;
+        max-width: $image-medium;
+        max-height: $image-medium;
     }
 
 }
@@ -28,10 +28,10 @@ body .markdown {
 .markdown {
 
     blockquote {
-        background-color: $black_trans;
+        background-color: $black-trans;
         width: 75%;
-        border-left: $border_big solid $gray;
-        padding: $padding_medium;
+        border-left: $border-big solid $gray;
+        padding: $padding-medium;
     }
 
 }
@@ -40,20 +40,20 @@ body .markdown {
 .markdown {
 
     {% for color in colors %}
-    .color_{{color}} {
+    .color-{{color}} {
         color: ${{color}};
     }
 
-    .color_{{color}}::selection {
-        color: ${{color}}_compl;
+    .color-{{color}}::selection {
+        color: ${{color}}-compl;
     }
 
-    .highlight_{{color}} {
+    .highlight-{{color}} {
         background-color: ${{color}};
     }
 
-    .highlight_{{color}}::selection {
-        background-color: ${{color}}_compl;
+    .highlight-{{color}}::selection {
+        background-color: ${{color}}-compl;
     }
     {% endfor %}
 
@@ -64,9 +64,9 @@ body .markdown {
 
     div.box {
         width: 80%;
-        padding: $padding_medium;
-        margin: $padding_medium;
-        border: $border_medium solid $gray;
+        padding: $padding-medium;
+        margin: $padding-medium;
+        border: $border-medium solid $gray;
     }
 
     div.box.no-border {
@@ -79,12 +79,12 @@ body .markdown {
 .markdown {
 
     {% for size in ["tiny", "small", "medium", "big", "giant"] %}
-    .size_{{size}} {
-        font-size: $font_{{size}};
+    .size-{{size}} {
+        font-size: $font-{{size}};
 
         img {
-            max-width: $image_{{size}};
-            max-height: $image_{{size}};
+            max-width: $image-{{size}};
+            max-height: $image-{{size}};
         }
     }
     {% endfor %}
@@ -94,7 +94,7 @@ body .markdown {
 /* Alignments */
 .markdown {
 
-    .align_center {
+    .align-center {
         text-align: center;
 
         table, img, .box, blockquote, svg {
@@ -104,7 +104,7 @@ body .markdown {
 
     }
 
-    .align_right {
+    .align-right {
         text-align: right;
 
         table, img, .box, blockquote, svg {
@@ -114,7 +114,7 @@ body .markdown {
 
     }
 
-    .align_left {
+    .align-left {
         text-align: left;
 
         table, img, .box, blockquote, svg {
@@ -130,20 +130,20 @@ body .markdown {
 
     {% for header_level in [1, 2, 3, 4, 5] %}
     h{{header_level}} {
-        font-size: $h{{header_level}}_font_size;
-        margin-top: $h{{header_level}}_margin;
-        margin-bottom: $h{{header_level}}_margin / 2;
+        font-size: $h{{header_level}}-font-size;
+        margin-top: $h{{header_level}}-margin;
+        margin-bottom: $h{{header_level}}-margin / 2;
         transition: color 0.3s;
     }
 
     h{{header_level}}:hover {
-        color: $white_trans;
+        color: $white-trans;
         transition: color 0.3s;
     }
     {% endfor %}
 
     h1, h2 {
-        border-bottom: $border_medium solid $gray;
+        border-bottom: $border-medium solid $gray;
     }
 
 }
@@ -152,7 +152,7 @@ body .markdown {
 .markdown {
 
     a:link {
-        border-bottom: $border_medium solid $aqua_trans;
+        border-bottom: $border-medium solid $aqua-trans;
         color: $aqua;
         text-decoration: none;
         transition: border 0.3s;
@@ -165,11 +165,11 @@ body .markdown {
 
     a:hover {
         text-decoration: none;
-        border-bottom: $border_medium solid $aqua;
+        border-bottom: $border-medium solid $aqua;
     }
 
     a::selection {
-        color: $aqua_compl;
+        color: $aqua-compl;
     }
 
 }
@@ -180,13 +180,13 @@ body .markdown {
     {% for n in [0, 1, 2, 3, 4, 5, 6] %}
     pre.line-num-width-{{n}} {
         span.code-fence-index {
-            min-width: $padding_medium + $font_medium * ({{n}} + 1) / 2;
+            min-width: $padding-medium + $font-medium * ({{n}} + 1) / 2;
         }
     }
     {% endfor %}
 
     pre {
-        padding: $padding_medium;
+        padding: $padding-medium;
         background-color: $black;
         width: 90%;
         overflow: auto;
@@ -194,12 +194,12 @@ body .markdown {
 
         span.code-fence-index {
             display: inline-block;
-            border-right: $border_medium solid $emerald;
+            border-right: $border-medium solid $emerald;
             text-align: right;
-            padding-right: $padding_medium;
-            margin-right: $padding_medium;
-            padding-top: $padding_tiny;
-            padding-bottom: $padding_tiny;
+            padding-right: $padding-medium;
+            margin-right: $padding-medium;
+            padding-top: $padding-tiny;
+            padding-bottom: $padding-tiny;
         }
 
         span.code-fence-row {
@@ -213,27 +213,27 @@ body .markdown {
 
         span.code-fence-code {
             display: inline-block;
-            padding-top: $padding_tiny;
-            padding-bottom: $padding_tiny;
+            padding-top: $padding-tiny;
+            padding-bottom: $padding-tiny;
         }
 
         span.highlight.code-fence-row {
-            background-color: $black_compl;
-            color: $white_compl;
+            background-color: $black-compl;
+            color: $white-compl;
 
             span.code-fence-index {
-                border-right: $border_medium solid $emerald_compl;
+                border-right: $border-medium solid $emerald-compl;
             }
 
         }
 
         span.highlight.code-fence-row:hover {
-            background-color: $black_compl_trans;
+            background-color: $black-compl-trans;
         }
 
         {% for color in colors %}
-        span.highlight span .color_{{color}} {
-            color: ${{color}}_compl;
+        span.highlight span .color-{{color}} {
+            color: ${{color}}-compl;
         }
         {% endfor %}
 
@@ -243,15 +243,15 @@ body .markdown {
         background-color: $dark;
         border: none;
         color: $white;
-        font-size: $font_medium;
-        padding: $padding_small;
+        font-size: $font-medium;
+        padding: $padding-small;
         border-radius: 6px;
         cursor: pointer;
         transition: background-color 0.5s ease-out;
     }
 
     button.copy-fenced-code:hover {
-        background-color: $white_trans;
+        background-color: $white-trans;
         transition: background-color 0.5s ease-out;
     }
 
@@ -264,7 +264,7 @@ body .markdown {
         color: $gold;
         background-color: $black;
         border-radius: 3px;
-        padding: $padding_tiny $padding_small $padding_tiny;
+        padding: $padding-tiny $padding-small $padding-tiny;
     }
 
 }
@@ -283,7 +283,7 @@ body .markdown {
     }
 
     td, th {
-        padding: $padding_medium + $padding_small;
+        padding: $padding-medium + $padding-small;
     }
 
     tr:nth-last-child(odd) {
@@ -299,7 +299,7 @@ body .markdown {
     }
 
     thead.collapsed th {
-        padding: $padding_small;
+        padding: $padding-small;
         transition: padding 0.5s ease-out;
     }
 
@@ -317,35 +317,35 @@ body .markdown {
 ----- Checkbox for task lists -----
 */
 
-div.unchecked_box, div.checked_box {
+div.unchecked-box, div.checked-box {
     position: relative;
-    top: $font_medium / 4;
+    top: $font-medium / 4;
     display: inline-block;
     border-radius: 4px;
-    width: $font_medium;
-    height: $font_medium;
+    width: $font-medium;
+    height: $font-medium;
 }
 
-div.unchecked_box {
+div.unchecked-box {
     background-color: $gray;
-    margin-right: $padding_medium;
+    margin-right: $padding-medium;
 }
 
-div.checked_box {
+div.checked-box {
     background-color: $black;
-    margin-right: $padding_medium;
+    margin-right: $padding-medium;
 }
 
 span.checkmark {
     display: block;
     position: relative;
-    left: $font_medium / 4;
-    top: $font_medium / 8;
-    width: $font_medium / 3;
-    height: $font_medium / 2;
+    left: $font-medium / 4;
+    top: $font-medium / 8;
+    width: $font-medium / 3;
+    height: $font-medium / 2;
     border: {
-        bottom: $border_medium solid $white;
-        right: $border_medium solid $white;
+        bottom: $border-medium solid $white;
+        right: $border-medium solid $white;
     }
     transform: rotate(45deg);
 }
@@ -355,9 +355,9 @@ span.triangle {
     position: relative;
     width: 0;
     height: 0;
-    left: $font_medium / 6;
-    top: $font_medium / 3;
-    border-left: $font_medium / 3 solid #0000;
-    border-right: $font_medium / 3 solid #0000;
-    border-bottom: $font_medium / 3 solid $white;
+    left: $font-medium / 6;
+    top: $font-medium / 3;
+    border-left: $font-medium / 3 solid #0000;
+    border-right: $font-medium / 3 solid #0000;
+    border-bottom: $font-medium / 3 solid $white;
 }
