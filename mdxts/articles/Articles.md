@@ -9,6 +9,8 @@
 
 ### August 2022
 
+- [Stars-Comparison](Stars-Comparison.html)
+- [Loc-Comparison](Loc-Comparison.html)
 - [MDxt-Reference](MDxt-Reference.html)
 - [MDxt-Math-Reference](MDxt-Math-Reference.html)
 

@@ -45,7 +45,7 @@ impl Graph {
             self.reverse_vertex_indexes.insert(index, tag_name);
             self.tag_articles.push(vec![article_name]);
 
-            if self.edges.len() < index {
+            if self.edges.len() <= index {
                 let mut new_edges = vec![vec![0; index * 2]; index * 2];
 
                 for i in 0..self.edges.len() {
