@@ -226,7 +226,7 @@ fn meta_article_context(articles: &HashMap<String, article::Article>, tags_graph
         let mut articles_by_month_page_tmp = vec![];
         let mut curr_month = [0, 0];
 
-        for ([year, month], name) in articles_by_month.into_iter() {
+        for ([year, month, day], name, preview) in articles_by_month.into_iter() {
 
             if [year, month] != curr_month {
 
@@ -238,7 +238,7 @@ fn meta_article_context(articles: &HashMap<String, article::Article>, tags_graph
                 curr_month = [year, month];
             }
 
-            articles_by_month_page_tmp.push(format!("- [{}]({}.html)", name, name));
+            articles_by_month_page_tmp.push(format!("- [[giant]] [{}]({}.html) [[/giant]] [[blank=3]]- {}.{}.{}\n  - {}", name, name, day, MONTHS[month], year, preview));
         }
 
         if articles_by_month_page_tmp.len() > 0 {

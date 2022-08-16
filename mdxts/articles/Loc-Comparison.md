@@ -1,6 +1,7 @@
 ---
 date: [2022, 8, 14]
 tags: [loc, opensource, comparison]
+preview: "I counted loc(lines of code) of some repositories, just for fun!"
 ---
 
 # LOC

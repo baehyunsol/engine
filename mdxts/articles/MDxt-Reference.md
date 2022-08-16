@@ -1,6 +1,7 @@
 ---
 date: [2022, 8, 7]
 tags: [mdxt, reference, documentation]
+preview: MDxt Reference
 ---
 
 # MDxt Reference
@@ -114,12 +115,12 @@ This is another footnote.[^B]
 ```
 - [ ] Unchecked
 - [X] Checked
-- [^] Not yet
+- [^] Triangle
 ```
 
 - [ ] Unchecked
 - [X] Checked
-- [^] Not yet
+- [^] Triangle
 
 ### Fenced Code Blocks
 

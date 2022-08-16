@@ -7,14 +7,15 @@ use std::collections::HashMap;
 #[derive(Clone)]
 pub struct Article {
     name: String,
+    preview: String,
     date: [usize; 3],  // [year, month, day]  -> will replace it later
     tags: Vec<String>
 }
 
 impl Article {
 
-    pub fn new(name: String, date: [usize; 3], tags: Vec<String>) -> Self {
-        Article { name, date, tags }
+    pub fn new(name: String, date: [usize; 3], tags: Vec<String>, preview: String) -> Self {
+        Article { name, date, tags, preview }
     }
 
     pub fn date_to_int(&self) -> usize {
@@ -71,7 +72,15 @@ pub fn from_yaml(yaml: Yaml) -> HashMap<String, Article> {
                     _ => {continue;}
                 };
 
-                result.insert(name.clone(), Article::new(name, date, tags));
+                let preview = match yaml_hash::get(&article, &Yaml::from_str("preview")) {
+                    Some(p) => match p.as_str() {
+                        Some(s) => s.to_string(),
+                        _ => String::from("There's no preview for this article.")
+                    },
+                    _ => String::from("There's no preview for this article.")
+                };
+
+                result.insert(name.clone(), Article::new(name, date, tags, preview));
             }
 
             result
@@ -90,13 +99,13 @@ pub fn get_recent_articles(articles: &HashMap<String, Article>, length: usize) -
     ).collect()
 }
 
-pub fn get_articles_by_month(articles: &HashMap<String, Article>) -> Vec<([usize; 2], String)> {  // Vec<([year, month], name)>
+pub fn get_articles_by_month(articles: &HashMap<String, Article>) -> Vec<([usize; 3], String, String)> {  // Vec<([year, month, day], name, preview)>
 
     let mut articles_vec = articles.values().collect::<Vec<&Article>>();
     articles_vec.sort_unstable_by_key(|article| usize::MAX - article.date_to_int());
 
     articles_vec.iter().map(
-        |article| ([article.date[0], article.date[1]], file_name(&article.name).unwrap())
+        |article| (article.date.clone(), file_name(&article.name).unwrap(), article.preview.clone())
     ).collect()
 }
 
