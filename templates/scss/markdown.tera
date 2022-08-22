@@ -1,6 +1,12 @@
 @import "colors";
 @import "units";
 
+@media screen and (orientation: landscape) {
+    html {
+        font-size: 21px;
+    }
+}
+
 body .markdown {
     background-color: $dark;
     color: $white;
@@ -314,10 +320,14 @@ body .markdown {
 }
 
 /*
------ Checkbox for task lists -----
+----- Lists -----
 */
 
 .markdown {
+
+    ul, ol {
+        padding-left: $padding-giant;
+    }
 
     li {
         padding: $padding-small;

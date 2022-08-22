@@ -1,7 +1,7 @@
 ---
 date: [2022, 8, 15]
 tags: [stars, github, opensource, comparison]
-preview: Counting Stars
+preview: Github stars comparison
 ---
 
 # Counting Stars

@@ -3,12 +3,23 @@
 
 html {
     scroll-behavior: smooth;
-
     background-color: $dark;
+}
+
+@media screen and (orientation: landscape) {
+    article {
+        margin-left: 8%;
+        width: 84%;
+    }
+}
+
+@media screen and (orientation: portrait) {
+    article {
+        margin-left: 5%;
+        width: 90%;
+    }
 }
 
 article {
     margin-top: $header-height + $padding-big;
-    margin-left: 8%;
-    width: 84%;
 }

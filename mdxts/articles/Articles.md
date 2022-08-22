@@ -9,14 +9,14 @@
 
 ### August 2022
 
-- [[giant]] [Stars-Comparison](Stars-Comparison.html) [[/giant]] [[blank=3]]- 15.August.2022
-  - Counting Stars
+- [[giant]] [Github-Stars-Comparison](Github-Stars-Comparison.html) [[/giant]] [[blank=3]]- 15.August.2022
+  - Github stars comparison
 - [[giant]] [Loc-Comparison](Loc-Comparison.html) [[/giant]] [[blank=3]]- 14.August.2022
   - I counted loc(lines of code) of some repositories, just for fun!
-- [[giant]] [MDxt-Math-Reference](MDxt-Math-Reference.html) [[/giant]] [[blank=3]]- 7.August.2022
-  - There's no preview for this article.
 - [[giant]] [MDxt-Reference](MDxt-Reference.html) [[/giant]] [[blank=3]]- 7.August.2022
   - MDxt Reference
+- [[giant]] [MDxt-Math-Reference](MDxt-Math-Reference.html) [[/giant]] [[blank=3]]- 7.August.2022
+  - There's no preview for this article.
 
 ### July 2022
 

@@ -16,10 +16,10 @@ This blog uses [MDxt], my custom Markdown Extension. If you wanna know more abou
 ### Recent Articles
 
 
-- [Stars-Comparison](Stars-Comparison.html)
+- [Github-Stars-Comparison](Github-Stars-Comparison.html)
 - [Loc-Comparison](Loc-Comparison.html)
-- [MDxt-Math-Reference](MDxt-Math-Reference.html)
 - [MDxt-Reference](MDxt-Reference.html)
+- [MDxt-Math-Reference](MDxt-Math-Reference.html)
 - [MDxt-Character-Reference](MDxt-Character-Reference.html)
 
 [[right]]
@@ -29,7 +29,7 @@ This blog uses [MDxt], my custom Markdown Extension. If you wanna know more abou
 ### Popular Tags
 
 
-- [#comparison](tag-comparison.html) (3)
+- [#mdxt](tag-mdxt.html) (3)
 - [#documentation](tag-documentation.html) (3)
 - [#reference](tag-reference.html) (3)
 
