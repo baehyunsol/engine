@@ -1,5 +1,5 @@
 ---
-date: [2022, 8, 7]
+date: [2022, 8, 23]
 tags: [mdxt, reference, documentation]
 preview: MDxt Reference
 ---
@@ -121,6 +121,52 @@ This is another footnote.[^B]
 - [ ] Unchecked
 - [X] Checked
 - [^] Triangle
+
+#### List Macros
+
+```
+- !![[no bullet]]
+- no
+- bullet
+  - 123
+  - 456
+- 789
+  a. !![[start = 20]]
+  a. `[[start = t]]` is invalid.
+  a. hahaha
+```
+
+is rendered to 
+
+```html
+<ul class="no-bullet-list">
+    <li>no</li>
+    <li>bullet
+        <ul>
+            <li>123</li>
+            <li>456</li>
+        </ul>
+    </li>
+    <li>789
+        <ol type="a" start="20">
+            <li><code class="short">[[start = t]]</code> is invalid.</li>
+            <li>hahaha</li>
+        </ol>
+    </li>
+</ul>
+```
+
+which looks like
+
+- !![[no bullet]]
+- no
+- bullet
+  - 123
+  - 456
+- 789
+  a. !![[start = 20]]
+  a. `[[start = t]]` is invalid.
+  a. hahaha
 
 ### Fenced Code Blocks
 

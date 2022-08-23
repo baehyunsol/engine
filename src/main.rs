@@ -134,6 +134,15 @@ fn render_articles_html(only_docs: bool) {
             Some(article_context()),
             true
         ).unwrap();
+
+        render_directory(
+            "./output/htmls/articles", "html",
+            EngineType::XML,
+            "./output/htmls/articles", "html",
+            &None,
+            &None,
+            true
+        ).unwrap();
     }
 
     render_templates(
@@ -142,6 +151,15 @@ fn render_articles_html(only_docs: bool) {
         "./output/htmls/documents", "html",
         None,
         Some(document_context()),
+        true
+    ).unwrap();
+
+    render_directory(
+        "./output/htmls/documents", "html",
+        EngineType::XML,
+        "./output/htmls/documents", "html",
+        &None,
+        &None,
         true
     ).unwrap();
 }

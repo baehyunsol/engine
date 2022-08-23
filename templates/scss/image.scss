@@ -1,0 +1,39 @@
+@import "colors";
+@import "units";
+
+img {
+    cursor: pointer;
+}
+
+#modal-box {
+    display: none;
+
+    z-index: 1;
+
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+
+    overflow: auto;
+    background-color: $black_trans;
+}
+
+#modal-img {
+    display: block;
+    margin: auto;
+    max-width: $image-giant + $image-big;
+    max-height: $image-giant + $image-big;
+}
+
+#close-button {
+    font-size: $font-big;
+    color: $white;
+    text-align: center;
+    background-color: $black;
+
+    width: 60%;
+    margin-left: 20%;
+    margin-right: 20%;
+}

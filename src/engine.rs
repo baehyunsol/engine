@@ -9,7 +9,7 @@ use crate::MONTHS;
 
 #[derive(Copy, Clone, Debug)]
 pub enum EngineType {
-    Tera, Scss, MDxt
+    Tera, Scss, MDxt, XML
 }
 
 /*
@@ -78,6 +78,8 @@ pub fn render_directory(
         }
     ).collect();
 
+    mkdir(dir_to);    // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
+
     match engine {
 
         EngineType::Tera => {
@@ -87,7 +89,6 @@ pub fn render_directory(
             };
 
             let mut tera = Tera::default();
-            mkdir(dir_to);    // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
 
             for file in files.iter() {
                 let dest = get_dest_path(&file, dir_to, ext_to)?;
@@ -123,7 +124,6 @@ pub fn render_directory(
 
         EngineType::Scss => {
             let scss_option = grass::Options::default();
-            mkdir(dir_to);    // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
 
             for file in files.iter() {
                 let dest = get_dest_path(&file, dir_to, ext_to)?;
@@ -148,11 +148,11 @@ pub fn render_directory(
         }
 
         EngineType::MDxt => {
-            let options = match mdxt_option {
+            let mut options = match mdxt_option {
                 Some(option) => option.clone(),
                 None => RenderOption::default()
             };
-            mkdir(dir_to);    // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
+            options.xml = true;
 
             let mut article_info = Tera::default();
 
@@ -185,6 +185,7 @@ pub fn render_directory(
 
                         metadata = yaml_hash::insert(metadata, Yaml::from_str("has_collapsible_table"), Yaml::Boolean(has_collapsible_table));
 
+                        // it renders article_info if the metadata has `date` or `tags`.
                         match render_article_info(&metadata, &article_info) {
                             Some(info) => {
                                 content = vec![render_to_html(&info, options.clone()).content, content].concat();
@@ -195,6 +196,82 @@ pub fn render_directory(
                         match write_to_file(&dest, content.as_bytes()) {
                             Err(_) => {return Err(Error::PathError(format!("error at `render_directory({:?}, {:?}, ...)`\n`write_to_file({:?})` failed", dir_from, ext_from, dest)));}
                             _ => { logs.push(Log::new(file, &dest, Some(metadata))); }
+                        }
+                    },
+                    _ => {
+                        return Err(Error::PathError(format!("error at `render_directory({:?}, {:?}, ...)`\n`read_string({:?})` failed", dir_from, ext_from, file)));
+                    }
+                }
+
+            }
+
+        }
+
+        EngineType::XML => {
+            let image_box = match read_string("./templates/xml/img_box.html") {
+                Ok(s) => s,
+                _ => {
+                    return Err(Error::PathError(format!("error at `render_directory({:?}, {:?}, ...)`\n`read_string('./templates/xml/img_box.html')` failed", dir_from, ext_from)));
+                }
+            };
+
+            let image_script = match read_string("./templates/xml/img_script.html") {
+                Ok(s) => s,
+                _ => {
+                    return Err(Error::PathError(format!("error at `render_directory({:?}, {:?}, ...)`\n`read_string('./templates/xml/img_script.html')` failed", dir_from, ext_from)));
+                }
+            };
+
+            for file in files.iter() {
+                let dest = get_dest_path(&file, dir_to, ext_to)?;
+
+                match read_string(file) {
+                    Ok(html) => match hxml::into_dom(html) {
+                        Ok(_) => {
+                            let mut images = hxml::dom::get_elements_by_tag_name(None, "img".to_string());
+
+                            if images.len() > 0 {
+
+                                for img in images.iter_mut() {
+                    
+                                    match img.get_attribute("src".to_string()) {
+                                        Some(src) => {
+                                            img.set_attribute("onclick".to_string(), format!("open_modal_img('{}');", src));
+                                        },
+                                        _ => {}
+                                    }
+                    
+                                }
+
+                            }
+
+                            let mut head = &mut hxml::dom::get_elements_by_tag_name(None, "head".to_string())[0];
+                            head.add_element_ptr(hxml::Element::from_string("<link href=\"image.css\" rel=\"stylesheet\"/>".to_string()).unwrap());
+
+                            let mut body = &mut hxml::dom::get_elements_by_tag_name(None, "body".to_string())[0];
+                            let modal_box = hxml::Element::from_string(image_box.clone()).unwrap();
+                            let script = hxml::Element::from_string(image_script.clone()).unwrap();
+
+                            body.add_element_ptr(modal_box);
+                            body.add_element_ptr(script);
+
+                            let result = hxml::dom::get_root().to_string();
+
+                            // HXML should handle this..!!
+                            let result = format!("<!DOCTYPE html>{}", result);
+
+                            match write_to_file(&dest, result.as_bytes()) {
+                                Ok(_) => {
+                                    logs.push(Log::new(file, &dest, None));
+                                },
+                                Err(error) => {
+                                    return Err(Error::PathError(format!("error at `render_directory({:?}, {:?}, ...)`\n`write_to_file({:?})` failed", dir_from, ext_from, dest)));
+                                }
+                            }
+
+                        },
+                        Err(errors) => {
+                            return Err(Error::RenderError(EngineType::XML, format!("{:?} is not a valid xml!\nerrors: {:?}", file, errors)));
                         }
                     },
                     _ => {
