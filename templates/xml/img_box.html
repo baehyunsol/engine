@@ -2,3 +2,18 @@
     <div id="close-button">Click the image to close.</div>
     <img id="modal-img" onclick="close_modal_img();"/>
 </div>
+<script>
+    /*<![CDATA[*/
+    var modal_box = document.getElementById("modal-box");
+    var modal_img = document.getElementById("modal-img");
+
+    function open_modal_img(src) {
+        modal_img.src = src;
+        modal_box.style.display = "block";
+    }
+
+    function close_modal_img() {
+        modal_box.style.display = "none";
+    }
+    /*]]>*/
+</script>

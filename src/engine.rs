@@ -215,13 +215,6 @@ pub fn render_directory(
                 }
             };
 
-            let image_script = match read_string("./templates/xml/img_script.html") {
-                Ok(s) => s,
-                _ => {
-                    return Err(Error::PathError(format!("error at `render_directory({:?}, {:?}, ...)`\n`read_string('./templates/xml/img_script.html')` failed", dir_from, ext_from)));
-                }
-            };
-
             for file in files.iter() {
                 let dest = get_dest_path(&file, dir_to, ext_to)?;
 
@@ -243,24 +236,16 @@ pub fn render_directory(
                     
                                 }
 
+                                let mut head = hxml::dom::get_elements_by_tag_name(None, "head".to_string())[0];
+                                head.add_element_ptr(hxml::Element::from_string("<link href=\"image.css\" rel=\"stylesheet\"/>".to_string()).unwrap());
+
+                                let mut body = hxml::dom::get_elements_by_tag_name(None, "body".to_string())[0];
+                                let modal_box = hxml::Content::from_string(image_box.clone()).unwrap();
+
+                                body.add_contents(modal_box);
                             }
 
-                            let mut head = &mut hxml::dom::get_elements_by_tag_name(None, "head".to_string())[0];
-                            head.add_element_ptr(hxml::Element::from_string("<link href=\"image.css\" rel=\"stylesheet\"/>".to_string()).unwrap());
-
-                            let mut body = &mut hxml::dom::get_elements_by_tag_name(None, "body".to_string())[0];
-                            let modal_box = hxml::Element::from_string(image_box.clone()).unwrap();
-                            let script = hxml::Element::from_string(image_script.clone()).unwrap();
-
-                            body.add_element_ptr(modal_box);
-                            body.add_element_ptr(script);
-
-                            let result = hxml::dom::get_root().to_string();
-
-                            // HXML should handle this..!!
-                            let result = format!("<!DOCTYPE html>{}", result);
-
-                            match write_to_file(&dest, result.as_bytes()) {
+                            match write_to_file(&dest, hxml::dom::to_string().as_bytes()) {
                                 Ok(_) => {
                                     logs.push(Log::new(file, &dest, None));
                                 },
