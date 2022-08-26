@@ -9,6 +9,8 @@
 
 ### August 2022
 
+- [[giant]] [MDxt-Character-Reference](MDxt-Character-Reference.html) [[/giant]] [[blank=3]]- 26.August.2022
+  - There's no preview for this article.
 - [[giant]] [MDxt-Reference](MDxt-Reference.html) [[/giant]] [[blank=3]]- 23.August.2022
   - MDxt Reference
 - [[giant]] [Github-Stars-Comparison](Github-Stars-Comparison.html) [[/giant]] [[blank=3]]- 15.August.2022
@@ -20,7 +22,5 @@
 
 ### July 2022
 
-- [[giant]] [MDxt-Character-Reference](MDxt-Character-Reference.html) [[/giant]] [[blank=3]]- 27.July.2022
-  - There's no preview for this article.
 - [[giant]] [Search-Engine-Comparison](Search-Engine-Comparison.html) [[/giant]] [[blank=3]]- 20.July.2022
   - Search Engines
