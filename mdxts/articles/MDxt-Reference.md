@@ -317,6 +317,8 @@ This text is centered.
 
 `[[highlight = red]] This text is highlighted! [[/highlight]]` is rendered to `<span class="highlight-red"> This text is highlighted! </span>`. The same rule is applied to the other colors.
 
+[[highlight = red]] This text is highlighted! [[/highlight]]
+
 To see available colors, read the [Colors](#colors) section.
 
 ### Box

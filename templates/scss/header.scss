@@ -6,29 +6,29 @@ html {
 }
 
 header {
-    background-color: $black;
+    background-color: var(--black);
     position: fixed;
     z-index: 1;
     left: 0;
     top: 0;
     width: 100%;
-    border-bottom: $border-medium solid $white;
+    border-bottom: $border-medium solid var(--white);
 
     p {
         margin: $padding-big;
     }
 
     a {
-        border-bottom: $border-big solid $black;
+        border-bottom: $border-big solid var(--black);
         text-decoration: none;
-        color: $white;
+        color: var(--white);
         font-size: $font-big;
         margin-right: $padding-giant;
         transition: border 0.5s ease-out;
     }
 
     a:hover {
-        border-bottom: $border-big solid $white;
+        border-bottom: $border-big solid var(--white);
         transition: border 0.5s ease-out;
     }
 

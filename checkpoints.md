@@ -15,7 +15,8 @@
 | HTML entities (`[[char]]`)                      | O  [^A]  | O  [^A]   | O  [^A] | ?          |
 | MathML (without MathJax)                        | O  [^B]  | X  [^B]   | X  [^B] | ?          |
 | Click to zoom images                            | O  [^C]  | O  [^C]   | O  [^C] | ?          |
+| Background blur (css `backdrop-filter`)         | O  [^C]  | O  [^C]   | X  [^C] | ?          |
 
 [^A]: 2022/07/21
 [^B]: 2022/08/02
-[^C]: 2022/08/23
+[^C]: 2022/08/28

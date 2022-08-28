@@ -1,0 +1,38 @@
+var root_doc = document.querySelector(":root");
+var is_dark = true;
+
+function change_theme() {
+
+    if (is_dark) {
+        to_light();
+        color_button.innerHTML = "&#9729";
+    }
+
+    else {
+        to_dark();
+        color_button.innerHTML = "&#9728";
+    }
+
+    is_dark = !is_dark;
+}
+
+function to_dark() {
+    {% for color in colors %}
+    root_doc.style.setProperty("--{{color}}", "{{hex[loop.index0]}}");
+    root_doc.style.setProperty("--{{color}}-compl", "{{compl_hex[loop.index0]}}");
+    root_doc.style.setProperty("--{{color}}-trans", "{{hex[loop.index0]}}80");
+    root_doc.style.setProperty("--{{color}}-compl-trans", "{{compl_hex[loop.index0]}}80");
+    {% endfor %}
+}
+
+function to_light() {
+    {% for color in colors %}
+    root_doc.style.setProperty("--{{color}}", "{{compl_hex[loop.index0]}}");
+    root_doc.style.setProperty("--{{color}}-compl", "{{hex[loop.index0]}}");
+    root_doc.style.setProperty("--{{color}}-trans", "{{compl_hex[loop.index0]}}80");
+    root_doc.style.setProperty("--{{color}}-compl-trans", "{{hex[loop.index0]}}80");
+    {% endfor %}
+}
+
+var color_button = document.querySelector("#toggletheme");
+color_button.addEventListener("click", change_theme);

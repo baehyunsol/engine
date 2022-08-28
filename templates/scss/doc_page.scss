@@ -2,9 +2,25 @@
 @import "units";
 
 html {
-    background-color: $dark;
+    scroll-behavior: smooth;
 }
 
 body {
     padding: $padding-medium;
+    background-color: var(--dark);
+    transition: background-color 0.5s ease-out;
+}
+
+@media print {
+    body {
+        padding-left: $padding-giant * 3;
+        padding-right: $padding-giant * 3;
+
+        .markdown {
+            pre {
+                overflow: none;
+            }
+        }
+
+    }
 }

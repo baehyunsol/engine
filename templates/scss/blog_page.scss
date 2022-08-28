@@ -3,7 +3,11 @@
 
 html {
     scroll-behavior: smooth;
-    background-color: $dark;
+}
+
+body {
+    background-color: var(--dark);
+    transition: background-color 0.5s ease-out;
 }
 
 @media screen and (orientation: landscape) {

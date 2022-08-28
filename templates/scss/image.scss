@@ -17,7 +17,8 @@ img {
     height: 100%;
 
     overflow: auto;
-    background-color: $black_trans;
+    background-color: #0000;
+    backdrop-filter: blur(5px);
 }
 
 #modal-img {
@@ -29,9 +30,9 @@ img {
 
 #close-button {
     font-size: $font-big;
-    color: $white;
+    color: var(--white);
     text-align: center;
-    background-color: $black;
+    background-color: var(--black);
 
     width: 60%;
     margin-left: 20%;

@@ -14,10 +14,10 @@ use log::Log;
 use std::collections::HashMap;
 
 fn main() {
-    render(false, true)
+    render(false, true, false)
 }
 
-fn render(only_docs: bool, first_time: bool) {
+fn render(only_docs: bool, first_time: bool, light_theme: bool) {
 
     remove_results();
 
@@ -29,7 +29,7 @@ fn render(only_docs: bool, first_time: bool) {
             "./templates/articles", "tera",
             EngineType::Tera,
             "./mdxts/articles", "md",
-            &Some(meta_article_context(&articles, &tags_graph)),
+            Some(&meta_article_context(&articles, &tags_graph)),
             &None,
             true
         ).unwrap();
@@ -39,10 +39,10 @@ fn render(only_docs: bool, first_time: bool) {
 
     render_articles_mdxt(only_docs);
     render_articles_html(only_docs);
-    render_styles();
+    render_styles(light_theme);
 
     if first_time && !only_docs {
-        render(only_docs, !first_time);
+        render(only_docs, !first_time, light_theme);
     }
 
     else {
@@ -53,17 +53,23 @@ fn render(only_docs: bool, first_time: bool) {
 
 use mdxt::COLORS;
 
-fn get_colors() -> tera::Context {
+fn get_colors(light_theme: bool) -> tera::Context {
 
     let mut context = tera::Context::new();
 
-    let color_names = COLORS.iter().map(|color| color.name.clone()).collect::<Vec<String>>();
+    let colors = if light_theme {
+        COLORS.iter().map(|c| c.complement()).collect()
+    } else {
+        COLORS.clone()
+    };
+
+    let color_names = colors.iter().map(|color| color.name.clone()).collect::<Vec<String>>();
     context.insert("colors", &color_names);
 
-    let hex = COLORS.iter().map(|color| color.to_hex()).collect::<Vec<String>>();
+    let hex = colors.iter().map(|color| color.to_hex()).collect::<Vec<String>>();
     context.insert("hex", &hex);
 
-    let compl_hex = COLORS.iter().map(|color| color.complement().to_hex()).collect::<Vec<String>>();
+    let compl_hex = colors.iter().map(|color| color.complement().to_hex()).collect::<Vec<String>>();
     context.insert("compl_hex", &compl_hex);
 
     context
@@ -87,7 +93,7 @@ fn render_articles_mdxt(only_docs: bool) {
         "./mdxts", "md",
         EngineType::MDxt,
         "./htmls", "html",
-        &None,
+        None,
         &None,
         true
     ).unwrap();
@@ -120,7 +126,7 @@ fn render_articles_html(only_docs: bool) {
         "./templates/pages", "md",
         EngineType::MDxt,
         "./templates/pages", "html",
-        &None,
+        None,
         &None,
         true
     ).unwrap();
@@ -139,7 +145,7 @@ fn render_articles_html(only_docs: bool) {
             "./output/htmls/articles", "html",
             EngineType::XML,
             "./output/htmls/articles", "html",
-            &None,
+            None,
             &None,
             true
         ).unwrap();
@@ -158,21 +164,40 @@ fn render_articles_html(only_docs: bool) {
         "./output/htmls/documents", "html",
         EngineType::XML,
         "./output/htmls/documents", "html",
-        &None,
+        None,
         &None,
         true
     ).unwrap();
 }
 
-fn render_styles() {
+fn render_styles(light_theme: bool) {
 
-    let color_context = get_colors();
+    let color_context = get_colors(light_theme);
+
+    // Render Javascripts
+
+    render_directory(
+        "./templates/js", "tera",
+        EngineType::Tera,
+        "./templates/js", "js",
+        Some(&color_context),
+        &None,
+        false
+    ).unwrap();
+
+    copy_all(
+        "./templates/js", "js",
+        "./output/scripts", "js",
+        true
+    ).unwrap();
+
+    // Render SCSS files
 
     render_directory(
         "./templates/scss", "tera",
         EngineType::Tera,
         "./output/styles", "scss",
-        &Some(color_context),
+        Some(&color_context),
         &None,
         false
     ).unwrap();
@@ -187,7 +212,7 @@ fn render_styles() {
         "./output/styles", "scss",
         EngineType::Scss,
         "./output/styles", "css",
-        &None,
+        None,
         &None,
         false
     ).unwrap();
@@ -196,6 +221,11 @@ fn render_styles() {
         copy_all(
             "./output/styles", "css",
             &sub_dir, "css",
+            true
+        ).unwrap();
+        copy_all(
+            "./output/scripts", "js",
+            &sub_dir, "js",
             true
         ).unwrap();
     }
@@ -298,8 +328,10 @@ fn article_context() -> tera::Context {
 fn document_context() -> tera::Context {
 
     let mut context = tera::Context::new();
+    let nav = read_string("./templates/pages/nav.html").unwrap();
 
-    context.insert("csses", &vec!["markdown.css", "doc_page.css"]);
+    context.insert("nav", &nav);
+    context.insert("csses", &vec!["markdown.css", "doc_page.css", "nav.css"]);
 
     context
 }

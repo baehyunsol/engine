@@ -1,6 +1,21 @@
+/*
+The default theme is dark.
+SCSS variables (`$black`) are not affected by scripts. (Inside code blocks, ...)
+CSS variables (`var(--black)`) are affected by scripts. (Everywhere else.)
+*/
+
 {% for color in colors%}
 ${{color}}: {{hex[loop.index0]}};
-${{color}}_compl: {{compl_hex[loop.index0]}};
-${{color}}_trans: {{hex[loop.index0]}}80;
-${{color}}_compl_trans: {{compl_hex[loop.index0]}}80;
+${{color}}-compl: {{compl_hex[loop.index0]}};
+${{color}}-trans: {{hex[loop.index0]}}80;
+${{color}}-compl-trans: {{compl_hex[loop.index0]}}80;
 {% endfor %}
+
+:root {
+    {% for color in colors %}
+    --{{color}}: {{hex[loop.index0]}};
+    --{{color}}-compl: {{compl_hex[loop.index0]}};
+    --{{color}}-trans: {{hex[loop.index0]}}80;
+    --{{color}}-compl-trans: {{compl_hex[loop.index0]}}80;
+    {% endfor %}
+}

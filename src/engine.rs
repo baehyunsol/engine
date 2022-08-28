@@ -20,7 +20,7 @@ pub fn render_directory(
     dir_from: &str, ext_from: &str,
     engine: EngineType,
     dir_to: &str, ext_to: &str,
-    tera_context: &Option<Context>,
+    tera_context: Option<&Context>,
     mdxt_option: &Option<RenderOption>,
     recursive: bool
 ) -> Result<Vec<Log>, Error> {
