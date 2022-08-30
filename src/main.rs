@@ -40,7 +40,7 @@ fn render(only_docs: bool, first_time: bool) {
 
     let articles_metadata = render_articles_mdxt(only_docs);
     render_articles_html(only_docs, articles_metadata);
-    render_styles();
+    render_styles_and_scripts();
 
     if first_time && !only_docs {
         render(only_docs, !first_time);
@@ -174,7 +174,7 @@ fn render_articles_html(only_docs: bool, articles_metadata: HashMap<String, Yaml
     ).unwrap();
 }
 
-fn render_styles() {
+fn render_styles_and_scripts() {
 
     let color_context = get_colors();
 
@@ -188,6 +188,11 @@ fn render_styles() {
         None,
         None,
         false
+    ).unwrap();
+
+    write_to_file(
+        "./templates/js/collapsible_tables.js",
+        mdxt::collapsible_table_javascript().as_bytes()
     ).unwrap();
 
     copy_all(

@@ -211,6 +211,8 @@ pub fn render_directory(
 
         }
 
+        // 1. make images clickable
+        // 2. add javascript for collapsible tables
         EngineType::XML => {
             let image_box = match read_string("./templates/xml/img_box.html") {
                 Ok(s) => s,
@@ -248,10 +250,20 @@ pub fn render_directory(
 
                                 }
 
-                                let mut head = hxml::dom::get_elements_by_tag_name(None, "head".to_string())[0];
+                                let mut head = match hxml::dom::get_element_by_tag_name(None, "head".to_string()) {
+                                    Some(head) => head,
+                                    None => {
+                                        return Err(Error::RenderError(EngineType::XML, format!("error at `render_directory({:?}, {:?}, ...)`\n`{}` doesn't have a `<head>` tag!", dir_from, ext_from, article_title)));
+                                    }
+                                };
                                 head.add_element_ptr(hxml::Element::from_string("<link href=\"image.css\" rel=\"stylesheet\"/>".to_string()).unwrap());
 
-                                let mut body = hxml::dom::get_elements_by_tag_name(None, "body".to_string())[0];
+                                let mut body = match hxml::dom::get_element_by_tag_name(None, "body".to_string()){
+                                    Some(head) => head,
+                                    None => {
+                                        return Err(Error::RenderError(EngineType::XML, format!("error at `render_directory({:?}, {:?}, ...)`\n`{}` doesn't have a `<body>` tag!", dir_from, ext_from, article_title)));
+                                    }
+                                };
                                 let modal_box = hxml::Content::from_string(image_box.clone()).unwrap();
 
                                 body.add_contents(modal_box);
@@ -261,8 +273,14 @@ pub fn render_directory(
                             match articles_metadata.get(&article_title) {
                                 Some(metadata) => match yaml_hash::get(metadata, &Yaml::from_str("has_collapsible_table")) {
                                     Some(d) => {
+                                        // if the article has collapsible tables
                                         if d.as_bool().is_some() && d.as_bool().unwrap() {
-                                            let mut body = hxml::dom::get_elements_by_tag_name(None, "body".to_string())[0];
+                                            let mut body = match hxml::dom::get_element_by_tag_name(None, "body".to_string()){
+                                                Some(head) => head,
+                                                None => {
+                                                    return Err(Error::RenderError(EngineType::XML, format!("error at `render_directory({:?}, {:?}, ...)`\n`{}` doesn't have a `<body>` tag!", dir_from, ext_from, article_title)));
+                                                }
+                                            };
                                             body.add_element_ptr(hxml::Element::from_string("<script src=\"collapsible_tables.js\"></script>".to_string()).unwrap());
                                         }
                                     },
