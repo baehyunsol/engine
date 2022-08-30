@@ -1,11 +1,12 @@
-use tera::{Context, Tera};
-use mdxt::{render_to_html, RenderOption, RenderResult};
-use yaml_rust::Yaml;
-use crate::file_io::*;
 use crate::error::Error;
+use crate::file_io::*;
 use crate::log::Log;
-use crate::yaml_hash;
 use crate::MONTHS;
+use crate::yaml_hash;
+use mdxt::{render_to_html, RenderOption, RenderResult};
+use std::collections::HashMap;
+use tera::{Context, Tera};
+use yaml_rust::Yaml;
 
 #[derive(Copy, Clone, Debug)]
 pub enum EngineType {
@@ -21,7 +22,8 @@ pub fn render_directory(
     engine: EngineType,
     dir_to: &str, ext_to: &str,
     tera_context: Option<&Context>,
-    mdxt_option: &Option<RenderOption>,
+    mdxt_option: Option<&RenderOption>,
+    articles_metadata: Option<&HashMap<String, Yaml>>,
     recursive: bool
 ) -> Result<Vec<Log>, Error> {
 
@@ -61,6 +63,7 @@ pub fn render_directory(
                 engine,
                 &new_dir_to, ext_to,
                 tera_context, mdxt_option,
+                articles_metadata,
                 recursive
             ) {
                 Ok(logs) => { recursive_logs.push(logs); }
@@ -153,6 +156,7 @@ pub fn render_directory(
                 None => RenderOption::default()
             };
             options.xml = true;
+            options.embed_js_for_collapsible_tables(false);
 
             let mut article_info = Tera::default();
 
@@ -214,26 +218,34 @@ pub fn render_directory(
                     return Err(Error::PathError(format!("error at `render_directory({:?}, {:?}, ...)`\n`read_string('./templates/xml/img_box.html')` failed", dir_from, ext_from)));
                 }
             };
+            let articles_metadata = match articles_metadata {
+                Some(a) => a,
+                None => {
+                    return Err(Error::RenderError(EngineType::XML, format!("error at `render_directory({:?}, {:?}, ...)`\n`articles_metadata` is necessary, but not given!", dir_from, ext_from)))
+                }
+            };
 
             for file in files.iter() {
                 let dest = get_dest_path(&file, dir_to, ext_to)?;
+                let article_title = file_name(&file).unwrap();
 
                 match read_string(file) {
                     Ok(html) => match hxml::into_dom(html) {
                         Ok(_) => {
+                            /* Clickable image */
                             let mut images = hxml::dom::get_elements_by_tag_name(None, "img".to_string());
 
                             if images.len() > 0 {
 
                                 for img in images.iter_mut() {
-                    
+
                                     match img.get_attribute("src".to_string()) {
                                         Some(src) => {
                                             img.set_attribute("onclick".to_string(), format!("open_modal_img('{}');", src));
                                         },
                                         _ => {}
                                     }
-                    
+
                                 }
 
                                 let mut head = hxml::dom::get_elements_by_tag_name(None, "head".to_string())[0];
@@ -243,6 +255,22 @@ pub fn render_directory(
                                 let modal_box = hxml::Content::from_string(image_box.clone()).unwrap();
 
                                 body.add_contents(modal_box);
+                            }
+
+                            /* collapsible_tables.js */
+                            match articles_metadata.get(&article_title) {
+                                Some(metadata) => match yaml_hash::get(metadata, &Yaml::from_str("has_collapsible_table")) {
+                                    Some(d) => {
+                                        if d.as_bool().is_some() && d.as_bool().unwrap() {
+                                            let mut body = hxml::dom::get_elements_by_tag_name(None, "body".to_string())[0];
+                                            body.add_element_ptr(hxml::Element::from_string("<script src=\"collapsible_tables.js\"></script>".to_string()).unwrap());
+                                        }
+                                    },
+                                    None => {}
+                                },
+                                None => {
+                                    return Err(Error::RenderError(EngineType::XML, format!("error at `render_directory({:?}, {:?}, ...)`\n`articles_metadata` doesn't have metadata of `{}`!", dir_from, ext_from, article_title)));
+                                }
                             }
 
                             match write_to_file(&dest, hxml::dom::to_string().as_bytes()) {

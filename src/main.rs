@@ -14,10 +14,10 @@ use log::Log;
 use std::collections::HashMap;
 
 fn main() {
-    render(false, true, false)
+    render(false, true)
 }
 
-fn render(only_docs: bool, first_time: bool, light_theme: bool) {
+fn render(only_docs: bool, first_time: bool) {
 
     remove_results();
 
@@ -30,19 +30,20 @@ fn render(only_docs: bool, first_time: bool, light_theme: bool) {
             EngineType::Tera,
             "./mdxts/articles", "md",
             Some(&meta_article_context(&articles, &tags_graph)),
-            &None,
+            None,
+            None,
             true
         ).unwrap();
 
         render_tag_pages(&articles, &tags_graph);
     }
 
-    render_articles_mdxt(only_docs);
-    render_articles_html(only_docs);
-    render_styles(light_theme);
+    let articles_metadata = render_articles_mdxt(only_docs);
+    render_articles_html(only_docs, articles_metadata);
+    render_styles();
 
     if first_time && !only_docs {
-        render(only_docs, !first_time, light_theme);
+        render(only_docs, !first_time);
     }
 
     else {
@@ -53,29 +54,23 @@ fn render(only_docs: bool, first_time: bool, light_theme: bool) {
 
 use mdxt::COLORS;
 
-fn get_colors(light_theme: bool) -> tera::Context {
+fn get_colors() -> tera::Context {
 
     let mut context = tera::Context::new();
 
-    let colors = if light_theme {
-        COLORS.iter().map(|c| c.complement()).collect()
-    } else {
-        COLORS.clone()
-    };
-
-    let color_names = colors.iter().map(|color| color.name.clone()).collect::<Vec<String>>();
+    let color_names = COLORS.iter().map(|color| color.name.clone()).collect::<Vec<String>>();
     context.insert("colors", &color_names);
 
-    let hex = colors.iter().map(|color| color.to_hex()).collect::<Vec<String>>();
+    let hex = COLORS.iter().map(|color| color.to_hex()).collect::<Vec<String>>();
     context.insert("hex", &hex);
 
-    let compl_hex = colors.iter().map(|color| color.complement().to_hex()).collect::<Vec<String>>();
+    let compl_hex = COLORS.iter().map(|color| color.complement().to_hex()).collect::<Vec<String>>();
     context.insert("compl_hex", &compl_hex);
 
     context
 }
 
-fn render_articles_mdxt(only_docs: bool) {
+fn render_articles_mdxt(only_docs: bool) -> HashMap<String, Yaml> {
 
     copy_all(
         "./mdxts", "jpg",
@@ -94,7 +89,8 @@ fn render_articles_mdxt(only_docs: bool) {
         EngineType::MDxt,
         "./htmls", "html",
         None,
-        &None,
+        None,
+        None,
         true
     ).unwrap();
 
@@ -106,28 +102,34 @@ fn render_articles_mdxt(only_docs: bool) {
         );
 
         let mut logs_hash = yaml_hash::new();
+        let mut articles_metadata = HashMap::with_capacity(mdxts_logs.len());
 
         for Log { file_from, file_to, metadata } in mdxts_logs.into_iter() {
-            logs_hash = yaml_hash::insert(logs_hash, Yaml::from_str(&file_from), metadata);
+            logs_hash = yaml_hash::insert(logs_hash, Yaml::from_str(&file_from), metadata.clone());
+            articles_metadata.insert(file_name(&file_from).unwrap(), metadata);
         }
 
         let mut yaml_hash_string = String::new();
         let mut emitter = YamlEmitter::new(&mut yaml_hash_string);
         emitter.dump(&logs_hash).unwrap();
 
-        write_to_file("./output/articles.txt", yaml_hash_string.as_bytes());
+        write_to_file("./output/articles.txt", yaml_hash_string.as_bytes()).unwrap();
+
+        return articles_metadata;
     }
 
+    HashMap::new()
 }
 
-fn render_articles_html(only_docs: bool) {
+fn render_articles_html(only_docs: bool, articles_metadata: HashMap<String, Yaml>) {
 
     render_directory(
         "./templates/pages", "md",
         EngineType::MDxt,
         "./templates/pages", "html",
         None,
-        &None,
+        None,
+        None,
         true
     ).unwrap();
 
@@ -146,7 +148,8 @@ fn render_articles_html(only_docs: bool) {
             EngineType::XML,
             "./output/htmls/articles", "html",
             None,
-            &None,
+            None,
+            Some(&articles_metadata),
             true
         ).unwrap();
     }
@@ -165,14 +168,15 @@ fn render_articles_html(only_docs: bool) {
         EngineType::XML,
         "./output/htmls/documents", "html",
         None,
-        &None,
+        None,
+        Some(&articles_metadata),
         true
     ).unwrap();
 }
 
-fn render_styles(light_theme: bool) {
+fn render_styles() {
 
-    let color_context = get_colors(light_theme);
+    let color_context = get_colors();
 
     // Render Javascripts
 
@@ -181,7 +185,8 @@ fn render_styles(light_theme: bool) {
         EngineType::Tera,
         "./templates/js", "js",
         Some(&color_context),
-        &None,
+        None,
+        None,
         false
     ).unwrap();
 
@@ -198,7 +203,8 @@ fn render_styles(light_theme: bool) {
         EngineType::Tera,
         "./output/styles", "scss",
         Some(&color_context),
-        &None,
+        None,
+        None,
         false
     ).unwrap();
 
@@ -213,7 +219,8 @@ fn render_styles(light_theme: bool) {
         EngineType::Scss,
         "./output/styles", "css",
         None,
-        &None,
+        None,
+        None,
         false
     ).unwrap();
 
