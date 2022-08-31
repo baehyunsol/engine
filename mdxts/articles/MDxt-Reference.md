@@ -170,8 +170,6 @@ which looks like
 
 ### Fenced Code Blocks
 
-Fenced code blocks are rendered to `<table>` tags in html. Be aware if you're writing custom css files for mdxt.
-
 ````
 ```rust, line_num, highlight(6, 17, 22)
 /*

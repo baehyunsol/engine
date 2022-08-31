@@ -1,20 +1,58 @@
-mod file_io;
+mod article;
 mod engine;
 mod error;
-mod log;
-mod yaml_hash;
-mod article;
+mod file_io;
 mod graph;
+mod log;
+mod xml;
+mod yaml_hash;
 
-use lazy_static::lazy_static;
-use yaml_rust::{Yaml, YamlEmitter, YamlLoader};
 use engine::*;
+use lazy_static::lazy_static;
 use file_io::*;
 use log::Log;
 use std::collections::HashMap;
+use yaml_rust::{
+    Yaml,
+    YamlEmitter,
+    YamlLoader,
+};
 
 fn main() {
-    render(false, true)
+    let mut only_docs = false;
+    let first_time = true;
+
+    let args = std::env::args().collect::<Vec<String>>();
+
+    if args.len() > 1 {
+
+        if args[1] == "--doc".to_string() || args[1] == "-d".to_string() {
+            only_docs = true;
+        }
+
+        else if args[1] == "--all".to_string() || args[1] == "-a".to_string() {
+            only_docs = false;
+        }
+
+        else if args[1] == "--clear".to_string() || args[1] == "-c".to_string() {
+            clean_up_results();
+            remove_results();
+            return;
+        }
+
+        else if args[1] == "--help".to_string() || args[1] == "-h".to_string(){
+            println!("Engine v 0.1.0 (c) Baehyunsol
+
+--all -a : render docs and articles
+--clear -c : clear results
+--doc -d : render only docs
+--help -h : help message");
+            return;
+        }
+
+    }
+
+    render(only_docs, first_time);
 }
 
 fn render(only_docs: bool, first_time: bool) {
@@ -35,7 +73,7 @@ fn render(only_docs: bool, first_time: bool) {
             true
         ).unwrap();
 
-        render_tag_pages(&articles, &tags_graph);
+        render_tag_pages(&tags_graph);
     }
 
     let articles_metadata = render_articles_mdxt(only_docs);
@@ -99,26 +137,24 @@ fn render_articles_mdxt(only_docs: bool) -> HashMap<String, Yaml> {
             "./htmls/tag_pages", "html",
             "./htmls/articles", "html",
             true
-        );
-
-        let mut logs_hash = yaml_hash::new();
-        let mut articles_metadata = HashMap::with_capacity(mdxts_logs.len());
-
-        for Log { file_from, file_to, metadata } in mdxts_logs.into_iter() {
-            logs_hash = yaml_hash::insert(logs_hash, Yaml::from_str(&file_from), metadata.clone());
-            articles_metadata.insert(file_name(&file_from).unwrap(), metadata);
-        }
-
-        let mut yaml_hash_string = String::new();
-        let mut emitter = YamlEmitter::new(&mut yaml_hash_string);
-        emitter.dump(&logs_hash).unwrap();
-
-        write_to_file("./output/articles.txt", yaml_hash_string.as_bytes()).unwrap();
-
-        return articles_metadata;
+        ).unwrap();
     }
 
-    HashMap::new()
+    let mut logs_hash = yaml_hash::new();
+    let mut articles_metadata = HashMap::with_capacity(mdxts_logs.len());
+
+    for Log { file_from, file_to, metadata } in mdxts_logs.into_iter() {
+        logs_hash = yaml_hash::insert(logs_hash, Yaml::from_str(&file_from), metadata.clone());
+        articles_metadata.insert(file_name(&file_from).unwrap(), metadata);
+    }
+
+    let mut yaml_hash_string = String::new();
+    let mut emitter = YamlEmitter::new(&mut yaml_hash_string);
+    emitter.dump(&logs_hash).unwrap();
+
+    write_to_file("./output/articles.txt", yaml_hash_string.as_bytes()).unwrap();
+
+    articles_metadata
 }
 
 fn render_articles_html(only_docs: bool, articles_metadata: HashMap<String, Yaml>) {
@@ -197,7 +233,7 @@ fn render_styles_and_scripts() {
 
     copy_all(
         "./templates/js", "js",
-        "./output/scripts", "js",
+        "./output/styles_and_scripts", "js",
         true
     ).unwrap();
 
@@ -206,7 +242,7 @@ fn render_styles_and_scripts() {
     render_directory(
         "./templates/scss", "tera",
         EngineType::Tera,
-        "./output/styles", "scss",
+        "./output/styles_and_scripts", "scss",
         Some(&color_context),
         None,
         None,
@@ -215,14 +251,14 @@ fn render_styles_and_scripts() {
 
     copy_all(
         "./templates/scss", "scss",
-        "./output/styles", "scss",
+        "./output/styles_and_scripts", "scss",
         true
     ).unwrap();
 
     render_directory(
-        "./output/styles", "scss",
+        "./output/styles_and_scripts", "scss",
         EngineType::Scss,
-        "./output/styles", "css",
+        "./output/styles_and_scripts", "css",
         None,
         None,
         None,
@@ -231,19 +267,19 @@ fn render_styles_and_scripts() {
 
     for sub_dir in get_sub_directories_recursive("./output") {
         copy_all(
-            "./output/styles", "css",
+            "./output/styles_and_scripts", "css",
             &sub_dir, "css",
             true
         ).unwrap();
         copy_all(
-            "./output/scripts", "js",
+            "./output/styles_and_scripts", "js",
             &sub_dir, "js",
             true
         ).unwrap();
     }
 }
 
-fn render_tag_pages(articles: &HashMap<String, article::Article>, tags_graph: &graph::Graph) {
+fn render_tag_pages(tags_graph: &graph::Graph) {
 
     let mut tera_instance = tera::Tera::default();
     tera_instance.add_template_file("./templates/pages/tag.tera", Some("tag_page")).unwrap();
@@ -348,13 +384,15 @@ fn document_context() -> tera::Context {
     context
 }
 
+// DO NOT unwrap these!!
 fn remove_results() {
     rmdir("./htmls");
     rmdir("./output/htmls");
-    rmdir("./output/styles");
+    rmdir("./output/styles_and_scripts");
     rmdir("./mdxts/tag_pages");
 }
 
+// DO NOT unwrap these!!
 fn clean_up_results() {
     rmdir("./htmls/tag_pages");
     rmdir("./mdxts/tag_pages");

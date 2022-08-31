@@ -2,6 +2,7 @@ use crate::error::Error;
 use crate::file_io::*;
 use crate::log::Log;
 use crate::MONTHS;
+use crate::xml;
 use crate::yaml_hash;
 use mdxt::{render_to_html, RenderOption, RenderResult};
 use std::collections::HashMap;
@@ -211,8 +212,6 @@ pub fn render_directory(
 
         }
 
-        // 1. make images clickable
-        // 2. add javascript for collapsible tables
         EngineType::XML => {
             let image_box = match read_string("./templates/xml/img_box.html") {
                 Ok(s) => s,
@@ -234,55 +233,14 @@ pub fn render_directory(
                 match read_string(file) {
                     Ok(html) => match hxml::into_dom(html) {
                         Ok(_) => {
-                            /* Clickable image */
-                            let mut images = hxml::dom::get_elements_by_tag_name(None, "img".to_string());
+                            xml::render_clickable_image(image_box.clone(), article_title.clone())?;
 
-                            if images.len() > 0 {
-
-                                for img in images.iter_mut() {
-
-                                    match img.get_attribute("src".to_string()) {
-                                        Some(src) => {
-                                            img.set_attribute("onclick".to_string(), format!("open_modal_img('{}');", src));
-                                        },
-                                        _ => {}
-                                    }
-
-                                }
-
-                                let mut head = match hxml::dom::get_element_by_tag_name(None, "head".to_string()) {
-                                    Some(head) => head,
-                                    None => {
-                                        return Err(Error::RenderError(EngineType::XML, format!("error at `render_directory({:?}, {:?}, ...)`\n`{}` doesn't have a `<head>` tag!", dir_from, ext_from, article_title)));
-                                    }
-                                };
-                                head.add_element_ptr(hxml::Element::from_string("<link href=\"image.css\" rel=\"stylesheet\"/>".to_string()).unwrap());
-
-                                let mut body = match hxml::dom::get_element_by_tag_name(None, "body".to_string()){
-                                    Some(head) => head,
-                                    None => {
-                                        return Err(Error::RenderError(EngineType::XML, format!("error at `render_directory({:?}, {:?}, ...)`\n`{}` doesn't have a `<body>` tag!", dir_from, ext_from, article_title)));
-                                    }
-                                };
-                                let modal_box = hxml::Content::from_string(image_box.clone()).unwrap();
-
-                                body.add_contents(modal_box);
-                            }
-
-                            /* collapsible_tables.js */
                             match articles_metadata.get(&article_title) {
                                 Some(metadata) => match yaml_hash::get(metadata, &Yaml::from_str("has_collapsible_table")) {
-                                    Some(d) => {
-                                        // if the article has collapsible tables
-                                        if d.as_bool().is_some() && d.as_bool().unwrap() {
-                                            let mut body = match hxml::dom::get_element_by_tag_name(None, "body".to_string()){
-                                                Some(head) => head,
-                                                None => {
-                                                    return Err(Error::RenderError(EngineType::XML, format!("error at `render_directory({:?}, {:?}, ...)`\n`{}` doesn't have a `<body>` tag!", dir_from, ext_from, article_title)));
-                                                }
-                                            };
-                                            body.add_element_ptr(hxml::Element::from_string("<script src=\"collapsible_tables.js\"></script>".to_string()).unwrap());
-                                        }
+                                    Some(has_collapsible_table) => {
+                                        if has_collapsible_table.as_bool().is_some()
+                                            && has_collapsible_table.as_bool().unwrap()
+                                        { xml::render_collapsible_tables(article_title.clone())?; }
                                     },
                                     None => {}
                                 },
@@ -295,7 +253,7 @@ pub fn render_directory(
                                 Ok(_) => {
                                     logs.push(Log::new(file, &dest, None));
                                 },
-                                Err(error) => {
+                                Err(_) => {
                                     return Err(Error::PathError(format!("error at `render_directory({:?}, {:?}, ...)`\n`write_to_file({:?})` failed", dir_from, ext_from, dest)));
                                 }
                             }
@@ -523,7 +481,7 @@ pub fn copy_all(
         }
     ).collect();
 
-    mkdir(dir_to);
+    mkdir(dir_to);  // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
 
     for file in files.iter() {
         let dest = get_dest_path(&file, dir_to, ext_to)?;

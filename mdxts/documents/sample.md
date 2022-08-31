@@ -30,3 +30,8 @@ fn qs(arr: &Vec<u32>) -> Vec<u32> {
     ].concat()
 }
 ```
+
+|a|v|
+|-|-|
+|!![[collapsible]]|
+|2|3asdf|
