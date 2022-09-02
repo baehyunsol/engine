@@ -18,26 +18,13 @@ nav {
     bottom: 5%;
     font-size: $font-giant;
 
-    button {
-        cursor: pointer;
-        background-color: #0000;
-        font-size: $font-giant;
-        border: none;
-        color: var(--white-trans);
-        transition: color 0.5s ease-out;
-    }
-
-    button:hover {
-        color: var(--white);
-        transition: color 0.5s ease-out;
-    }
-
     p {
         padding: 0;
         margin: 0;
     }
 
     a {
+        cursor: pointer;
         color: var(--white-trans);
         text-decoration: none;
         transition: color 0.5s ease-out;

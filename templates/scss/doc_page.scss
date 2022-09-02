@@ -6,7 +6,8 @@ html {
 }
 
 body {
-    padding: $padding-medium;
+    --body-padding: $padding-medium;
+    padding: var(--body-padding);
     background-color: var(--dark);
     transition: background-color 0.5s ease-out;
 }

@@ -73,7 +73,7 @@ body .markdown {
     div.box {
         width: 80%;
         padding: $padding-medium;
-        margin: $padding-medium;
+        margin: $margin-big $margin-medium;
         border: $border-medium solid var(--gray);
     }
 
@@ -199,6 +199,8 @@ body .markdown {
         width: 90%;
         overflow: auto;
         line-height: 1.0;
+        margin-top: $margin-big;
+        margin-bottom: $margin-big;
 
         /* Not affected by themes */
         code {
@@ -220,7 +222,7 @@ body .markdown {
             border-right: $border-medium solid $emerald;
             text-align: right;
             padding-right: $padding-medium;
-            margin-right: $padding-medium;
+            margin-right: $margin-medium;
             padding-top: $padding-tiny;
             padding-bottom: $padding-tiny;
         }
@@ -268,6 +270,8 @@ body .markdown {
         color: $white;
         font-size: $font-medium;
         padding: $padding-small;
+        margin-top: $margin-medium;
+        margin-left: $margin-medium;
         border-radius: $round-border-medium;
         cursor: pointer;
         transition: background-color 0.5s ease-out;
@@ -297,7 +301,7 @@ body .markdown {
 
     table {
         border-collapse: collapse;
-        margin: $padding-medium;
+        margin: $margin-big $margin-medium;
     }
 
     th {

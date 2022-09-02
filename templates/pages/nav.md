@@ -1,1 +1,1 @@
-[[button, id = toggle theme]][[char=9728]][[/button]][[[char=9650]]](#top)[[[char=9660]]](#bottom)
+[[anchor, id = toggle theme]][[char=9728]][[/anchor]][[[char=9650]]](#top)[[[char=9660]]](#bottom)
