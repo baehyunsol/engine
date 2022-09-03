@@ -368,7 +368,7 @@ fn article_context() -> tera::Context {
     context.insert("nav", &nav);
     context.insert("header", &header);
     context.insert("footer", &footer);
-    context.insert("csses", &vec!["markdown.css", "blog_page.css", "nav.css", "header.css"]);
+    context.insert("csses", &vec!["markdown.css", "page_common.css", "page_blog.css", "nav.css", "header.css"]);
 
     context
 }
@@ -379,7 +379,7 @@ fn document_context() -> tera::Context {
     let nav = read_string("./templates/pages/nav.html").unwrap();
 
     context.insert("nav", &nav);
-    context.insert("csses", &vec!["markdown.css", "doc_page.css", "nav.css"]);
+    context.insert("csses", &vec!["markdown.css", "page_common.css", "page_doc.css", "nav.css"]);
 
     context
 }

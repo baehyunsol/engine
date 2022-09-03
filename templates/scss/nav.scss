@@ -40,6 +40,34 @@ nav {
         background-color: #0000;
     }
 
+    div#settingsmenubg {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+      
+        display: none;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
+    }
+
+    div#settingsmenu {
+        background-color: var(--black);
+
+        a {
+            font-size: $font-medium;
+            display: block;
+            margin: $margin-medium;
+        }
+
+        a#settingsclosebutton {
+            background-color: var(--gray);
+        }
+
+    }
+
 }
 
 nav:hover {

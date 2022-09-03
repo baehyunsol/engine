@@ -1,0 +1,17 @@
+@import "colors";
+@import "units";
+
+body {
+    padding: $padding-medium;
+}
+
+@media print {
+    body {
+        .markdown {
+            pre {
+                overflow: none;
+            }
+        }
+
+    }
+}

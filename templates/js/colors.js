@@ -5,12 +5,12 @@ function change_theme() {
 
     if (is_dark) {
         to_light();
-        color_button.innerHTML = "&#9729";
+        change_theme_button.innerHTML = "Set Dark Theme";
     }
 
     else {
         to_dark();
-        color_button.innerHTML = "&#9728";
+        change_theme_button.innerHTML = "Set Light Theme";
     }
 
     is_dark = !is_dark;
@@ -164,5 +164,5 @@ function to_light() {
     
 }
 
-var color_button = document.querySelector("#toggletheme");
-color_button.addEventListener("click", change_theme);
+var change_theme_button = document.getElementById("changethemebutton");
+change_theme_button.addEventListener("click", change_theme);

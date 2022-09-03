@@ -16,7 +16,9 @@
 | MathML (without MathJax)                        | O  [^B]  | X  [^B]   | X  [^B] | ?          |
 | Click to zoom images                            | O  [^C]  | O  [^C]   | O  [^C] | ?          |
 | Background blur (css `backdrop-filter`)         | O  [^C]  | O  [^C]   | X  [^C] | ?          |
+| Change Theme (css `var`, `transition`)          | O  [^C]  | O  [^C]   | X  [^C] | ?          |
+| Settings menu alignment (css `flex`)            | O  [^C]  | O  [^C]   | O  [^C] | ?          |
 
 [^A]: 2022/07/21
 [^B]: 2022/08/02
-[^C]: 2022/08/28
+[^C]: 2022/09/03

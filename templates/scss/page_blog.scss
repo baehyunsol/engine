@@ -1,26 +1,19 @@
 @import "colors";
 @import "units";
 
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    background-color: var(--dark);
-    transition: background-color 0.5s ease-out;
-}
-
 @media screen and (orientation: landscape) {
     article {
         margin-left: 8%;
-        width: 84%;
+        margin-right: 8%;
+        max-width: 84%;
     }
 }
 
 @media screen and (orientation: portrait) {
     article {
         margin-left: 5%;
-        width: 90%;
+        margin-right: 5%;
+        max-width: 90%;
     }
 }
 
