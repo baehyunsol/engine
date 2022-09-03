@@ -16,18 +16,32 @@ body .markdown {
     transition: color 0.5s ease-out;
     transition: background-color 0.5s ease-out;
 
+    p {
+        margin-top: $margin-big;
+    }
+
     ::selection {
         background-color: var(--dark-compl);
         color: var(--white-compl);
     }
 
+    img {
+        max-width: $image-medium;
+        max-height: $image-medium;
+    }
+
+}
+
+/* Footnotes */
+.markdown {
+
     hr.footnote-hr {
         margin-top: $h1-margin;
     }
 
-    img {
-        max-width: $image-medium;
-        max-height: $image-medium;
+    div.footnote-cite {
+        margin-top: $margin-medium;
+        margin-bottom: $margin-medium;
     }
 
 }
@@ -193,7 +207,7 @@ body .markdown {
     }
     {% endfor %}
 
-    pre {
+    pre.fenced-code-block {
         padding: $padding-medium;
         background-color: $black;
         width: 90%;
@@ -287,7 +301,7 @@ body .markdown {
 /* Code Spans */
 .markdown {
 
-    code.short {
+    code.inline-code-span {
         color: $gold;
         background-color: $black;
         border-radius: $round-border-tiny;
