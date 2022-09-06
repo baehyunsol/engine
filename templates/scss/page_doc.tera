@@ -1,0 +1,20 @@
+@import "colors";
+@import "units";
+
+article {
+    {% if doc_article_left_margin %}
+    margin-left: {{doc_article_left_margin}};
+    {% else %}
+    margin-left: 3%;
+    {% endif %}
+    {% if doc_article_right_margin %}
+    margin-right: {{doc_article_right_margin}};
+    {% else %}
+    margin-right: 3%;
+    {% endif %}
+    {% if doc_article_width %}
+    max-width: {{doc_article_width}};
+    {% else %}
+    max-width: 94%;
+    {% endif %}
+}

@@ -1,4 +1,5 @@
 mod article;
+mod config;
 mod engine;
 mod error;
 mod file_io;
@@ -7,6 +8,7 @@ mod log;
 mod xml;
 mod yaml_hash;
 
+use config::*;
 use engine::*;
 use lazy_static::lazy_static;
 use file_io::*;
@@ -55,11 +57,19 @@ fn main() {
     render(only_docs, first_time);
 }
 
+// affected by configs
 fn render(only_docs: bool, first_time: bool) {
 
     remove_results();
 
-    let articles = article::from_yaml((YamlLoader::load_from_str(&read_string("./output/articles.txt").unwrap()).unwrap())[0].clone());
+    let doc_configs = load_documents_config();
+    let article_configs = load_articles_config();
+
+    let articles = match read_string("./output/articles.yaml") {
+        Ok(data) => article::from_yaml(YamlLoader::load_from_str(&data).unwrap()[0].clone()),
+        Err(_) => article::from_yaml(YamlLoader::load_from_str("{}").unwrap()[0].clone())
+    };
+
     let tags_graph = article::get_tags(&articles);
 
     if !only_docs {
@@ -140,6 +150,11 @@ fn render_articles_mdxt(only_docs: bool) -> HashMap<String, Yaml> {
         ).unwrap();
     }
 
+    update_articles_metadata(mdxts_logs)
+}
+
+fn update_articles_metadata(mdxts_logs: Vec<Log>) -> HashMap<String, Yaml> {
+
     let mut logs_hash = yaml_hash::new();
     let mut articles_metadata = HashMap::with_capacity(mdxts_logs.len());
 
@@ -152,11 +167,12 @@ fn render_articles_mdxt(only_docs: bool) -> HashMap<String, Yaml> {
     let mut emitter = YamlEmitter::new(&mut yaml_hash_string);
     emitter.dump(&logs_hash).unwrap();
 
-    write_to_file("./output/articles.txt", yaml_hash_string.as_bytes()).unwrap();
+    write_to_file("./output/articles.yaml", yaml_hash_string.as_bytes()).unwrap();
 
     articles_metadata
 }
 
+// affected by configs
 fn render_articles_html(only_docs: bool, articles_metadata: HashMap<String, Yaml>) {
 
     render_directory(
@@ -210,6 +226,8 @@ fn render_articles_html(only_docs: bool, articles_metadata: HashMap<String, Yaml
     ).unwrap();
 }
 
+
+// affected by configs
 fn render_styles_and_scripts() {
 
     let color_context = get_colors();
@@ -283,6 +301,7 @@ fn render_tag_pages(tags_graph: &graph::Graph) {
 
     let mut tera_instance = tera::Tera::default();
     tera_instance.add_template_file("./templates/pages/tag.tera", Some("tag_page")).unwrap();
+    mkdir("./mdxts/tag_pages");
 
     for tag in tags_graph.iter() {
         let mut context = tera::Context::new();
@@ -302,7 +321,6 @@ fn render_tag_pages(tags_graph: &graph::Graph) {
 
         let rendered = tera_instance.render("tag_page", &context).unwrap();
         let save_to = join("./mdxts/tag_pages", &format!("tag-{}.md", tag)).unwrap();
-        mkdir("./mdxts/tag_pages");
         write_to_file(&save_to, rendered.as_bytes()).unwrap();
     }
 
@@ -358,6 +376,7 @@ fn meta_article_context(articles: &HashMap<String, article::Article>, tags_graph
     context
 }
 
+// affected by configs
 fn article_context() -> tera::Context {
 
     let mut context = tera::Context::new();
@@ -373,6 +392,7 @@ fn article_context() -> tera::Context {
     context
 }
 
+// affected by configs
 fn document_context() -> tera::Context {
 
     let mut context = tera::Context::new();

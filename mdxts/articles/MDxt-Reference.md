@@ -321,9 +321,9 @@ To see available colors, read the [Colors](#colors) section.
 
 ### Box
 
-`[[box]]A text in a box.[[/box]]` is rendered to `<div class="box">A text in a box.</div>`.
+`[[box]]A text in a box.[[/box]]` is rendered to `<span class="box">A text in a box.</span>`.
 
-`[[box, no border]]A text in a box.[[/box]]` is rendered to `<div class="box no-border">A text in a box.</div>`.
+`[[box, no border]]A text in a box.[[/box]]` is rendered to `<span class="box no-border">A text in a box.</span>`.
 
 ```
 [[box]]

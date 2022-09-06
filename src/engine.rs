@@ -283,6 +283,7 @@ Render the given template with the given context and the articles.
 The articles are inserted to the context with `article` keyword.
 The rendered results are written to `output_path`, with `output_ext`.
 */
+// This function is only used to render `./templates/pages/article.tera`
 pub fn render_templates(
     template_path: &str,  // file
     article_path: &str,   // path

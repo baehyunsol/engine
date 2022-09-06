@@ -84,6 +84,11 @@ body .markdown {
 /* Box */
 .markdown {
 
+    span.box {
+        padding: $padding-medium;
+        border: $border-medium solid var(--gray);
+    }
+
     div.box {
         width: 80%;
         padding: $padding-medium;
@@ -91,7 +96,7 @@ body .markdown {
         border: $border-medium solid var(--gray);
     }
 
-    div.box.no-border {
+    .box.no-border {
         border: none;
     }
 
@@ -306,6 +311,7 @@ body .markdown {
         background-color: $black;
         border-radius: $round-border-tiny;
         padding: $padding-tiny $padding-small $padding-tiny;
+        white-space: pre;
     }
 
 }

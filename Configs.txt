@@ -1,0 +1,17 @@
+doc_article_width: String                   // length (%, px, rem, ...)
+doc_article_left_margin: String             // length (%, px, rem, ...)
+doc_article_right_margin: String            // length (%, px, rem, ...)
+default_horiz_padding: String               // length (%, px, rem, ...)
+blog_article_width_pc: String               // length (%, px, rem, ...)
+blog_article_left_margin_pc: String         // length (%, px, rem, ...)
+blog_article_right_margin_pc: String        // length (%, px, rem, ...)
+blog_article_width_mobile: String           // length (%, px, rem, ...)
+blog_article_left_margin_mobile: String     // length (%, px, rem, ...)
+blog_article_right_margin_mobile: String    // length (%, px, rem, ...)
+
+doc_footer: Bool
+blog_footer: Bool
+doc_nav: Bool
+blog_nav: Bool
+doc_header: Bool
+blog_header: Bool

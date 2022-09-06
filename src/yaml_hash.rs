@@ -4,6 +4,10 @@ pub fn new() -> Yaml {
     Yaml::Hash(Hash::new())
 }
 
+pub fn is_hash(yaml: &Yaml) -> bool {
+    yaml.as_hash().is_some()
+}
+
 pub fn from_yaml(yaml: Yaml) -> Yaml {
     match yaml.as_hash() {
         None => new(),

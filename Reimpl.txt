@@ -1,0 +1,33 @@
+$$ = ["/articles/", "/documents/"]
+
+# styles
+engine: templates/scss/*.tera -> ./*.scss  # affected by configs
+engine: templates/*.scss -> outputs/htmls/$$/*.css
+
+# js
+engine: templates/js/*.tera -> outputs/htmls/$$/*.js  # affected by configs
+copy: templates/js/*.js -> outputs/htmls/$$/*.js
+
+# meta articles
+# must be followed by mdxt renderings
+engine: templates/articles/*.tera -> mdxts/articles/*.md  # requires articles.yaml
+
+# templates
+# must be followed by mdxt renderings
+engine: templates/pages/*.tera -> ./*.md  # affected by configs
+engine: templates/pages/*.md -> ./*.html
+
+# tag_pages
+# must be followed by mdxt renderings
+render_tag_pages  # requires articles.yaml
+
+# mdxts
+engine: mdxts/$$/*.md -> htmls/$$/*.html
+render_template: htmls/$$/*.html -> output/htmls/$$/*.html  # affected by configs
+
+# articles.yaml
+update_articles_metadata  # called when rendering mdxt files
+
+# xml
+# must be called after mdxt renderings are done
+engine: outputs/htmls/$$/*.html -> outputs/htmls/$$/*.html  # EngineType::XML will do.
