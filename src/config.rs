@@ -1,5 +1,6 @@
 use crate::file_io::*;
 use crate::yaml_hash;
+use tera::Context;
 use yaml_rust::{Yaml, YamlLoader};
 
 pub fn load_articles_config() -> Config {
@@ -19,7 +20,7 @@ pub fn load_articles_config() -> Config {
 }
 
 pub fn load_documents_config() -> Config {
-    let mut config = Config::default_article();
+    let mut config = Config::default_document();
 
     match read_string("./configs/documents.yaml") {
         Ok(y) => match YamlLoader::load_from_str(&y) {
@@ -35,9 +36,9 @@ pub fn load_documents_config() -> Config {
 }
 
 pub struct Config {
-    has_header: bool,
-    has_nav: bool,
-    has_footer: bool,
+    pub has_header: bool,
+    pub has_nav: bool,
+    pub has_footer: bool,
 
     article_width_landscape: String,
     article_top_margin_landscape: String,
@@ -54,6 +55,30 @@ pub struct Config {
 }
 
 impl Config {
+
+    pub fn to_tera_context(&self) -> Context {
+        let mut context = Context::new();
+
+        context.insert("has_header", &self.has_header);
+        context.insert("has_nav", &self.has_nav);
+        context.insert("has_footer", &self.has_footer);
+
+        context.insert("article_width_landscape", &self.article_width_landscape);
+        context.insert("article_top_margin_landscape", &self.article_top_margin_landscape);
+        context.insert("article_bottom_margin_landscape", &self.article_bottom_margin_landscape);
+        context.insert("article_left_margin_landscape", &self.article_left_margin_landscape);
+        context.insert("article_right_margin_landscape", &self.article_right_margin_landscape);
+
+        context.insert("article_width_portrait", &self.article_width_portrait);
+        context.insert("article_top_margin_portrait", &self.article_top_margin_portrait);
+        context.insert("article_bottom_margin_portrait", &self.article_bottom_margin_portrait);
+        context.insert("article_left_margin_portrait", &self.article_left_margin_portrait);
+        context.insert("article_right_margin_portrait", &self.article_right_margin_portrait);
+
+        context.insert("default_horiz_padding", &self.default_horiz_padding);
+
+        context
+    }
 
     fn merge_yaml(&mut self, yaml: Yaml) {
 
@@ -114,9 +139,9 @@ impl Config {
 
     fn default_document() -> Self {
         Config {
-            has_header: true,
+            has_header: false,
             has_nav: true,
-            has_footer: true,
+            has_footer: false,
             article_width_landscape: "94%".to_string(),
             article_top_margin_landscape: "0px".to_string(),
             article_bottom_margin_landscape: "0px".to_string(),

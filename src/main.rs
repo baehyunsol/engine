@@ -54,7 +54,308 @@ fn main() {
 
     }
 
-    render(only_docs, first_time);
+    //render(only_docs, first_time);
+    render2(only_docs);
+}
+
+fn render2(only_docs: bool) {
+
+    remove_results();
+
+    let doc_configs = load_documents_config();
+    let mut doc_configs_context = doc_configs.to_tera_context();
+    let color_context = get_colors();
+
+    doc_configs_context.extend(color_context);
+
+    // docs & articles, images
+
+    copy_all(
+        "./mdxts/documents", "jpg",
+        "./output/htmls/documents", "jpg",
+        true
+    ).unwrap();
+
+    if !only_docs {
+        copy_all(
+            "./mdxts/articles", "jpg",
+            "./output/htmls/articles", "jpg",
+            true
+        ).unwrap();
+    }
+
+    // docs & articles, mdxt
+
+    let mut mdxts_logs = render_directory(
+        "./mdxts/documents", "md",
+        EngineType::MDxt,
+        "./htmls/documents", "html",
+        None,
+        None,
+        None,
+        true
+    ).unwrap();
+
+    if !only_docs {
+        let mdxts_logs_articles = render_directory(
+            "./mdxts/articles", "md",
+            EngineType::MDxt,
+            "./htmls/articles", "html",
+            None,
+            None,
+            None,
+            true
+        ).unwrap();
+
+        mdxts_logs = vec![
+            mdxts_logs,
+            mdxts_logs_articles
+        ].concat();
+    }
+
+    let articles_metadata = update_articles_metadata(mdxts_logs, !only_docs);
+
+    // docs, styles
+
+    render_directory(
+        "./templates/scss", "tera",
+        EngineType::Tera,
+        "./output/htmls/documents", "scss",
+        Some(&doc_configs_context),
+        None,
+        None,
+        true
+    ).unwrap();
+
+    copy_all(
+        "./templates/scss", "scss",
+        "./output/htmls/documents", "scss",
+        true
+    ).unwrap();
+
+    render_directory(
+        "./output/htmls/documents", "scss",
+        EngineType::Scss,
+        "./output/htmls/documents", "css",
+        None,
+        None,
+        None,
+        true
+    ).unwrap();
+
+    // docs, js
+
+    render_directory(
+        "./templates/js", "tera",
+        EngineType::Tera,
+        "./output/htmls/documents", "js",
+        Some(&doc_configs_context),
+        None,
+        None,
+        true
+    ).unwrap();
+
+    copy_all(
+        "./templates/js", "js",
+        "./output/htmls/documents", "js",
+        true
+    ).unwrap();
+
+    // doc, page_templates
+
+    // not configurable yet
+    /*render_directory(
+        "./templates/pages", "tera",
+        EngineType::Tera,
+        "./templates/pages", "md",
+        Some(&doc_configs_context),
+        None,
+        None,
+        true
+    ).unwrap();*/
+
+    render_directory(
+        "./templates/pages", "md",
+        EngineType::MDxt,
+        "./templates/pages", "html",
+        None,
+        None,
+        None,
+        true
+    ).unwrap();
+
+    // docs, html_template
+
+    render_templates(
+        "./templates/pages/article.tera",
+        "./htmls/documents", "html",
+        "./output/htmls/documents", "html",
+        None,
+        Some(get_page_template_context(&doc_configs)),
+        true
+    ).unwrap();
+
+    // docs, xml
+
+    render_directory(
+        "./output/htmls/documents", "html",
+        EngineType::XML,
+        "./output/htmls/documents", "html",
+        None,
+        None,
+        Some(&articles_metadata),
+        true
+    ).unwrap();
+
+    // articles
+    if !only_docs {
+        let article_configs = load_articles_config();
+        let mut article_configs_context = article_configs.to_tera_context();
+        let color_context = get_colors();
+
+        article_configs_context.extend(color_context);
+
+        // articles, scss
+        render_directory(
+            "./templates/scss", "tera",
+            EngineType::Tera,
+            "./output/htmls/articles", "scss",
+            Some(&article_configs_context),
+            None,
+            None,
+            true
+        ).unwrap();
+
+        copy_all(
+            "./templates/scss", "scss",
+            "./output/htmls/articles", "scss",
+            true
+        ).unwrap();
+
+        render_directory(
+            "./output/htmls/articles", "scss",
+            EngineType::Scss,
+            "./output/htmls/articles", "css",
+            None,
+            None,
+            None,
+            true
+        ).unwrap();
+
+        // articles, js
+
+        render_directory(
+            "./templates/js", "tera",
+            EngineType::Tera,
+            "./output/htmls/articles", "js",
+            Some(&article_configs_context),
+            None,
+            None,
+            true
+        ).unwrap();
+
+        copy_all(
+            "./templates/js", "js",
+            "./output/htmls/articles", "js",
+            true
+        ).unwrap();
+
+        // articles, meta_articles
+
+        let articles = match read_string("./output/articles.yaml") {
+            Ok(data) => article::from_yaml(YamlLoader::load_from_str(&data).unwrap()[0].clone()),
+            Err(_) => article::from_yaml(YamlLoader::load_from_str("{}").unwrap()[0].clone())
+        };
+
+        let tags_graph = article::get_tags(&articles);
+
+        render_directory(
+            "./templates/articles", "tera",
+            EngineType::Tera,
+            "./mdxts/articles", "md",
+            Some(&meta_article_context(&articles, &tags_graph)),
+            None,
+            None,
+            true
+        ).unwrap();
+
+        render_tag_pages(&tags_graph);
+
+        // articles, page_templates
+
+        // not configurable yet
+        /*render_directory(
+            "./templates/pages", "tera",
+            EngineType::Tera,
+            "./templates/pages", "md",
+            Some(&article_configs_context),
+            None,
+            None,
+            true
+        ).unwrap();*/
+
+        // since it's not configurable yet, mdxt files don't have to be rendered twice
+        /*render_directory(
+            "./templates/pages", "md",
+            EngineType::MDxt,
+            "./templates/pages", "html",
+            None,
+            None,
+            None,
+            true
+        ).unwrap();*/
+
+        // articles, html_templates
+
+        render_templates(
+            "./templates/pages/article.tera",
+            "./htmls/articles", "html",
+            "./output/htmls/articles", "html",
+            None,
+            Some(get_page_template_context(&article_configs)),
+            true
+        ).unwrap();
+
+        render_directory(
+            "./output/htmls/articles", "html",
+            EngineType::XML,
+            "./output/htmls/articles", "html",
+            None,
+            None,
+            Some(&articles_metadata),
+            true
+        ).unwrap();
+    }
+
+}
+
+fn get_page_template_context(config: &Config) -> tera::Context {
+
+    let mut context = tera::Context::new();
+    let mut csses = vec!["page.css", "markdown.css"];
+
+    if config.has_nav {
+        let nav = read_string("./templates/pages/nav.html").unwrap();
+        context.insert("nav", &nav);
+        csses.push("nav.css");
+    }
+
+    if config.has_header {
+        let header = read_string("./templates/pages/header.html").unwrap();
+        context.insert("header", &header);
+        csses.push("header.css");
+    }
+
+    if config.has_footer {
+        let footer = read_string("./templates/pages/footer.html").unwrap();
+        context.insert("footer", &footer);
+        csses.push("footer.css");
+    }
+
+    context.insert("csses", &csses);
+
+    context
+
 }
 
 // affected by configs
@@ -150,24 +451,36 @@ fn render_articles_mdxt(only_docs: bool) -> HashMap<String, Yaml> {
         ).unwrap();
     }
 
-    update_articles_metadata(mdxts_logs)
+    update_articles_metadata(mdxts_logs, true)
 }
 
-fn update_articles_metadata(mdxts_logs: Vec<Log>) -> HashMap<String, Yaml> {
+fn update_articles_metadata(mdxts_logs: Vec<Log>, save_to_file: bool) -> HashMap<String, Yaml> {
 
-    let mut logs_hash = yaml_hash::new();
     let mut articles_metadata = HashMap::with_capacity(mdxts_logs.len());
 
-    for Log { file_from, file_to, metadata } in mdxts_logs.into_iter() {
-        logs_hash = yaml_hash::insert(logs_hash, Yaml::from_str(&file_from), metadata.clone());
-        articles_metadata.insert(file_name(&file_from).unwrap(), metadata);
+    if save_to_file {
+        let mut logs_hash = yaml_hash::new();
+
+        for Log { file_from, file_to, metadata } in mdxts_logs.into_iter() {
+            logs_hash = yaml_hash::insert(logs_hash, Yaml::from_str(&file_from), metadata.clone());
+            articles_metadata.insert(file_name(&file_from).unwrap(), metadata);
+        }
+
+        let mut yaml_hash_string = String::new();
+        let mut emitter = YamlEmitter::new(&mut yaml_hash_string);
+        emitter.dump(&logs_hash).unwrap();
+
+        write_to_file("./output/articles.yaml", yaml_hash_string.as_bytes()).unwrap();
+
     }
 
-    let mut yaml_hash_string = String::new();
-    let mut emitter = YamlEmitter::new(&mut yaml_hash_string);
-    emitter.dump(&logs_hash).unwrap();
+    else {
 
-    write_to_file("./output/articles.yaml", yaml_hash_string.as_bytes()).unwrap();
+        for Log { file_from, file_to, metadata } in mdxts_logs.into_iter() {
+            articles_metadata.insert(file_name(&file_from).unwrap(), metadata);
+        }
+    
+    }
 
     articles_metadata
 }

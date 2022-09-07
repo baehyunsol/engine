@@ -1,33 +1,36 @@
 $$ = ["/articles/", "/documents/"]
 
-# styles
-engine: templates/scss/*.tera -> ./*.scss  # affected by configs
-engine: templates/*.scss -> outputs/htmls/$$/*.css
-
-# js
-engine: templates/js/*.tera -> outputs/htmls/$$/*.js  # affected by configs
-copy: templates/js/*.js -> outputs/htmls/$$/*.js
-
-# meta articles
-# must be followed by mdxt renderings
-engine: templates/articles/*.tera -> mdxts/articles/*.md  # requires articles.yaml
-
-# templates
-# must be followed by mdxt renderings
-engine: templates/pages/*.tera -> ./*.md  # affected by configs
-engine: templates/pages/*.md -> ./*.html
-
-# tag_pages
-# must be followed by mdxt renderings
-render_tag_pages  # requires articles.yaml
-
 # mdxts
 engine: mdxts/$$/*.md -> htmls/$$/*.html
-render_template: htmls/$$/*.html -> output/htmls/$$/*.html  # affected by configs
 
 # articles.yaml
 update_articles_metadata  # called when rendering mdxt files
 
+# styles
+engine: templates/scss/*.tera -> output/htmls/$$/*.scss  # affected by configs
+copy: templates/scss/*.scss -> output/htmls/$$/*.scss
+engine: output/htmls/$$/*.scss -> output/htmls/$$/*.css
+
+# js
+engine: templates/js/*.tera -> output/htmls/$$/*.js  # affected by configs
+copy: templates/js/*.js -> output/htmls/$$/*.js
+
+# meta articles
+# must be followed by html_template renderings
+engine: templates/articles/*.tera -> mdxts/articles/*.md  # requires articles.yaml
+
+# tag_pages
+# must be followed by html_template renderings
+render_tag_pages  # requires articles.yaml
+
+# templates
+# must be followed by html_template renderings
+engine: templates/pages/*.tera -> ./*.md  # affected by configs (not now, but possibly in future)
+engine: templates/pages/*.md -> ./*.html
+
+# html_template
+render_template: htmls/$$/*.html -> output/htmls/$$/*.html  # affected by configs
+
 # xml
 # must be called after mdxt renderings are done
-engine: outputs/htmls/$$/*.html -> outputs/htmls/$$/*.html  # EngineType::XML will do.
+engine: output/htmls/$$/*.html -> output/htmls/$$/*.html  # EngineType::XML will do.

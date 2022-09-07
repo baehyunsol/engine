@@ -12,7 +12,7 @@ document.getElementById("settingsopenbutton").addEventListener("click", open_set
 document.getElementById("settingsclosebutton").addEventListener("click", close_settings);
 
 var root_doc = document.querySelector(":root");
-var horizontal_padding = {{default_horiz_padding}}px;
+var horizontal_padding = {{default_horiz_padding}};
 
 function loose_padding() {
     horizontal_padding -= 24;
