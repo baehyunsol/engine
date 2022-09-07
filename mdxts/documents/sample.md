@@ -4,6 +4,8 @@
 [[small]]2018-14566 배현솔[[/small]]
 [[/right]]
 
+## Sample h2
+
 This is a sample report.
 
 I would be using a lot of lists when writing reports.
@@ -31,7 +33,20 @@ fn qs(arr: &Vec<u32>) -> Vec<u32> {
 }
 ```
 
+## qtxvc123
+
 |a|v|
 |-|-|
 |!![[collapsible]]|
 |2|3asdf|
+
+```rust
+println!("Hello World!");
+println!("Hello World!");
+println!("Hello World!");
+println!("Hello World!");
+```
+
+## exex
+
+[123](#qtxvc123)

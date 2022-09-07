@@ -54,11 +54,10 @@ fn main() {
 
     }
 
-    //render(only_docs, first_time);
-    render2(only_docs);
+    render(only_docs);
 }
 
-fn render2(only_docs: bool) {
+fn render(only_docs: bool) {
 
     remove_results();
 
@@ -327,6 +326,7 @@ fn render2(only_docs: bool) {
         ).unwrap();
     }
 
+    clean_up_results();
 }
 
 fn get_page_template_context(config: &Config) -> tera::Context {
@@ -358,49 +358,6 @@ fn get_page_template_context(config: &Config) -> tera::Context {
 
 }
 
-// affected by configs
-fn render(only_docs: bool, first_time: bool) {
-
-    remove_results();
-
-    let doc_configs = load_documents_config();
-    let article_configs = load_articles_config();
-
-    let articles = match read_string("./output/articles.yaml") {
-        Ok(data) => article::from_yaml(YamlLoader::load_from_str(&data).unwrap()[0].clone()),
-        Err(_) => article::from_yaml(YamlLoader::load_from_str("{}").unwrap()[0].clone())
-    };
-
-    let tags_graph = article::get_tags(&articles);
-
-    if !only_docs {
-        render_directory(
-            "./templates/articles", "tera",
-            EngineType::Tera,
-            "./mdxts/articles", "md",
-            Some(&meta_article_context(&articles, &tags_graph)),
-            None,
-            None,
-            true
-        ).unwrap();
-
-        render_tag_pages(&tags_graph);
-    }
-
-    let articles_metadata = render_articles_mdxt(only_docs);
-    render_articles_html(only_docs, articles_metadata);
-    render_styles_and_scripts();
-
-    if first_time && !only_docs {
-        render(only_docs, !first_time);
-    }
-
-    else {
-        clean_up_results();
-    }
-
-}
-
 use mdxt::COLORS;
 
 fn get_colors() -> tera::Context {
@@ -417,41 +374,6 @@ fn get_colors() -> tera::Context {
     context.insert("compl_hex", &compl_hex);
 
     context
-}
-
-fn render_articles_mdxt(only_docs: bool) -> HashMap<String, Yaml> {
-
-    copy_all(
-        "./mdxts", "jpg",
-        "./output/htmls", "jpg",
-        true
-    ).unwrap();
-
-    copy_all(
-        "./mdxts", "png",
-        "./output/htmls", "png",
-        true
-    ).unwrap();
-
-    let mdxts_logs = render_directory(
-        "./mdxts", "md",
-        EngineType::MDxt,
-        "./htmls", "html",
-        None,
-        None,
-        None,
-        true
-    ).unwrap();
-
-    if !only_docs {
-        copy_all(
-            "./htmls/tag_pages", "html",
-            "./htmls/articles", "html",
-            true
-        ).unwrap();
-    }
-
-    update_articles_metadata(mdxts_logs, true)
 }
 
 fn update_articles_metadata(mdxts_logs: Vec<Log>, save_to_file: bool) -> HashMap<String, Yaml> {
@@ -483,131 +405,6 @@ fn update_articles_metadata(mdxts_logs: Vec<Log>, save_to_file: bool) -> HashMap
     }
 
     articles_metadata
-}
-
-// affected by configs
-fn render_articles_html(only_docs: bool, articles_metadata: HashMap<String, Yaml>) {
-
-    render_directory(
-        "./templates/pages", "md",
-        EngineType::MDxt,
-        "./templates/pages", "html",
-        None,
-        None,
-        None,
-        true
-    ).unwrap();
-
-    if !only_docs {
-        render_templates(
-            "./templates/pages/article.tera",
-            "./htmls/articles", "html",
-            "./output/htmls/articles", "html",
-            None,
-            Some(article_context()),
-            true
-        ).unwrap();
-
-        render_directory(
-            "./output/htmls/articles", "html",
-            EngineType::XML,
-            "./output/htmls/articles", "html",
-            None,
-            None,
-            Some(&articles_metadata),
-            true
-        ).unwrap();
-    }
-
-    render_templates(
-        "./templates/pages/article.tera",
-        "./htmls/documents", "html",
-        "./output/htmls/documents", "html",
-        None,
-        Some(document_context()),
-        true
-    ).unwrap();
-
-    render_directory(
-        "./output/htmls/documents", "html",
-        EngineType::XML,
-        "./output/htmls/documents", "html",
-        None,
-        None,
-        Some(&articles_metadata),
-        true
-    ).unwrap();
-}
-
-
-// affected by configs
-fn render_styles_and_scripts() {
-
-    let color_context = get_colors();
-
-    // Render Javascripts
-
-    render_directory(
-        "./templates/js", "tera",
-        EngineType::Tera,
-        "./templates/js", "js",
-        Some(&color_context),
-        None,
-        None,
-        false
-    ).unwrap();
-
-    write_to_file(
-        "./templates/js/collapsible_tables.js",
-        mdxt::collapsible_table_javascript().as_bytes()
-    ).unwrap();
-
-    copy_all(
-        "./templates/js", "js",
-        "./output/styles_and_scripts", "js",
-        true
-    ).unwrap();
-
-    // Render SCSS files
-
-    render_directory(
-        "./templates/scss", "tera",
-        EngineType::Tera,
-        "./output/styles_and_scripts", "scss",
-        Some(&color_context),
-        None,
-        None,
-        false
-    ).unwrap();
-
-    copy_all(
-        "./templates/scss", "scss",
-        "./output/styles_and_scripts", "scss",
-        true
-    ).unwrap();
-
-    render_directory(
-        "./output/styles_and_scripts", "scss",
-        EngineType::Scss,
-        "./output/styles_and_scripts", "css",
-        None,
-        None,
-        None,
-        false
-    ).unwrap();
-
-    for sub_dir in get_sub_directories_recursive("./output") {
-        copy_all(
-            "./output/styles_and_scripts", "css",
-            &sub_dir, "css",
-            true
-        ).unwrap();
-        copy_all(
-            "./output/styles_and_scripts", "js",
-            &sub_dir, "js",
-            true
-        ).unwrap();
-    }
 }
 
 fn render_tag_pages(tags_graph: &graph::Graph) {
@@ -685,34 +482,6 @@ fn meta_article_context(articles: &HashMap<String, article::Article>, tags_graph
 
     context.insert("tags", &tags);
     context.insert("tag_nums", &tag_nums);
-
-    context
-}
-
-// affected by configs
-fn article_context() -> tera::Context {
-
-    let mut context = tera::Context::new();
-    let nav = read_string("./templates/pages/nav.html").unwrap();
-    let header = read_string("./templates/pages/header.html").unwrap();
-    let footer = read_string("./templates/pages/footer.html").unwrap();
-
-    context.insert("nav", &nav);
-    context.insert("header", &header);
-    context.insert("footer", &footer);
-    context.insert("csses", &vec!["markdown.css", "page_common.css", "page_blog.css", "nav.css", "header.css"]);
-
-    context
-}
-
-// affected by configs
-fn document_context() -> tera::Context {
-
-    let mut context = tera::Context::new();
-    let nav = read_string("./templates/pages/nav.html").unwrap();
-
-    context.insert("nav", &nav);
-    context.insert("csses", &vec!["markdown.css", "page_common.css", "page_doc.css", "nav.css"]);
 
     context
 }

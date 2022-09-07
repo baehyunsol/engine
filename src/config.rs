@@ -116,6 +116,116 @@ impl Config {
             _ => {}
         }
 
+        match yaml_hash::get(&yaml, &Yaml::from_str("article_width_landscape")) {
+            Some(s) => match s.as_str() {
+                Some(s) => {
+                    self.article_width_landscape = s.to_string();
+                },
+                _ => {}
+            },
+            _ => {}
+        }
+
+        match yaml_hash::get(&yaml, &Yaml::from_str("article_width_portrait")) {
+            Some(s) => match s.as_str() {
+                Some(s) => {
+                    self.article_width_portrait = s.to_string();
+                },
+                _ => {}
+            },
+            _ => {}
+        }
+
+        match yaml_hash::get(&yaml, &Yaml::from_str("article_top_margin_landscape")) {
+            Some(s) => match s.as_str() {
+                Some(s) => {
+                    self.article_top_margin_landscape = s.to_string();
+                },
+                _ => {}
+            },
+            _ => {}
+        }
+
+        match yaml_hash::get(&yaml, &Yaml::from_str("article_top_margin_portrait")) {
+            Some(s) => match s.as_str() {
+                Some(s) => {
+                    self.article_top_margin_portrait = s.to_string();
+                },
+                _ => {}
+            },
+            _ => {}
+        }
+
+        match yaml_hash::get(&yaml, &Yaml::from_str("article_bottom_margin_landscape")) {
+            Some(s) => match s.as_str() {
+                Some(s) => {
+                    self.article_bottom_margin_landscape = s.to_string();
+                },
+                _ => {}
+            },
+            _ => {}
+        }
+
+        match yaml_hash::get(&yaml, &Yaml::from_str("article_bottom_margin_portrait")) {
+            Some(s) => match s.as_str() {
+                Some(s) => {
+                    self.article_bottom_margin_portrait = s.to_string();
+                },
+                _ => {}
+            },
+            _ => {}
+        }
+
+        match yaml_hash::get(&yaml, &Yaml::from_str("article_left_margin_landscape")) {
+            Some(s) => match s.as_str() {
+                Some(s) => {
+                    self.article_left_margin_landscape = s.to_string();
+                },
+                _ => {}
+            },
+            _ => {}
+        }
+
+        match yaml_hash::get(&yaml, &Yaml::from_str("article_left_margin_portrait")) {
+            Some(s) => match s.as_str() {
+                Some(s) => {
+                    self.article_left_margin_portrait = s.to_string();
+                },
+                _ => {}
+            },
+            _ => {}
+        }
+
+        match yaml_hash::get(&yaml, &Yaml::from_str("article_right_margin_landscape")) {
+            Some(s) => match s.as_str() {
+                Some(s) => {
+                    self.article_right_margin_landscape = s.to_string();
+                },
+                _ => {}
+            },
+            _ => {}
+        }
+
+        match yaml_hash::get(&yaml, &Yaml::from_str("article_right_margin_portrait")) {
+            Some(s) => match s.as_str() {
+                Some(s) => {
+                    self.article_right_margin_portrait = s.to_string();
+                },
+                _ => {}
+            },
+            _ => {}
+        }
+
+        match yaml_hash::get(&yaml, &Yaml::from_str("default_horiz_padding")) {
+            Some(s) => match s.as_i64() {
+                Some(s) if 0 <= s && s < u32::MAX as i64 => {
+                    self.default_horiz_padding = s as u32;
+                },
+                _ => {}
+            },
+            _ => {}
+        }
+
     }
 
     fn default_article() -> Self {

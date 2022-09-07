@@ -1,1 +1,18 @@
-{}
+{
+    "has_header": true,
+    "has_nav": true,
+    "has_footer": true,
+
+    "article_width_landscape": "82%",
+    "article_top_margin_landscape": "$header-height + $padding-big",
+    "article_bottom_margin_landscape": "0px",
+    "article_left_margin_landscape": "9%",
+    "article_right_margin_landscape": "9%",
+    "article_width_portrait": "90%",
+    "article_top_margin_portrait": "$header-height + $padding-big",
+    "article_bottom_margin_portrait": "0px",
+    "article_left_margin_portrait": "5%",
+    "article_right_margin_portrait": "5%",
+
+    "default_horiz_padding": 0,
+}
