@@ -218,11 +218,26 @@ pub fn mkdir(path: &str) -> Result<(), ()> {
 
 }
 
-pub fn rmdir(path: &str) -> Result<(), ()> {
+pub fn rmdir(path: &str) {
 
-    match fs::remove_dir_all(path) {
-        Ok(_) => Ok(()),
-        _ => Err(())
+    match read_dir(path) {
+        Ok(cur_dir) => {
+
+            for dir in cur_dir.iter() {
+
+                if is_dir(dir) {
+                    rmdir(&dir);
+                }
+        
+                else {
+                    fs::remove_file(dir);
+                }
+        
+            }
+        
+            fs::remove_dir(path);
+        },
+        _ => {}
     }
 
 }

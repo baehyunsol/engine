@@ -42,6 +42,7 @@ article, footer {
 }
 
 html {
+    font-family: 'Nanum Gothic';
     scroll-behavior: smooth;
 }
 

@@ -1,5 +1,6 @@
 use crate::file_io::*;
 use crate::yaml_hash;
+use std::collections::{HashMap, HashSet};
 use tera::Context;
 use yaml_rust::{Yaml, YamlLoader};
 
@@ -52,6 +53,9 @@ pub struct Config {
     article_right_margin_portrait: String,
 
     default_horiz_padding: u32,  // in pixels
+
+    pub titles: HashMap<String, String>,
+    pub ignores: HashSet<String>
 }
 
 impl Config {
@@ -226,9 +230,57 @@ impl Config {
             _ => {}
         }
 
+        match yaml_hash::get(&yaml, &Yaml::from_str("titles")) {
+            Some(s) => match s.as_hash() {
+                Some(h) => {
+                    let mut titles = HashMap::new();
+
+                    for (k, v) in h.iter() {
+                        let (k, v) = (k.as_str(), v.as_str());
+
+                        if k.is_none() || v.is_none() {
+                            continue;
+                        }
+
+                        titles.insert(k.unwrap().to_string(), v.unwrap().to_string());
+                    }
+
+                    self.titles = titles;
+                },
+                _ => {}
+            }
+            _ => {}
+        }
+
+        match yaml_hash::get(&yaml, &Yaml::from_str("ignores")) {
+            Some(s) => match s.as_vec() {
+                Some(v) => {
+                    let mut ignores = HashSet::new();
+
+                    for i in v.iter() {
+
+                        match i.as_str() {
+                            Some(ii) => {
+                                ignores.insert(ii.to_string());
+                            }
+                            _ => {}
+                        }
+
+                    }
+
+                    self.ignores = ignores;
+                },
+                _ => {}
+            },
+            _ => {}
+        }
+
     }
 
     fn default_article() -> Self {
+        let mut titles = HashMap::new();
+        titles.insert("index".to_string(), "Blog".to_string());
+
         Config {
             has_header: true,
             has_nav: true,
@@ -244,6 +296,8 @@ impl Config {
             article_left_margin_portrait: "5%".to_string(),
             article_right_margin_portrait: "5%".to_string(),
             default_horiz_padding: 0,
+            titles,
+            ignores: HashSet::new()
         }
     }
 
@@ -263,6 +317,8 @@ impl Config {
             article_left_margin_portrait: "3%".to_string(),
             article_right_margin_portrait: "3%".to_string(),
             default_horiz_padding: 96,
+            titles: HashMap::new(),
+            ignores: HashSet::new()
         }
     }
 

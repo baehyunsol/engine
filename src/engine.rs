@@ -1,3 +1,4 @@
+use crate::config::Config;
 use crate::error::Error;
 use crate::file_io::*;
 use crate::log::Log;
@@ -25,6 +26,7 @@ pub fn render_directory(
     tera_context: Option<&Context>,
     mdxt_option: Option<&RenderOption>,
     articles_metadata: Option<&HashMap<String, Yaml>>,
+    config: &Config,
     recursive: bool
 ) -> Result<Vec<Log>, Error> {
 
@@ -65,6 +67,7 @@ pub fn render_directory(
                 &new_dir_to, ext_to,
                 tera_context, mdxt_option,
                 articles_metadata,
+                config,
                 recursive
             ) {
                 Ok(logs) => { recursive_logs.push(logs); }
@@ -172,6 +175,11 @@ pub fn render_directory(
             }
 
             for file in files.iter() {
+
+                if config.ignores.contains(&basename(file).unwrap()) {
+                    continue;
+                }
+
                 let dest = get_dest_path(&file, dir_to, ext_to)?;
 
                 match read_string(file) {
@@ -292,6 +300,7 @@ pub fn render_templates(
     output_ext: &str,
     mut tera_instance: Option<Tera>,
     mut context: Option<Context>,
+    config: &Config,
     recursive: bool
 ) -> Result<Vec<Log>, Error> {
 
@@ -355,6 +364,7 @@ pub fn render_templates(
                 output_ext,
                 tera_instance.clone(),
                 context.clone(),
+                config,
                 recursive
             ) {
                 Ok(logs) => { recursive_logs.push(logs); }
@@ -395,8 +405,11 @@ pub fn render_templates(
                 }
             };
 
-            if title == "index".to_string() {
-                title = "Blog".to_string();
+            match config.titles.get(&title) {
+                Some(alt_title) => {
+                    title = alt_title.clone();
+                }
+                _ => {}
             }
 
             context.insert("title", &title);

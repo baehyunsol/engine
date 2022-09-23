@@ -10,7 +10,7 @@ script를 html 안에 넣지말고 외부에 .js 파일로 따로 만들기
 - 사진/표/코드 등등은 페이지 중간에서 잘리지 않게 하기!
 - 페이지 바꾸는 매크로나 vertical 공간 만드는 매크로 만들기..??
 
-`/templates`, `/mdxts`, `/engine.exe` 이 3개만 옮기면 바로바로 사용가능하도록 하자!
+`/templates`, `/mdxts`, `/engine.exe`, `/configs` 이 4개만 옮기면 바로바로 사용가능하도록 하자!
 
 multiline table header는 행간 구분선 넣자!
 
@@ -62,10 +62,16 @@ image processing도 추가하고 싶음.
 
 ---
 
-지금 `index.html`의 제목은 자동으로 `Blog`로 바꾸지? 이것도 engine 안에 넣지 말고 configurable하게 하자!
-
----
-
 미리보기 tooltip. Article끼리 link를 걸면, link의 hover로 article 미리보기 tooltip을 띄우자! 이거 HXML로 할 수 있음. 해당 link가 inner link인지 보고, 그럼 해당 article의 html을 읽어서 `<body>`의 가장 앞부분 내용만 (태그들 다 벗겨서) 긁어와서 tooltip으로 만들면 될 듯!
 
 footnote도 비슷하지만 더 쉬운 방식으로 구현하자. 걍 footnote cite의 내용들 tooltip에 다 넣어버리면 되지!
+
+---
+
+모바일 버전은 top bar 구현 다르게 하자. https://www.w3schools.com/howto/howto_js_mobile_navbar.asp 방식으로!
+
+왜냐면 CoqStudy에서 top bar에 `index_by_chapter`랑 `index_by_keyword`를 넣을 거거든.
+
+---
+
+이미지 확대한 거 닫는 버튼을 따로 만들자. 위에 `click 어쩌구저쩌구 close 얼씨구절씨구`는 날려버리고

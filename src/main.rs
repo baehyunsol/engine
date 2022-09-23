@@ -61,6 +61,7 @@ fn render(only_docs: bool) {
 
     remove_results();
 
+    let article_configs = load_articles_config();
     let doc_configs = load_documents_config();
     let mut doc_configs_context = doc_configs.to_tera_context();
     let color_context = get_colors();
@@ -92,6 +93,7 @@ fn render(only_docs: bool) {
         None,
         None,
         None,
+        &doc_configs,
         true
     ).unwrap();
 
@@ -103,6 +105,7 @@ fn render(only_docs: bool) {
             None,
             None,
             None,
+            &article_configs,
             true
         ).unwrap();
 
@@ -123,6 +126,7 @@ fn render(only_docs: bool) {
         Some(&doc_configs_context),
         None,
         None,
+        &doc_configs,
         true
     ).unwrap();
 
@@ -139,6 +143,7 @@ fn render(only_docs: bool) {
         None,
         None,
         None,
+        &doc_configs,
         true
     ).unwrap();
 
@@ -151,6 +156,7 @@ fn render(only_docs: bool) {
         Some(&doc_configs_context),
         None,
         None,
+        &doc_configs,
         true
     ).unwrap();
 
@@ -180,6 +186,7 @@ fn render(only_docs: bool) {
         None,
         None,
         None,
+        &doc_configs,
         true
     ).unwrap();
 
@@ -191,6 +198,7 @@ fn render(only_docs: bool) {
         "./output/htmls/documents", "html",
         None,
         Some(get_page_template_context(&doc_configs)),
+        &doc_configs,
         true
     ).unwrap();
 
@@ -203,12 +211,12 @@ fn render(only_docs: bool) {
         None,
         None,
         Some(&articles_metadata),
+        &doc_configs,
         true
     ).unwrap();
 
     // articles
     if !only_docs {
-        let article_configs = load_articles_config();
         let mut article_configs_context = article_configs.to_tera_context();
         let color_context = get_colors();
 
@@ -222,6 +230,7 @@ fn render(only_docs: bool) {
             Some(&article_configs_context),
             None,
             None,
+            &article_configs,
             true
         ).unwrap();
 
@@ -238,6 +247,7 @@ fn render(only_docs: bool) {
             None,
             None,
             None,
+            &article_configs,
             true
         ).unwrap();
 
@@ -250,6 +260,7 @@ fn render(only_docs: bool) {
             Some(&article_configs_context),
             None,
             None,
+            &article_configs,
             true
         ).unwrap();
 
@@ -275,6 +286,7 @@ fn render(only_docs: bool) {
             Some(&meta_article_context(&articles, &tags_graph)),
             None,
             None,
+            &article_configs,
             true
         ).unwrap();
 
@@ -312,6 +324,7 @@ fn render(only_docs: bool) {
             "./output/htmls/articles", "html",
             None,
             Some(get_page_template_context(&article_configs)),
+            &article_configs,
             true
         ).unwrap();
 
@@ -322,6 +335,7 @@ fn render(only_docs: bool) {
             None,
             None,
             Some(&articles_metadata),
+            &article_configs,
             true
         ).unwrap();
     }
@@ -489,8 +503,8 @@ fn meta_article_context(articles: &HashMap<String, article::Article>, tags_graph
 // DO NOT unwrap these!!
 fn remove_results() {
     rmdir("./htmls");
-    rmdir("./output/htmls");
-    rmdir("./output/styles_and_scripts");
+    rmdir("./output/htmls/articles");
+    rmdir("./output/htmls/documents");
     rmdir("./mdxts/tag_pages");
 }
 
