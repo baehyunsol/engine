@@ -279,6 +279,8 @@ fn render(only_docs: bool) {
 
         let tags_graph = article::get_tags(&articles);
 
+        render_tag_pages(&tags_graph);
+
         render_directory(
             "./templates/articles", "tera",
             EngineType::Tera,
@@ -290,7 +292,16 @@ fn render(only_docs: bool) {
             true
         ).unwrap();
 
-        render_tag_pages(&tags_graph);
+        render_directory(
+            "./mdxts/tag_pages", "md",
+            EngineType::MDxt,
+            "./htmls/articles", "html",
+            None,
+            None,
+            None,
+            &article_configs,
+            true
+        ).unwrap();
 
         // articles, page_templates
 

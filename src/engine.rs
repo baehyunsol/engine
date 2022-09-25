@@ -252,8 +252,11 @@ pub fn render_directory(
                                     },
                                     None => {}
                                 },
-                                None => {
+                                None if !article_title.starts_with("tag-") => {
                                     return Err(Error::RenderError(EngineType::XML, format!("error at `render_directory({:?}, {:?}, ...)`\n`articles_metadata` doesn't have metadata of `{}`!", dir_from, ext_from, article_title)));
+                                }
+                                _ => {
+                                    continue;
                                 }
                             }
 

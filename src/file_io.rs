@@ -169,6 +169,7 @@ pub fn read_dir(path: &str) -> Result<Vec<String>, ()> {
                 }
             }
 
+            result.sort();
             Ok(result)
         }
     }
