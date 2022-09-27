@@ -52,20 +52,19 @@ pub struct Config {
     article_left_margin_portrait: String,
     article_right_margin_portrait: String,
 
+    font_size_landscape: u32,    // in pixels
+    font_size_portrait: u32,     // in pixels
+
     default_horiz_padding: u32,  // in pixels
 
-    pub titles: HashMap<String, String>,
-    pub ignores: HashSet<String>
+    pub titles: HashMap<String, String>,  // not in context
+    pub ignores: HashSet<String>,         // not in context
 }
 
 impl Config {
 
     pub fn to_tera_context(&self) -> Context {
         let mut context = Context::new();
-
-        context.insert("has_header", &self.has_header);
-        context.insert("has_nav", &self.has_nav);
-        context.insert("has_footer", &self.has_footer);
 
         context.insert("article_width_landscape", &self.article_width_landscape);
         context.insert("article_top_margin_landscape", &self.article_top_margin_landscape);
@@ -78,6 +77,9 @@ impl Config {
         context.insert("article_bottom_margin_portrait", &self.article_bottom_margin_portrait);
         context.insert("article_left_margin_portrait", &self.article_left_margin_portrait);
         context.insert("article_right_margin_portrait", &self.article_right_margin_portrait);
+
+        context.insert("font_size_landscape", &self.font_size_landscape);
+        context.insert("font_size_portrait", &self.font_size_portrait);
 
         context.insert("default_horiz_padding", &self.default_horiz_padding);
 
@@ -220,6 +222,26 @@ impl Config {
             _ => {}
         }
 
+        match yaml_hash::get(&yaml, &Yaml::from_str("font_size_landscape")) {
+            Some(s) => match s.as_i64() {
+                Some(s) if 0 <= s && s < u32::MAX as i64 => {
+                    self.font_size_landscape = s as u32;
+                },
+                _ => {}
+            },
+            _ => {}
+        }
+
+        match yaml_hash::get(&yaml, &Yaml::from_str("font_size_portrait")) {
+            Some(s) => match s.as_i64() {
+                Some(s) if 0 <= s && s < u32::MAX as i64 => {
+                    self.font_size_portrait = s as u32;
+                },
+                _ => {}
+            },
+            _ => {}
+        }
+
         match yaml_hash::get(&yaml, &Yaml::from_str("default_horiz_padding")) {
             Some(s) => match s.as_i64() {
                 Some(s) if 0 <= s && s < u32::MAX as i64 => {
@@ -295,6 +317,8 @@ impl Config {
             article_bottom_margin_portrait: "0px".to_string(),
             article_left_margin_portrait: "5%".to_string(),
             article_right_margin_portrait: "5%".to_string(),
+            font_size_landscape: 21,
+            font_size_portrait: 16,
             default_horiz_padding: 0,
             titles,
             ignores: HashSet::new()
@@ -316,6 +340,8 @@ impl Config {
             article_bottom_margin_portrait: "0px".to_string(),
             article_left_margin_portrait: "3%".to_string(),
             article_right_margin_portrait: "3%".to_string(),
+            font_size_landscape: 21,
+            font_size_portrait: 16,
             default_horiz_padding: 96,
             titles: HashMap::new(),
             ignores: HashSet::new()

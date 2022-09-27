@@ -1,12 +1,6 @@
 @import "colors";
 @import "units";
 
-@media screen and (orientation: landscape) {
-    html {
-        font-size: 21px;
-    }
-}
-
 body .markdown {
     background-color: var(--dark);
     color: var(--white);

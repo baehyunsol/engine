@@ -6,6 +6,11 @@
 }
 
 @media screen and (orientation: landscape) {
+
+    html {
+        font-size: {{font_size_landscape}}px;
+    }
+
     article {
         margin-top: {{article_top_margin_landscape}};
         margin-bottom: {{article_bottom_margin_landscape}};
@@ -16,6 +21,11 @@
 }
 
 @media screen and (orientation: portrait) {
+
+    html {
+        font-size: {{font_size_portrait}}px;
+    }
+
     article {
         margin-top: {{article_top_margin_portrait}};
         margin-bottom: {{article_bottom_margin_portrait}};
