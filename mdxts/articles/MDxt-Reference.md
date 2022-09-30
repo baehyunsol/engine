@@ -1,5 +1,5 @@
 ---
-date: [2022, 8, 23]
+date: [2022, 9, 30]
 tags: [mdxt, reference, documentation]
 preview: MDxt Reference
 ---
@@ -82,6 +82,22 @@ This is another footnote.[^B]
 #### Column Alignments
 
 #### Multiline Table Head
+
+```
+|         [[colspan = 6]] Shopping List         |
+| [[colspan = 3]] Food  | [[colspan = 3]] Drink |
+|-------|:-----:|-------|:-----:|-------|-------|
+| Bread | Cake  | Pie   | Beer  | Water | Coffee|
+| None  | Center| None  | Center| None  | None  |
+| Foo   | [[colspan = 4]] *Bar*         |
+```
+
+|         [[colspan = 6]] Shopping List         |
+| [[colspan = 3]] Food  | [[colspan = 3]] Drink |
+|-------|:-----:|-------|:-----:|-------|-------|
+| Bread | Cake  | Pie   | Beer  | Water | Coffee|
+| None  | Center| None  | Center| None  | None  |
+| Foo   | [[colspan = 4]] *Bar*         |
 
 #### Colspan
 

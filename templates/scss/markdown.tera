@@ -326,38 +326,56 @@ body .markdown {
     table {
         border-collapse: collapse;
         margin: $margin-big $margin-medium;
-    }
 
-    th {
-        background-color: var(--gray);
-        transition: padding 0.5s ease-out;
-    }
+        th {
+            background-color: var(--gray);
+            transition: padding 0.5s ease-out;
+            border: $border-medium solid var(--lightgray);
+        }
 
-    td, th {
-        padding: $padding-medium + $padding-small;
-    }
+        tr th:first-child {
+            border-left: $border-big solid var(--gray);
+        }
 
-    tr:nth-last-child(odd) {
-        background-color: var(--black);
-    }
+        tr th:last-child {
+            border-right: $border-big solid var(--gray);
+        }
 
-    tr:nth-last-child(even) {
-        background-color: var(--dark);
-    }
+        tr:first-child th {
+            border-top: $border-big solid var(--gray);
+        }
 
-    thead.collapsible {
-        cursor: pointer;
-    }
+        tr:last-child th {
+            border-bottom: $border-big solid var(--gray);
+        }
 
-    thead.collapsed th {
-        padding: $padding-small;
-        transition: padding 0.5s ease-out;
-    }
+        td, th {
+            padding: $padding-medium + $padding-small;
+        }
+    
+        tr:nth-last-child(odd) {
+            background-color: var(--black);
+        }
 
-    .invisible {
+        tr:nth-last-child(even) {
+            background-color: var(--dark);
+        }
+    
+        thead.collapsible {
+            cursor: pointer;
+        }
+    
+        thead.collapsed th {
+            padding: $padding-small;
+            transition: padding 0.5s ease-out;
+        }
 
-        th, td {
-            display: none;
+        .invisible {
+    
+            th, td {
+                display: none;
+            }
+    
         }
 
     }

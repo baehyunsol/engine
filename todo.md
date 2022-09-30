@@ -12,11 +12,7 @@ script를 html 안에 넣지말고 외부에 .js 파일로 따로 만들기
 
 `/templates`, `/mdxts`, `/engine.exe`, `/configs` 이 4개만 옮기면 바로바로 사용가능하도록 하자!
 
-multiline table header는 행간 구분선 넣자!
-
 footnote에 tooltip 띄우고 싶음... 이건 구현하는데 한참 걸리겠지? 학기 끝나고 하자!
-
-js랑 C에서 `//`로 쓰는 주석들 끝이 제대로 안 남. 분명히 줄바꿈을 했는데 계속 글씨가 회색임.
 
 ---
 
@@ -78,4 +74,4 @@ footnote도 비슷하지만 더 쉬운 방식으로 구현하자. 걍 footnote c
 
 ---
 
-file_io에서 read_dir 같은 거 하면 사전순으로 반환하게 할까? 그래야 더 깨끗할 거 같은데
+[[big]][[gold]]는 selection이 적용이 안되는데 [[gold]][[big]]은 됨. 반댄가? 쨌든 해보셈
