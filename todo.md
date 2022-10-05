@@ -75,3 +75,22 @@ footnote도 비슷하지만 더 쉬운 방식으로 구현하자. 걍 footnote c
 ---
 
 [[big]][[gold]]는 selection이 적용이 안되는데 [[gold]][[big]]은 됨. 반댄가? 쨌든 해보셈
+
+---
+
+`~_abc_~`를 select하면 글자색만 바뀌고 밑줄색은 안바뀜 ㅠㅠ
+
+---
+
+table에서 `[[background=red]]` 같은 것도 되게 할까?
+
+`[[column background = red]]`나 `[[row background = red]]` 같은 것도 되게 만든 다음에 `cell > row > column` 우선순위로 적용되게 해도 좋을 것 같고.
+
+굳이 색깔만 설정하는게 아니고 다른 것도 되게하면 좋을 거 같고...!!
+
+---
+
+fenced code block::selection
+
+- dark theme: 보이긴 함
+- light theme: hover effect랑 selection effect가 색깔이 동일해서 안 보임
