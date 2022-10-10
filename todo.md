@@ -94,3 +94,19 @@ fenced code block::selection
 
 - dark theme: 보이긴 함
 - light theme: hover effect랑 selection effect가 색깔이 동일해서 안 보임
+
+---
+
+config로 mdxt render_options도 설정하고 싶음...
+
+---
+
+css랑 js를 html 안에 embed해서 한 파일로 만드는 기능도 추가하고 싶음!
+
+그러려면 쟤네도 `/*<![CDATA[*/`로 감싸야겠네.
+
+---
+
+`--init`이란 인수 받으면 `/configs`, `/templates`, `/mdxts` 다 자동으로 생성하게 할까? 그럼 `/templates` 안의 내용도 전부 자동 생성임? 그 내용들은 어떻게 알아? engine 안에 하드코딩 해놔야해? 하드코딩 해놓으면 앞으로 template 수정할 때마다 engine도 이중으로 수정해야하는데?
+
+이거는 좀 더 안정화가 되고 나서 하자. template들이 거의 바뀔 일이 없겠다 싶을 때 engine 안에 하드코딩으로 넣자.
