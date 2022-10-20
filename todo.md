@@ -16,35 +16,6 @@ footnote에 tooltip 띄우고 싶음... 이건 구현하는데 한참 걸리겠�
 
 ---
 
-```markdown
-[[box]]
-교수님의 질문: 내 폰이랑 공유기랑 통신하고 니네 폰이랑 공유기랑도 통신하지? 그럼 니네 폰에서 공유기로 가는 packet을 내 폰에서도 볼 수 있을까?
-- yes.
-- 근데 header 확인해보고 나랑 관련없는 packet은 걍 버림. 그래서 내 폰에서 공유기로 가는 정보를 다른 폰에서 못 보는 거임.
-  - 엥? 근데 이럼 보안 구멍 아님? 내 폰에서 쓰는 데이터를 친구 폰에서 볼 수 있는 거잖아?
-  - ㅇㅇ 그래서 application layer에서 암호화를 해버림. 그럼 중간에 가로채도 알 방법이 없음.
-    - 왜 application layer냐? 민감한 정보는 다 저기 있을 거 아녀? 다른 layer에는 공유기 ip 주소같은 안 민감한 정보만 있을 거잖아.
-[[/box]]
-```
-
-버그 찾았음!
-
----
-
-```markdown
-[[box]]
-a
-[[/box]]
-b
-[[box]]
-c
-[[/box]]
-```
-
-이거 지금처럼 되는게 맞아?
-
----
-
 지금 `render` 구현을 보면 `remove_results`를 가장 먼저 하고 시작하잖아? 저걸 조금 늦게할 순 없나? 그럼 파일이 없는 시간이 훨씬 줄어들텐데.
 
 ---
@@ -59,6 +30,7 @@ image processing도 추가하고 싶음.
 ---
 
 미리보기 tooltip. Article끼리 link를 걸면, link의 hover로 article 미리보기 tooltip을 띄우자! 이거 HXML로 할 수 있음. 해당 link가 inner link인지 보고, 그럼 해당 article의 html을 읽어서 `<body>`의 가장 앞부분 내용만 (태그들 다 벗겨서) 긁어와서 tooltip으로 만들면 될 듯!
+- 그럼 tooltip을 mdxt가 아니고 html로 구현해야하는데...
 
 footnote도 비슷하지만 더 쉬운 방식으로 구현하자. 걍 footnote cite의 내용들 tooltip에 다 넣어버리면 되지!
 
@@ -82,14 +54,6 @@ footnote도 비슷하지만 더 쉬운 방식으로 구현하자. 걍 footnote c
 
 ---
 
-table에서 `[[background=red]]` 같은 것도 되게 할까?
-
-`[[column background = red]]`나 `[[row background = red]]` 같은 것도 되게 만든 다음에 `cell > row > column` 우선순위로 적용되게 해도 좋을 것 같고.
-
-굳이 색깔만 설정하는게 아니고 다른 것도 되게하면 좋을 거 같고...!!
-
----
-
 fenced code block::selection
 
 - dark theme: 보이긴 함
@@ -110,3 +74,19 @@ css랑 js를 html 안에 embed해서 한 파일로 만드는 기능도 추가하
 `--init`이란 인수 받으면 `/configs`, `/templates`, `/mdxts` 다 자동으로 생성하게 할까? 그럼 `/templates` 안의 내용도 전부 자동 생성임? 그 내용들은 어떻게 알아? engine 안에 하드코딩 해놔야해? 하드코딩 해놓으면 앞으로 template 수정할 때마다 engine도 이중으로 수정해야하는데?
 
 이거는 좀 더 안정화가 되고 나서 하자. template들이 거의 바뀔 일이 없겠다 싶을 때 engine 안에 하드코딩으로 넣자.
+
+---
+
+localStorage 써서 theme이랑 horizontal padding 기억시키자!
+
+---
+
+print 할 때는 copy_button 숨기자!
+
+---
+
+fenced code block에서 button 없이 무식하게 복붙하면 `'\n'`이 과하게 많이 들어감
+
+---
+
+Browser-Compatibility에 footnote index 한번 봐봐. 쟤네 sort 못함?
