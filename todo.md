@@ -90,3 +90,12 @@ fenced code block에서 button 없이 무식하게 복붙하면 `'\n'`이 과하
 ---
 
 Browser-Compatibility에 footnote index 한번 봐봐. 쟤네 sort 못함?
+
+---
+
+github이나 youtube 같은 거 macro로 지원할까? [linus.dev](linus.dev)에 있는 거 같은 github 카드!
+
+emoji도 지원했으면 좋겠음...
+- https://www.w3schools.com/charsets/ref_emoji.asp
+- https://www.alt-codes.net/flags
+- char랑 겹치는 건 빼자!

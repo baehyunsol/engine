@@ -7,6 +7,8 @@ This blog uses [MDxt], my custom Markdown Extension. If you wanna know more abou
 - [Reference]
 - [API Docs]
 
+This blog is optimized for the Firefox browser. Well, I didn't mean it: my blog sticks to the html5 specification. But firefox is the only browser that supports all the html5 features that I'm using. If you wanna know more, read [this](Browser-Compatibility.html) article
+
 [Seoul National University]: https://www.snu.ac.kr/
 [MDxt]: https://github.com/baehyunsol/MDxt
 [Reference]: MDxt-Reference.html
@@ -31,7 +33,7 @@ This blog uses [MDxt], my custom Markdown Extension. If you wanna know more abou
 
 - [#comparison](tag-comparison.html) (4)
 - [#mdxt](tag-mdxt.html) (3)
-- [#reference](tag-reference.html) (3)
+- [#documentation](tag-documentation.html) (3)
 
 [[right]]
 [See more](Tags.html)
