@@ -79,6 +79,8 @@ css랑 js를 html 안에 embed해서 한 파일로 만드는 기능도 추가하
 
 localStorage 써서 theme이랑 horizontal padding 기억시키자!
 
+근데 이러면 config에서 theme이랑 horizontal padding 바꿔도 적용이 안되는데??
+
 ---
 
 print 할 때는 copy_button 숨기자!
@@ -89,13 +91,70 @@ fenced code block에서 button 없이 무식하게 복붙하면 `'\n'`이 과하
 
 ---
 
-Browser-Compatibility에 footnote index 한번 봐봐. 쟤네 sort 못함?
+왜 render할 때마다 tag page가 바뀜? 이거 글 쓴 시간 순으로 정렬하는 거 아님?
 
 ---
 
-github이나 youtube 같은 거 macro로 지원할까? [linus.dev](linus.dev)에 있는 거 같은 github 카드!
+`<script>`에 `async`나 `defer` 넣고 싶은데 HXML이 저 문법을 허용을 안함
 
-emoji도 지원했으면 좋겠음...
-- https://www.w3schools.com/charsets/ref_emoji.asp
-- https://www.alt-codes.net/flags
-- char랑 겹치는 건 빼자!
+큰 dilema긴 함... 저건 대놓고 XML이 아닌데? 근데 필요하긴 함...
+
+---
+
+Bottlenecks
+
+폰트 loading하는 거: https://stackoverflow.com/questions/40624515/load-google-font-with-link-asynchronously-or-deferred-without-font-face-observ
+
+image loading하는 거: 일단 빈 image를 넣고 js로 src를 고쳐버릴까??
+- 아니면 네이버처럼 일단은 저화질 이미지로 넣고 그다음에 본 이미지를 넣을까?
+
+https://pagespeed.web.dev/ <- 괜찮네
+
+---
+
+javascript strict mode 추가하기!
+
+---
+
+`[[gold]]D1[[/gold]]이 [[red]]D3[[/red]]보다 크지? 아까 말한 queue 때문에 그래.`를 select하면 색깔 다른 부분이 크기도 달라짐... 왜 그럴까
+
+---
+
+zola에 보면 extra syntax highlighting 있음 Coq 좀 추가하셈 제발
+
+https://packagecontrol.io/packages/Coq
+https://github.com/whitequark/Sublime-Coq
+
+쟤네 참고 ㄱㄱ
+
+---
+
+syntect 문서 잘 뒤져보면 oniguruma 대신 fancy-regex 쓰는 법 나와있음. 웬만해선 pure rust가 나으니까 저거로 갈아타자! 해보고 performance 차이가 너무 심하다 싶으면 다시 돌아오고 그게 아니면 계속 유지 ㄱㄱ
+
+아니 근데 fancy-regex 최신 버전이 0.10.0인데 syntect는 0.7.0 쓰는데??? 이 쉐키들 관리 안하네...
+
+---
+
+css modularization: 안 쓰는 CSS는 굳이 import 하지 말자
+
+각 html 파일별로 css를 따로 만들자: ex: A.html은 table만 쓰니까 그것만 들어간 A.css 제작
+- 근데 A.html과 B.html이 동일한 css를 쓴다? 그럼 굳이 별개로 만들지 말고 둘이 같은 거 쓰게 하셈...
+- 어떻게 하지?? 필요한 css의 기능이 table, blockquote, codespan이라고 하자? 그럼 `'table-blockquote-codespan'`이라는 문자열을 hash를 해. 걔가 ABCD라고 하자? 그럼 `ABCD.css`를 import하면 됨. `ABCD.css`가 존재하는지 아닌지는 engine이 관리하는 거고
+
+만약에 js DOM으로 활성화되는 css면? ex: html만 보면은 `A`라는 class를 절대 못 찾음. 근데 js가 DOM을 이용해서 `A`라는 class를 만듦. 저런 css 날려버리면 안되잖아...
+
+variables
+- 이 페이지 전체에 `--yellow`라는 변수가 안 쓰임. 그럼 `--yellow`라는 변수 날려버릴 거임? 저거 날렸는데 js DOM으로 `--yellow` 조작하면 어떻게 됨? 에러임?
+  - 걍 js DOM에 있는 `--yellow`까지 날려버리는게 best기는 함. 근데 그러려면 js까지 이해하는 engine을 만들어야함...ㅠㅠ
+
+---
+
+cache system
+
+scss 만드는 거나 md->html 하는 거나 css modularization 하는 거나 수정사항 없으면 걍 기존 거 사용하면 안됨??
+
+아 근데 이게 구현이 복잡할텐데... cache + garbage collection하려면...
+
+---
+
+작은 창에서 이미지 확대하면 다 가려버림... ㅠㅠ

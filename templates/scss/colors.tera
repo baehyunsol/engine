@@ -7,15 +7,15 @@ CSS variables (`var(--black)`) are affected by scripts. (Everywhere else.)
 {% for color in colors%}
 ${{color}}: {{hex[loop.index0]}};
 ${{color}}-compl: {{compl_hex[loop.index0]}};
-${{color}}-trans: {{hex[loop.index0]}}80;
-${{color}}-compl-trans: {{compl_hex[loop.index0]}}80;
+${{color}}-trans: {{hex[loop.index0]}}60;
+${{color}}-compl-trans: {{compl_hex[loop.index0]}}60;
 {% endfor %}
 
 :root {
     {% for color in colors %}
     --{{color}}: {{hex[loop.index0]}};
     --{{color}}-compl: {{compl_hex[loop.index0]}};
-    --{{color}}-trans: {{hex[loop.index0]}}80;
-    --{{color}}-compl-trans: {{compl_hex[loop.index0]}}80;
+    --{{color}}-trans: {{hex[loop.index0]}}60;
+    --{{color}}-compl-trans: {{compl_hex[loop.index0]}}60;
     {% endfor %}
 }

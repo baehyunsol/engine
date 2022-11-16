@@ -81,8 +81,20 @@ body .markdown {
     .highlight-{{color}}::selection {
         background-color: var(--{{color}}-compl);
     }
+
+    .color-{{color}} svg {
+        path, rect, circle {
+            fill: var(--{{color}});
+        }
+    }
     {% endfor %}
 
+    /* Default color */
+    svg {
+        path, rect, circle {
+            fill: var(--white);
+        }
+    }
 }
 
 /* Box */
@@ -326,6 +338,7 @@ body .markdown {
     table {
         border-collapse: collapse;
         margin: $margin-big $margin-medium;
+        /*break-inside: avoid;  // needs more research */
 
         th {
             background-color: var(--gray);

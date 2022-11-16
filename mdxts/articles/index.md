@@ -2,12 +2,12 @@
 
 I'm Baehyunsol. I'm a student at [Seoul National University]. I'm currently interested in the [Rust] programming language.
 
-This blog uses [MDxt], my custom Markdown Extension. If you wanna know more about it, visit links below.
+This blog uses [MDxt], my custom Markdown Extension. If you wanna know more about it, visit the links below.
 
 - [Reference]
 - [API Docs]
 
-This blog is optimized for the Firefox browser. Well, I didn't mean it: my blog sticks to the html5 specification. But firefox is the only browser that supports all the html5 features that I'm using. If you wanna know more, read [this](Browser-Compatibility.html) article
+This blog is optimized for the Firefox browser. Well, I didn't mean it: my blog adheres to the html5 specification. But firefox is the only browser that supports all the html5 features that I'm using. If you wanna know more about it, read [this](Browser-Compatibility.html) article.
 
 [Seoul National University]: https://www.snu.ac.kr/
 [MDxt]: https://github.com/baehyunsol/MDxt
@@ -33,7 +33,7 @@ This blog is optimized for the Firefox browser. Well, I didn't mean it: my blog 
 
 - [#comparison](tag-comparison.html) (4)
 - [#mdxt](tag-mdxt.html) (3)
-- [#documentation](tag-documentation.html) (3)
+- [#reference](tag-reference.html) (3)
 
 [[right]]
 [See more](Tags.html)

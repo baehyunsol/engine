@@ -10,7 +10,7 @@ I always try my best to fit my blog into the HTML5 specification. But what if th
 
 ## Browsers
 
-I must include 3 major browsers: firefox, chrome and safari. I only tested on PC, not mobile. Since each browser uses the same engine for both platforms, the compatibility issue between two must be minor. I didn't include the Edge browser because it uses the Chrome's engine. I excluded Samsung Internet, Brave and many other browsers for the same reason.
+I must include 3 major browsers: firefox, chrome and safari. I only tested on PC, not mobile. Since each browser uses the same engine for both platforms, the compatibility issue between the two must be minor. I didn't include the Edge browser because it uses the Chrome's engine. I excluded Samsung Internet, Brave and many other browsers for the same reason.
 
 I also tested on minor *or* outdated browsers: IE, [Ladybird], [Servo] and [NetSurf]. They all use their own engine, all built from scratch.
 
@@ -25,9 +25,10 @@ I also tested on minor *or* outdated browsers: IE, [Ladybird], [Servo] and [NetS
   - tested on 2022/10/22
 - IE
   - Version 11.0.19041.1566 on Windows 10
-  - tested on 2022/10/20, but that doesn't matter at all: IE's not maintained anymore
+  - tested on 2022/10/20, but that doesn't matter at all: IE's not maintained anymore.
 - Ladybird
-  - Not tested yet
+  - Version ?? on Serenity OS
+  - tested on 2022/10/22
 - NetSurf
   - Version 3.10 on Windows 10
   - tested on 2022/10/20
@@ -42,25 +43,27 @@ I also tested on minor *or* outdated browsers: IE, [Ladybird], [Servo] and [NetS
 ## Result
 
 | Checkpoint                                    | Firefox  | Chrome    | Safari  | IE         | Ladybird  | NetSurf    | Servo     |
-|-----------------------------------------------|----------|-----------|---------|------------|-----------|------------|-----------|
-| Smooth Scroll                                 | O        | O         | X       | X          | ?         | X          | X         |
-| CSS Variables                                 | O        | O         | O       | X          | ?         | X          | O         |
-| MathML (without help of JS)                   | O        | X         | O       | X          | ?         | X          | X         |
-| copy_button of fenced code blocks [^cbf]      | O        | O         | O       | X          | ?         | X          | X         |
-| Transparent background color                  | O        | O         | O       | X          | ?         | X          | O         |
-| Changing theme [^ct]                          | O        | O         | O       | X          | ?         | X[^nse1]   | X[^sve1]  |
-| Tasklist: Checked marker [^tlcm]              | O        | O         | O       | O[^iee1]   | ?         | X[^nse2]   | O         |
-| Tasklist: Triangle marker [^tlcm]             | O        | O         | O       | O[^iee1]   | ?         | X[^nse2]   | O         |
-| Background blur when viewing an image [^bb]   | O        | O         | X       | X          | ?         | X[^nse3]   | X         |
-| Alignment of the Settings menu [^alsm]        | O        | O         | O       | O          | ?         | X[^nse4]   | X[^sve1]  |
-| Collapsible tables with animations [^ctwa]    | O        | O         | O       | O          | ?         | X          | O         |
-| Special Characters [^specialchars]            | O        | O         | O       | O          | ?         | ▲[^nse5]   | O         |
-| CSS Media Query: Screen Orientation           | O        | O         | O       | O          | ?         | X          | X         |
-| CSS Media Query: Print                        | O        | X[^che1]  | O       | O          | ?         | X[^nse6]   | X[^sve2]  |
-| Rendering Korean alphabets (한글)             | O        | O         | O       | O          | ?         | O          | O         |
-| Score                                         | 15/15    | 13/15     | 13/15   | 8/15       | ?/15      | 1.5/15     | 7/15      |
+|-----------------------------------------------|:--------:|:---------:|:-------:|:----------:|:---------:|:----------:|:---------:|
+| Smooth Scroll                                 | O        | O         | X       | X          | X         | X          | X         |
+| CSS Variables                                 | O        | O         | O       | X          | O         | X          | O         |
+| MathML (without help of JS)                   | O        | X         | O       | X          | X         | X          | X         |
+| copy_button of fenced code blocks [^cbf]      | O        | O         | O       | X          | X         | X          | X         |
+| CSS: transparent background color             | O        | O         | O       | X          | O         | X          | O         |
+| Changing theme [^ct]                          | O        | O         | O       | X          | X[^lbe1]  | X[^nse1]   | X[^sve1]  |
+| Tasklist: Checked marker [^tlcm]              | O        | O         | O       | O[^iee1]   | X[^lbe2]  | X[^nse2]   | O         |
+| Tasklist: Triangle marker [^tlcm]             | O        | O         | O       | O[^iee1]   | O         | X[^nse2]   | O         |
+| Background blur when viewing an image [^bb]   | O        | O         | X       | X          | X         | X[^nse3]   | X         |
+| Alignment of the Settings menu [^alsm]        | O        | O         | O       | O          | X[^lbe1]  | X[^nse4]   | X[^sve1]  |
+| Collapsible tables with animations [^ctwa]    | O        | O         | O       | O          | X[^lbe3]  | X          | O         |
+| Special Characters [^specialchars]            | O        | O         | O       | O          | X         | ▲[^nse5]   | O         |
+| CSS Media Query: Screen Orientation           | O        | O         | O       | O          | O         | X          | X         |
+| CSS Media Query: Print [^cmqp]                | O        | X[^che1]  | O       | O          | X[^lbe4]  | X[^nse6]   | X[^sve2]  |
+| Rendering Korean alphabets (한글)             | O        | O         | O       | O          | X         | O          | O         |
+| Score                                         | 15/15    | 13/15     | 13/15   | 8/15       | 4/15      | 1.5/15     | 7/15      |
 
-Currently, firefox is the only browser that passes all the tests. It's surprising that even the major browsers are not rendering a valid html5 page properly.
+Currently, firefox is the only browser that passes all the tests. It's surprising that even the major browsers are not rendering valid html5 pages properly.
+
+I'll be back 6 months later. I hope the browsers pass more tests then.
 
 [^ct]: It uses JS' DOM API to control CSS variables. CSS `color` has a transition effect.
 
@@ -95,3 +98,13 @@ Currently, firefox is the only browser that passes all the tests. It's surprisin
 [^nse6]: Print button doesn't work.
 
 [^sve2]: There's no print function.
+
+[^cmqp]: The nav bar disappears when printing.
+
+[^lbe1]: I can't open the settings menu.
+
+[^lbe2]: It does render a marker, but the shape is not correct.
+
+[^lbe3]: Tables are collapsible but the animation is not working.
+
+[^lbe4]: There's no print function.

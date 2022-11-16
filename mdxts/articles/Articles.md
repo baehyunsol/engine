@@ -9,7 +9,7 @@
 
 ### October 2022
 
-- [[giant]] [Browser-Compatibility](Browser-Compatibility.html) [[/giant]] [[blank=3]]- 21.October.2022
+- [[giant]] [Browser-Compatibility](Browser-Compatibility.html) [[/giant]] [[blank=3]]- 22.October.2022
   - Browser compatibility comparison
 
 ### September 2022

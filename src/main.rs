@@ -69,20 +69,7 @@ fn render(only_docs: bool) {
     doc_configs_context.extend(color_context);
 
     // docs & articles, images
-
-    copy_all(
-        "./mdxts/documents", "jpg",
-        "./output/htmls/documents", "jpg",
-        true
-    ).unwrap();
-
-    if !only_docs {
-        copy_all(
-            "./mdxts/articles", "jpg",
-            "./output/htmls/articles", "jpg",
-            true
-        ).unwrap();
-    }
+    copy_images(only_docs);
 
     // docs & articles, mdxt
 
@@ -352,6 +339,35 @@ fn render(only_docs: bool) {
     }
 
     clean_up_results();
+}
+
+fn copy_images(only_docs: bool) {
+
+    copy_all(
+        "./mdxts/documents", "jpg",
+        "./output/htmls/documents", "jpg",
+        true
+    ).unwrap();
+
+    copy_all(
+        "./mdxts/documents", "png",
+        "./output/htmls/documents", "png",
+        true
+    ).unwrap();
+
+    if !only_docs {
+        copy_all(
+            "./mdxts/articles", "jpg",
+            "./output/htmls/articles", "jpg",
+            true
+        ).unwrap();
+        copy_all(
+            "./mdxts/articles", "png",
+            "./output/htmls/articles", "png",
+            true
+        ).unwrap();
+    }
+
 }
 
 fn get_page_template_context(config: &Config) -> tera::Context {
