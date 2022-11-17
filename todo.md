@@ -158,3 +158,9 @@ scss 만드는 거나 md->html 하는 거나 css modularization 하는 거나 �
 ---
 
 작은 창에서 이미지 확대하면 다 가려버림... ㅠㅠ
+
+---
+
+box에 attribute 추가했으면 reference.md도 고치셈
+
+하는 김에 icon도 reference에 추가!

@@ -106,7 +106,7 @@ body .markdown {
     }
 
     div.box {
-        width: 80%;
+        max-width: 90%;
         padding: $padding-medium;
         margin: $margin-big $margin-medium;
         border: $border-medium solid var(--gray);
@@ -114,6 +114,10 @@ body .markdown {
 
     .box.no-border {
         border: none;
+    }
+
+    .box.inline {
+        display: inline-block;
     }
 
 }
@@ -129,6 +133,14 @@ body .markdown {
             max-width: $image-{{size}};
             max-height: $image-{{size}};
         }
+    }
+
+    .box.width-{{size}} {
+        width: $box-{{size}};
+    }
+
+    .box.height-{{size}} {
+        height: $box-{{size}};
     }
     {% endfor %}
 

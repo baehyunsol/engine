@@ -32,7 +32,7 @@ This blog is optimized for the Firefox browser. Well, I didn't mean it: my blog 
 
 
 - [#comparison](tag-comparison.html) (4)
-- [#mdxt](tag-mdxt.html) (3)
+- [#documentation](tag-documentation.html) (3)
 - [#reference](tag-reference.html) (3)
 
 [[right]]
