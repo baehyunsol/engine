@@ -6,6 +6,6 @@
 
 [[center]]
 
-2021 ~ 2022 (c) Baehyunsol
+2021 ~ 2022 [[char=copy]] Baehyunsol
 
 [[/center]]

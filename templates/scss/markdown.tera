@@ -342,6 +342,10 @@ body .markdown {
         white-space: pre;
     }
 
+    table tr:nth-last-child(odd) code.inline-code-span {
+        background-color: $gray;
+    }
+
 }
 
 /* Table */
@@ -377,7 +381,7 @@ body .markdown {
         td, th {
             padding: $padding-medium + $padding-small;
         }
-    
+
         tr:nth-last-child(odd) {
             background-color: var(--black);
         }

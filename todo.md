@@ -1,5 +1,3 @@
-이전에는 table 안에 있는 codespan이 색이 안 보이는 문제가 있었지? 그것도 CSS로 처리하자!!
-
 script를 html 안에 넣지말고 외부에 .js 파일로 따로 만들기
 - 이미지 확대, 표 접기 등은 따로 빼도 됨!
 - 코드 복사는 따로 못 뺌...
@@ -8,7 +6,7 @@ script를 html 안에 넣지말고 외부에 .js 파일로 따로 만들기
 
 이걸로 보고서 쓸 수 있을 정도로 깔끔하게 만들기
 - 사진/표/코드 등등은 페이지 중간에서 잘리지 않게 하기!
-- 페이지 바꾸는 매크로나 vertical 공간 만드는 매크로 만들기..??
+- 페이지 바꾸는 매크로 만들기..??
 
 `/templates`, `/mdxts`, `/engine.exe`, `/configs` 이 4개만 옮기면 바로바로 사용가능하도록 하자!
 
@@ -26,6 +24,8 @@ image processing도 추가하고 싶음.
   - 크기 자체는 이미 충분히 조절이 가능하지만 용량을 줄이고 싶을 수도 있으니까!
 - 흑백 반전
   - 필기할 때 요긴할 듯
+- 이미지 열화
+  - 열화된 거 먼저 보내고 나중에 제대로 된 거 보내기
 
 ---
 
@@ -75,15 +75,13 @@ css랑 js를 html 안에 embed해서 한 파일로 만드는 기능도 추가하
 
 이거는 좀 더 안정화가 되고 나서 하자. template들이 거의 바뀔 일이 없겠다 싶을 때 engine 안에 하드코딩으로 넣자.
 
+at least: todo들은 다 없앤 다음에!
+
 ---
 
 localStorage 써서 theme이랑 horizontal padding 기억시키자!
 
 근데 이러면 config에서 theme이랑 horizontal padding 바꿔도 적용이 안되는데??
-
----
-
-print 할 때는 copy_button 숨기자!
 
 ---
 
@@ -106,7 +104,10 @@ Bottlenecks
 폰트 loading하는 거: https://stackoverflow.com/questions/40624515/load-google-font-with-link-asynchronously-or-deferred-without-font-face-observ
 
 image loading하는 거: 일단 빈 image를 넣고 js로 src를 고쳐버릴까??
+- 그럼 page render를 여러번 해서 손해 아님??
+  - ㄴㄴ 이렇게 해도 노상관인게: CPU 도는 속도가 네트워크로 파일전송하는 속도보다 압도적으로 빠름.
 - 아니면 네이버처럼 일단은 저화질 이미지로 넣고 그다음에 본 이미지를 넣을까?
+  - 엔진이 저화질 이미지 일일이 만들어야함...
 
 https://pagespeed.web.dev/ <- 괜찮네
 
@@ -145,6 +146,7 @@ css modularization: 안 쓰는 CSS는 굳이 import 하지 말자
 
 variables
 - 이 페이지 전체에 `--yellow`라는 변수가 안 쓰임. 그럼 `--yellow`라는 변수 날려버릴 거임? 저거 날렸는데 js DOM으로 `--yellow` 조작하면 어떻게 됨? 에러임?
+  - 저래도 error는 아닌 듯? 저렇게 하면 `--yellow`라는 변수가 새로 생김
   - 걍 js DOM에 있는 `--yellow`까지 날려버리는게 best기는 함. 근데 그러려면 js까지 이해하는 engine을 만들어야함...ㅠㅠ
 
 ---
@@ -157,10 +159,10 @@ scss 만드는 거나 md->html 하는 거나 css modularization 하는 거나 �
 
 ---
 
-작은 창에서 이미지 확대하면 다 가려버림... ㅠㅠ
-
----
-
 box에 attribute 추가했으면 reference.md도 고치셈
 
 하는 김에 icon도 reference에 추가!
+
+---
+
+파일 관련된 API들 전부 case-insensitive하게 바꾸셈! `.CSS`든 `.cSs`든 다 작동하도록

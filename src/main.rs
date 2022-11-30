@@ -390,7 +390,7 @@ fn get_page_template_context(config: &Config) -> tera::Context {
     if config.has_footer {
         let footer = read_string("./templates/pages/footer.html").unwrap();
         context.insert("footer", &footer);
-        csses.push("footer.css");
+        csses.push("footer.css");  // `footer.css` doesn't exist
     }
 
     context.insert("csses", &csses);
