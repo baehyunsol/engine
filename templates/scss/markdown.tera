@@ -17,6 +17,7 @@ body .markdown {
     ::selection {
         background-color: var(--dark-compl);
         color: var(--white-compl);
+        text-decoration-color: var(--white-compl);
     }
 
     img {
@@ -70,7 +71,7 @@ body .markdown {
         color: var(--{{color}});
     }
 
-    .color-{{color}}::selection {
+    .color-{{color}}::selection, .color-{{color}} ::selection {
         color: var(--{{color}}-compl);
     }
 
@@ -340,6 +341,10 @@ body .markdown {
         border-radius: $round-border-tiny;
         padding: $padding-tiny $padding-small $padding-tiny;
         white-space: pre;
+    }
+
+    code.inline-code-span::selection {
+        color: $gold-compl;
     }
 
     table tr:nth-last-child(odd) code.inline-code-span {

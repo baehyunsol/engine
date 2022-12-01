@@ -46,11 +46,26 @@ footnote도 비슷하지만 더 쉬운 방식으로 구현하자. 걍 footnote c
 
 ---
 
-[[big]][[gold]]는 selection이 적용이 안되는데 [[gold]][[big]]은 됨. 반댄가? 쨌든 해보셈
+```
+[[big]][[gold]]big [[tiny]][[red]]tiny red[[/red]][[/tiny]] gold[[/gold]][[/big]]
+
+[[gold]][[big]]gold [[red]][[tiny]]red tiny[[/tiny]][[/red]] big[[/big]][[/gold]]
+
+[[big]][[red]]big [[tiny]][[gold]]tiny gold[[/gold]][[/tiny]] red[[/red]][[/big]]
+
+[[red]][[big]]red [[gold]][[tiny]]gold tiny[[/tiny]][[/gold]] big[[/big]][[/red]]
+```
+
+selection 해서 색깔 제대로 나오는지 확인하기! 저러면 안쪽의 selection은 gold::selection랑 red::selection이 충돌하잖아? 그럼 항상 gold가 이기더라... css 파일에 정의된 순서대로인 듯! 둘중에 더 가까운 거 적용되도록 하려면 어떻게 해야하지...
 
 ---
 
 `~_abc_~`를 select하면 글자색만 바뀌고 밑줄색은 안바뀜 ㅠㅠ
+- chrome에선 제대로 동작하고 firefox에선 안 됨...
+- text-decoration-color는 두 browser에서 둘다 영향 X
+  - chrome은 그냥 color 기준으로 underline도 하는 듯??
+  - border-bottom은 절대 쓰면 안됨!! text가 여러 줄이면 underline이 이상하게 될 거 아녀
+- 나중에 또 고치면 하는 김에 `[[gold]]~_abc_~[[/gold]]`도 해보셈
 
 ---
 
@@ -118,6 +133,9 @@ javascript strict mode 추가하기!
 ---
 
 `[[gold]]D1[[/gold]]이 [[red]]D3[[/red]]보다 크지? 아까 말한 queue 때문에 그래.`를 select하면 색깔 다른 부분이 크기도 달라짐... 왜 그럴까
+- chrome에선 안 그러고 firefox에서만 그럼... CSS 고친다고 해결될 문제가 아닌 듯?
+- 로마자랑 한글이 원래 크기가 다른가 싶었는데 그것도 아님,,, 색깔 macro 없애니까 크기 동일함
+- 이건 그냥 놔둘까?
 
 ---
 
