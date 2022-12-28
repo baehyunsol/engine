@@ -104,10 +104,6 @@ fenced code block에서 button 없이 무식하게 복붙하면 `'\n'`이 과하
 
 ---
 
-왜 render할 때마다 tag page가 바뀜? 이거 글 쓴 시간 순으로 정렬하는 거 아님?
-
----
-
 `<script>`에 `async`나 `defer` 넣고 싶은데 HXML이 저 문법을 허용을 안함
 
 큰 dilema긴 함... 저건 대놓고 XML이 아닌데? 근데 필요하긴 함...
@@ -184,3 +180,15 @@ box에 attribute 추가했으면 reference.md도 고치셈
 ---
 
 파일 관련된 API들 전부 case-insensitive하게 바꾸셈! `.CSS`든 `.cSs`든 다 작동하도록
+
+---
+
+settings menu에서 글씨 크기도 조절 가능하게 하자! 이러면 `rem`에 영향받는 모든 친구들이 다 바뀔 듯?
+
+---
+
+fenced code block을 light/dark 선택 가능하게 할까?
+
+---
+
+md가 여러개면 parallel하게 render할까?

@@ -28,8 +28,11 @@ impl Graph {
         self.vertex_indexes.len()
     }
 
-    pub fn iter(&self) -> Keys<String, usize> {
-        self.vertex_indexes.keys()
+    pub fn iter(&self) -> Vec<String> {
+        let mut result: Vec<String> = self.vertex_indexes.keys().map(|s| s.to_string()).collect();
+        result.sort_unstable();
+
+        result
     }
 
     pub fn add_vertex(&mut self, tag_name: String, article_name: String) {
@@ -83,6 +86,7 @@ impl Graph {
             (name.clone(), self.tag_articles[*index].len())
         ).collect::<Vec<(String, usize)>>();
 
+        result.sort_unstable_by_key(|(name, _)| name.to_string());
         result.sort_unstable_by_key(|(_, weight)| usize::MAX - *weight);
 
         result
