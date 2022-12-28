@@ -36,3 +36,41 @@ function tight_padding() {
 
 document.getElementById("tightpaddingbutton").addEventListener("click", tight_padding);
 document.getElementById("loosepaddingbutton").addEventListener("click", loose_padding);
+
+var font_size_landscape = {{font_size_landscape}};
+var font_size_portrait = {{font_size_portrait}};
+
+function shrink_font() {
+    font_size_landscape -= 1;
+    font_size_portrait -= 1;
+
+    if (font_size_landscape < 8) {
+        font_size_landscape = 8;
+    }
+
+    if (font_size_portrait < 3) {
+        font_size_portrait = 3;
+    }
+
+    root_doc.style.setProperty("--font-size-landscape", font_size_landscape + "px");
+    root_doc.style.setProperty("--font-size-portrait", font_size_portrait + "px");
+}
+
+function grow_font() {
+    font_size_landscape += 1;
+    font_size_portrait += 1;
+
+    if (font_size_landscape > 50) {
+        font_size_landscape = 50;
+    }
+
+    if (font_size_portrait > 45) {
+        font_size_portrait = 45;
+    }
+
+    root_doc.style.setProperty("--font-size-landscape", font_size_landscape + "px");
+    root_doc.style.setProperty("--font-size-portrait", font_size_portrait + "px");
+}
+
+document.getElementById("growfontbutton").addEventListener("click", grow_font);
+document.getElementById("shrinkfontbutton").addEventListener("click", shrink_font);

@@ -177,10 +177,6 @@ box에 attribute 추가했으면 reference.md도 고치셈
 
 ---
 
-settings menu에서 글씨 크기도 조절 가능하게 하자! 이러면 `rem`에 영향받는 모든 친구들이 다 바뀔 듯?
-
----
-
 fenced code block을 light/dark 선택 가능하게 할까?
 
 ---

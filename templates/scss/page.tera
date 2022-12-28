@@ -3,12 +3,14 @@
 
 :root {
     --horiz-padding: {{default_horiz_padding}}px;
+    --font-size-landscape: {{font_size_landscape}}px;
+    --font-size-portrait: {{font_size_portrait}}px;
 }
 
 @media screen and (orientation: landscape) {
 
     html {
-        font-size: {{font_size_landscape}}px;
+        font-size: var(--font-size-landscape);
     }
 
     article {
@@ -23,7 +25,7 @@
 @media screen and (orientation: portrait) {
 
     html {
-        font-size: {{font_size_portrait}}px;
+        font-size: var(--font-size-portrait);
     }
 
     article {

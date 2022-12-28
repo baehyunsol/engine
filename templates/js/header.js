@@ -1,9 +1,8 @@
-let navbutton = document.getElementById("navbutton");
 let topmenu = document.querySelector("div.topmenu");
 
-function f() {
+function toggle_header() {
     topmenu.classList.toggle("activated");
     topmenu.classList.toggle("deactivated");
 }
 
-navbutton.onclick = f;
+document.getElementById("navbutton").addEventListener("click", toggle_header);
