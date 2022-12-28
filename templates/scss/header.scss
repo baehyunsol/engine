@@ -2,7 +2,71 @@
 @import "units";
 
 html {
-    scroll-padding: $header-height
+    scroll-padding: $header-height;
+}
+
+@media screen and (orientation: portrait) {
+
+    header {
+
+        .topmenu.activated {
+            display: block;
+        }
+
+        .topmenu.deactivated {
+            display: none;
+        }
+
+        .topmenu {
+            position: fixed;
+            z-index: 2;
+            left: 0;
+            width: 100%;
+            top: $header-height - 0.5rem;
+            background-color: var(--black);
+            border-bottom: $border-medium solid var(--white);
+
+            a {
+                padding: $padding-big;
+                display: block;
+            }
+    
+            a:hover {
+                background-color: var(--gray);
+            }
+
+        }
+
+    }
+
+}
+
+@media screen and (orientation: landscape) {
+
+    header {
+
+        .topmenu {
+            display: block;
+        }
+
+        .mobileview {
+            display: none;
+        }
+
+        p {
+            margin: $padding-big;
+        }
+
+        a {
+            margin-left: $padding-giant;
+        }
+
+        a:hover {
+            border-bottom: $border-big solid var(--white);
+        }
+
+    }
+
 }
 
 header {
@@ -14,8 +78,19 @@ header {
     width: 100%;
     border-bottom: $border-medium solid var(--white);
 
-    p {
-        margin: $padding-big;
+    .mobileview {
+
+        p {
+            margin: $padding-big;
+        }
+
+        a {
+            display: block;
+            text-align: right;
+            margin-right: $padding-giant;
+            cursor: pointer;
+        }
+
     }
 
     a {
@@ -23,12 +98,10 @@ header {
         text-decoration: none;
         color: var(--white);
         font-size: $font-big;
-        margin-right: $padding-giant;
         transition: border 0.5s ease-out;
     }
 
     a:hover {
-        border-bottom: $border-big solid var(--white);
         transition: border 0.5s ease-out;
     }
 

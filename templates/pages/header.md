@@ -1,1 +1,1 @@
-[Home](index.html) [Articles](Articles.html) [Tags](Tags.html)
+[[div, class=top menu, class=deactivated]][Home](index.html) [Articles](Articles.html) [Tags](Tags.html)[[/div]][[div, class=mobile view]][[anchor, id=nav button]][[char=9776]][[/anchor]][[/div]]

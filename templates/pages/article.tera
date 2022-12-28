@@ -52,6 +52,10 @@
     {% if nav %}
     <script src="nav.js"></script>
     {% endif %}
+    
+    {% if header %}
+    <script src="header.js"></script>
+    {% endif %}
 </body>
 
 </html>

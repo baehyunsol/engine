@@ -36,12 +36,6 @@ footnote도 비슷하지만 더 쉬운 방식으로 구현하자. 걍 footnote c
 
 ---
 
-모바일 버전은 top bar 구현 다르게 하자. https://www.w3schools.com/howto/howto_js_mobile_navbar.asp 방식으로!
-
-왜냐면 CoqStudy에서 top bar에 `index_by_chapter`랑 `index_by_keyword`를 넣을 거거든.
-
----
-
 이미지 확대한 거 닫는 버튼을 따로 만들자. 위에 `click 어쩌구저쩌구 close 얼씨구절씨구`는 날려버리고
 
 ---
@@ -192,3 +186,7 @@ fenced code block을 light/dark 선택 가능하게 할까?
 ---
 
 md가 여러개면 parallel하게 render할까?
+
+---
+
+print할 때 header를 숨길까?
