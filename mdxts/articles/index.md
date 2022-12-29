@@ -18,11 +18,11 @@ This blog is optimized for the Firefox browser. Well, I didn't mean it: my blog 
 ### Recent Articles
 
 
+- [MDxt-Icon-Reference](MDxt-Icon-Reference.html)
 - [Browser-Compatibility](Browser-Compatibility.html)
 - [MDxt-Reference](MDxt-Reference.html)
 - [MDxt-Character-Reference](MDxt-Character-Reference.html)
 - [Github-Stars-Comparison](Github-Stars-Comparison.html)
-- [Loc-Comparison](Loc-Comparison.html)
 
 [[right]]
 [See more](Articles.html)
@@ -32,8 +32,8 @@ This blog is optimized for the Firefox browser. Well, I didn't mean it: my blog 
 
 
 - [#comparison](tag-comparison.html) (4)
-- [#documentation](tag-documentation.html) (3)
-- [#mdxt](tag-mdxt.html) (3)
+- [#documentation](tag-documentation.html) (4)
+- [#mdxt](tag-mdxt.html) (4)
 
 [[right]]
 [See more](Tags.html)

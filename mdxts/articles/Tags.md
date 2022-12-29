@@ -2,9 +2,9 @@
 
 
 - [#comparison](tag-comparison.html) (4)
-- [#documentation](tag-documentation.html) (3)
-- [#mdxt](tag-mdxt.html) (3)
-- [#reference](tag-reference.html) (3)
+- [#documentation](tag-documentation.html) (4)
+- [#mdxt](tag-mdxt.html) (4)
+- [#reference](tag-reference.html) (4)
 - [#opensource](tag-opensource.html) (2)
 - [#browser](tag-browser.html) (1)
 - [#github](tag-github.html) (1)

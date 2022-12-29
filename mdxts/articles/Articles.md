@@ -7,6 +7,11 @@
 ## All articles
 
 
+### December 2022
+
+- [[giant]] [MDxt-Icon-Reference](MDxt-Icon-Reference.html) [[/giant]] [[blank=3]]- 29.December.2022
+  - There's no preview for this article.
+
 ### October 2022
 
 - [[giant]] [Browser-Compatibility](Browser-Compatibility.html) [[/giant]] [[blank=3]]- 22.October.2022
