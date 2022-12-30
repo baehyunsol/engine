@@ -241,7 +241,9 @@ pub fn render_directory(
                 match read_string(file) {
                     Ok(html) => match hxml::into_dom(html) {
                         Ok(_) => {
+                            // `render_clickable_image` has to be called before `render_lazy_loaded_images`, because the second function erases all the `src` of `img` tags.
                             xml::render_clickable_image(image_box.clone(), article_title.clone())?;
+                            xml::render_lazy_loaded_images(article_title.clone())?;
 
                             match articles_metadata.get(&article_title) {
                                 Some(metadata) => match yaml_hash::get(metadata, &Yaml::from_str("has_collapsible_table")) {

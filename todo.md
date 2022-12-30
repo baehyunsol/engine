@@ -104,21 +104,6 @@ fenced code block에서 button 없이 무식하게 복붙하면 `'\n'`이 과하
 
 ---
 
-Bottlenecks
-
-폰트 loading하는 거: https://stackoverflow.com/questions/40624515/load-google-font-with-link-asynchronously-or-deferred-without-font-face-observ
-
-`<link rel="preload" href="styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">`
-- 저기서 `styles.css`에다가 폰트 주소 넣으면 됨!
-
-image loading하는 거: 일단 빈 image를 넣고 js로 src를 고쳐버릴까??
-- 그럼 page render를 여러번 해서 손해 아님??
-  - ㄴㄴ 이렇게 해도 노상관인게: CPU 도는 속도가 네트워크로 파일전송하는 속도보다 압도적으로 빠름.
-
-https://pagespeed.web.dev/ <- 괜찮네
-
----
-
 javascript strict mode 추가하기!
 
 ---
