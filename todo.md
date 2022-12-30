@@ -88,9 +88,9 @@ at least: todo들은 다 없앤 다음에!
 
 ---
 
-localStorage 써서 theme이랑 horizontal padding 기억시키자!
+menu에 `save_settings` 추가하고 저 버튼에 tooltip으로 ~_Remember the current font size, horizontal padding and theme. It's written to the local storage._~라고 표시 ㄱㄱ
 
-근데 이러면 config에서 theme이랑 horizontal padding 바꿔도 적용이 안되는데??
+`colors.js`랑 `nav.js`가 페이지 열 때마다 local storage에 해당 정보 있는지 확인, 있으면 그 값으로 설정 변경
 
 ---
 
@@ -108,11 +108,12 @@ Bottlenecks
 
 폰트 loading하는 거: https://stackoverflow.com/questions/40624515/load-google-font-with-link-asynchronously-or-deferred-without-font-face-observ
 
+`<link rel="preload" href="styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">`
+- 저기서 `styles.css`에다가 폰트 주소 넣으면 됨!
+
 image loading하는 거: 일단 빈 image를 넣고 js로 src를 고쳐버릴까??
 - 그럼 page render를 여러번 해서 손해 아님??
   - ㄴㄴ 이렇게 해도 노상관인게: CPU 도는 속도가 네트워크로 파일전송하는 속도보다 압도적으로 빠름.
-- 아니면 네이버처럼 일단은 저화질 이미지로 넣고 그다음에 본 이미지를 넣을까?
-  - 엔진이 저화질 이미지 일일이 만들어야함...
 
 https://pagespeed.web.dev/ <- 괜찮네
 

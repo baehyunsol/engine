@@ -14,7 +14,7 @@ document.getElementById("settingsclosebutton").addEventListener("click", close_s
 var root_doc = document.querySelector(":root");
 var horizontal_padding = {{default_horiz_padding}};
 
-function loose_padding() {
+function grow_horiz() {
     horizontal_padding -= 24;
 
     if (horizontal_padding < 0) {
@@ -24,7 +24,7 @@ function loose_padding() {
     root_doc.style.setProperty("--horiz-padding", horizontal_padding + "px");
 }
 
-function tight_padding() {
+function shrink_horiz() {
     horizontal_padding += 24;
 
     if (horizontal_padding > 288) {
@@ -34,8 +34,8 @@ function tight_padding() {
     root_doc.style.setProperty("--horiz-padding", horizontal_padding + "px");
 }
 
-document.getElementById("tightpaddingbutton").addEventListener("click", tight_padding);
-document.getElementById("loosepaddingbutton").addEventListener("click", loose_padding);
+document.getElementById("growhorizontalbutton").addEventListener("click", grow_horiz);
+document.getElementById("shrinkhorizontalbutton").addEventListener("click", shrink_horiz);
 
 var font_size_landscape = {{font_size_landscape}};
 var font_size_portrait = {{font_size_portrait}};
