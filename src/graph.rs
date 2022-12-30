@@ -86,8 +86,9 @@ impl Graph {
             (name.clone(), self.tag_articles[*index].len())
         ).collect::<Vec<(String, usize)>>();
 
+        // vertices with the same weights are sorted alphabetically
         result.sort_unstable_by_key(|(name, _)| name.to_string());
-        result.sort_unstable_by_key(|(_, weight)| usize::MAX - *weight);
+        result.sort_by_key(|(_, weight)| usize::MAX - *weight);
 
         result
     }
@@ -117,7 +118,8 @@ impl Graph {
 
                 }
 
-                result.sort_unstable_by_key(|(_, weight)| usize::MAX - *weight);
+                result.sort_unstable_by_key(|(name, _)| name.to_string());
+                result.sort_by_key(|(_, weight)| usize::MAX - *weight);
 
                 result
             }
