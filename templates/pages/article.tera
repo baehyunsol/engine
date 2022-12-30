@@ -9,7 +9,8 @@
     {% else %}
     <title>Test</title>
     {% endif %}
-    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&amp;display=swap" rel="stylesheet"/> 
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&amp;display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
+    <!--<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&amp;display=swap" rel="stylesheet"/> -->
     {% if csses %}
     {% for css in csses %}<link href="{{css}}" rel="stylesheet"/>{% endfor %}
     {% endif %}
