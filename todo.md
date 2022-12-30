@@ -167,16 +167,6 @@ scss 만드는 거나 md->html 하는 거나 css modularization 하는 거나 �
 
 ---
 
-box에 attribute 추가했으면 reference.md도 고치셈
-
-하는 김에 icon도 reference에 추가!
-
----
-
-파일 관련된 API들 전부 case-insensitive하게 바꾸셈! `.CSS`든 `.cSs`든 다 작동하도록
-
----
-
 fenced code block을 light/dark 선택 가능하게 할까?
 
 ---

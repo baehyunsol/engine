@@ -80,7 +80,7 @@ pub fn render_directory(
 
     files = files.into_iter().filter(
         |f| match extension(f) {
-            Ok(ext) if ext == ext_from => true,
+            Ok(ext) if ext.to_lowercase() == ext_from.to_lowercase() => true,
             _ => false
         }
     ).collect();
@@ -380,7 +380,7 @@ pub fn render_templates(
 
     articles = articles.into_iter().filter(
         |f| match extension(f) {
-            Ok(ext) if ext == article_ext => true,
+            Ok(ext) if ext.to_lowercase() == article_ext.to_lowercase() => true,
             _ => false
         }
     ).collect();
@@ -493,7 +493,7 @@ pub fn copy_all(
 
     files = files.into_iter().filter(
         |f| match extension(f) {
-            Ok(ext) if ext == ext_from => true,
+            Ok(ext) if ext.to_lowercase() == ext_from.to_lowercase() => true,
             _ => false
         }
     ).collect();

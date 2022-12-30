@@ -1,5 +1,5 @@
 ---
-date: [2022, 9, 30]
+date: [2022, 12, 30]
 tags: [mdxt, reference, documentation]
 preview: MDxt Reference
 ---
@@ -54,6 +54,10 @@ A valid link after a bang(!) character is rendered to an `img` tag.
 `![abc](def)` is rendered to `<img src="def" alt="abc">`.
 
 ### Footnotes
+
+Links whose names begin with `^` are rendered to footnotes. A footnote may have multiple lines, but it can have only 1 paragraph. Don't ref another footnote inside a footnote.
+
+Below is an example.
 
 ```
 This is a footnote.[^A]
@@ -379,6 +383,36 @@ A paragraph in a borderless box in a box.
 
 [[/box]]
 
+You can set box's width/height using attributes. See examples below.
+
+```
+[[box, width = giant, height = giant]]
+
+A Giant Box
+
+[[/box]]
+
+[[box, width = tiny, height = tiny]]
+
+A Tiny Box
+
+[[/box]]
+```
+
+[[box, width = giant, height = giant]]
+
+A Giant Box
+
+[[/box]]
+
+[[box, width = tiny, height = tiny]]
+
+A Tiny Box
+
+[[/box]]
+
+There's another attribute: `inline`, which is a bit tricky. An inline `[[box]]` macro is rendered to a `<span>` tag, while a multiline `[[box]]` macro with an `inline` attribute is rendered to a `<div>` tag with an `"inline"` class.
+
 ### Table of Contents
 
 ```
@@ -402,7 +436,7 @@ To see the list of available characters, visit [here](MDxt-Character-Reference.h
 
 ### Icons
 
-WIP
+You can embed SVG icons using the `[[icon]]` macro. The full documentation can be found [here](MDxt-Icon-Reference.html).
 
 ### Math
 

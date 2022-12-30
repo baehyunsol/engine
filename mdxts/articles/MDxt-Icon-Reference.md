@@ -33,8 +33,7 @@ tags: [mdxt, reference, documentation]
 
 `[[pink]]       [[icon=github]]       [[/pink]]`: [[pink]][[icon=github]][[/pink]]
 
-`[[grassgreen]] [[ico
-n=github]] [[/grassgreen]]`: [[grassgreen]][[icon=github]][[/grassgreen]]
+`[[grassgreen]] [[icon=github]] [[/grassgreen]]`: [[grassgreen]][[icon=github]][[/grassgreen]]
 
 `[[gold]]       [[icon=github]]       [[/gold]]`: [[gold]][[icon=github]][[/gold]]
 
@@ -58,9 +57,7 @@ n=github]] [[/grassgreen]]`: [[grassgreen]][[icon=github]][[/grassgreen]]
 
 Total 109 icons.
 
- [airplane](#iconairplane)  [alert](#iconalert)  [arrowback](#iconarrowback)  [arrowdown](#iconarrowdown)  [arrowforward](#iconarrowforward)  [arrowheaddown](#iconarrowheaddown)  [arrowheadleft](#iconarrowheadleft)  [arrowheadright](#iconarrowheadright)  [arrowheadup](#iconarrowheadup)  [arrowupward](#iconarrowupward)  [at](#iconat)  [attach](#iconattach)  [award](#iconaward)  [beer](#iconbeer)  [bell](#iconbell)  [belloff](#iconbelloff)  [bug](#iconbug)  [bulb](#iconbulb)  [c](#iconc)  [camera](#iconcamera)  [car](#iconcar)  [cart](#iconcart)  [chip](#iconchip)  [clock](#iconclock)  [close](#iconclose)  [cpp](#iconcpp)  [css](#iconcss)  [document](#icondocument)  [electricity](#iconelectricity)  [eye](#iconeye)  [
-eyeoff](#iconeyeoff)  [facebook](#iconfacebook)  [fish](#iconfish)  [folder](#iconfolder)  [forest](#iconforest)  [game](#icongame)  [gift](#icongift)  [github](#icongithub)  [glasses](#iconglasses)  [google](#icongoogle)  [happy](#iconhappy)  [hash](#iconhash)  [heart](#iconheart)  [home](#iconhome)  [html](#iconhtml)  [image](#iconimage)  [info](#iconinfo)  [instagram](#iconinstagram)  [javascript](#iconjavascript)  [key](#iconkey)  [linux](#iconlinux)  [liquor](#iconliquor)  [list](#iconlist)  [lock](#iconlock)  [maximize](#iconmaximize)  [menu](#iconmenu)  [messagesquare](#iconmessagesquare)  [mic](#iconmic)  [micoff](#iconmicoff)  [minimize](#iconminimize)  [monitor](#iconmonitor)  [music](#iconmusic)  [navigation](#iconnavigation)  [nuclear](#iconnuclear)  [options](#iconoptions)  [palette](#iconpalette)  [pen](#iconpen)  [people](#iconpeople)  [person](#iconperson)  [phone](#iconphone)  [pin](#iconpin)  [power](#iconpower)  [python](#iconpython)  [question](#iconquestion)  [radio](#iconradio)  [refresh
-](#iconrefresh)  [rocket](#iconrocket)  [run](#iconrun)  [rust](#iconrust)  [save](#iconsave)  [scissors](#iconscissors)  [search](#iconsearch)  [settings](#iconsettings)  [share](#iconshare)  [shield](#iconshield)  [shieldoff](#iconshieldoff)  [skull](#iconskull)  [slash](#iconslash)  [smoke](#iconsmoke)  [smokefree](#iconsmokefree)  [soccer](#iconsoccer)  [star](#iconstar)  [terminal](#iconterminal)  [thumbdown](#iconthumbdown)  [thumbup](#iconthumbup)  [trophy](#icontrophy)  [tv](#icontv)  [twitter](#icontwitter)  [umbrella](#iconumbrella)  [university](#iconuniversity)  [video](#iconvideo)  [videooff](#iconvideooff)  [volumeoff](#iconvolumeoff)  [volumeup](#iconvolumeup)  [water](#iconwater)  [wifi](#iconwifi)  [wifioff](#iconwifioff)  [wine](#iconwine)  [youtube](#iconyoutube) 
+ [airplane](#iconairplane)  [alert](#iconalert)  [arrowback](#iconarrowback)  [arrowdown](#iconarrowdown)  [arrowforward](#iconarrowforward)  [arrowheaddown](#iconarrowheaddown)  [arrowheadleft](#iconarrowheadleft)  [arrowheadright](#iconarrowheadright)  [arrowheadup](#iconarrowheadup)  [arrowupward](#iconarrowupward)  [at](#iconat)  [attach](#iconattach)  [award](#iconaward)  [beer](#iconbeer)  [bell](#iconbell)  [belloff](#iconbelloff)  [bug](#iconbug)  [bulb](#iconbulb)  [c](#iconc)  [camera](#iconcamera)  [car](#iconcar)  [cart](#iconcart)  [chip](#iconchip)  [clock](#iconclock)  [close](#iconclose)  [cpp](#iconcpp)  [css](#iconcss)  [document](#icondocument)  [electricity](#iconelectricity)  [eye](#iconeye)  [eyeoff](#iconeyeoff)  [facebook](#iconfacebook)  [fish](#iconfish)  [folder](#iconfolder)  [forest](#iconforest)  [game](#icongame)  [gift](#icongift)  [github](#icongithub)  [glasses](#iconglasses)  [google](#icongoogle)  [happy](#iconhappy)  [hash](#iconhash)  [heart](#iconheart)  [home](#iconhome)  [html](#iconhtml)  [image](#iconimage)  [info](#iconinfo)  [instagram](#iconinstagram)  [javascript](#iconjavascript)  [key](#iconkey)  [linux](#iconlinux)  [liquor](#iconliquor)  [list](#iconlist)  [lock](#iconlock)  [maximize](#iconmaximize)  [menu](#iconmenu)  [messagesquare](#iconmessagesquare)  [mic](#iconmic)  [micoff](#iconmicoff)  [minimize](#iconminimize)  [monitor](#iconmonitor)  [music](#iconmusic)  [navigation](#iconnavigation)  [nuclear](#iconnuclear)  [options](#iconoptions)  [palette](#iconpalette)  [pen](#iconpen)  [people](#iconpeople)  [person](#iconperson)  [phone](#iconphone)  [pin](#iconpin)  [power](#iconpower)  [python](#iconpython)  [question](#iconquestion)  [radio](#iconradio)  [refresh](#iconrefresh)  [rocket](#iconrocket)  [run](#iconrun)  [rust](#iconrust)  [save](#iconsave)  [scissors](#iconscissors)  [search](#iconsearch)  [settings](#iconsettings)  [share](#iconshare)  [shield](#iconshield)  [shieldoff](#iconshieldoff)  [skull](#iconskull)  [slash](#iconslash)  [smoke](#iconsmoke)  [smokefree](#iconsmokefree)  [soccer](#iconsoccer)  [star](#iconstar)  [terminal](#iconterminal)  [thumbdown](#iconthumbdown)  [thumbup](#iconthumbup)  [trophy](#icontrophy)  [tv](#icontv)  [twitter](#icontwitter)  [umbrella](#iconumbrella)  [university](#iconuniversity)  [video](#iconvideo)  [videooff](#iconvideooff)  [volumeoff](#iconvolumeoff)  [volumeup](#iconvolumeup)  [water](#iconwater)  [wifi](#iconwifi)  [wifioff](#iconwifioff)  [wine](#iconwine)  [youtube](#iconyoutube) 
 
 
 
@@ -133,8 +130,7 @@ eyeoff](#iconeyeoff)  [facebook](#iconfacebook)  [fish](#iconfish)  [folder](#ic
 
 [[/center]]
 
-[[/box
-]]
+[[/box]]
 
 [[box, inline, width = medium]]
 
@@ -192,8 +188,7 @@ eyeoff](#iconeyeoff)  [facebook](#iconfacebook)  [fish](#iconfish)  [folder](#ic
 
 [[icon = award, size = 64]][[br]]award[[br]][[anchor, id=iconaward]][[/anchor]][EVA][[br]]MIT
 
-[[/cente
-r]]
+[[/center]]
 
 [[/box]]
 
@@ -261,8 +256,7 @@ r]]
 
 [[center]]
 
-[[icon 
-= camera, size = 64]][[br]]camera[[br]][[anchor, id=iconcamera]][[/anchor]][ION][[br]]MIT
+[[icon = camera, size = 64]][[br]]camera[[br]][[anchor, id=iconcamera]][[/anchor]][ION][[br]]MIT
 
 [[/center]]
 
@@ -322,8 +316,7 @@ r]]
 
 [[center]]
 
-[[icon = cpp, size = 64]][[br]]cpp[[br]][[anchor, id=iconcpp]]
-[[/anchor]][DEV][[br]]MIT
+[[icon = cpp, size = 64]][[br]]cpp[[br]][[anchor, id=iconcpp]][[/anchor]][DEV][[br]]MIT
 
 [[/center]]
 
@@ -383,8 +376,7 @@ r]]
 
 [[center]]
 
-[[icon = facebook, size = 64]][[br]]facebook[[br]][[anchor, id=iconfacebook]][[/anch
-or]][EVA][[br]]MIT
+[[icon = facebook, size = 64]][[br]]facebook[[br]][[anchor, id=iconfacebook]][[/anchor]][EVA][[br]]MIT
 
 [[/center]]
 
@@ -448,8 +440,7 @@ or]][EVA][[br]]MIT
 
 [[/center]]
 
-[
-[/box]]
+[[/box]]
 
 [[box, inline, width = medium]]
 
@@ -513,8 +504,7 @@ or]][EVA][[br]]MIT
 
 [[box, inline, width = medium]]
 
-[
-[center]]
+[[center]]
 
 [[icon = html, size = 64]][[br]]html[[br]][[anchor, id=iconhtml]][[/anchor]][DEV][[br]]MIT
 
@@ -576,8 +566,7 @@ or]][EVA][[br]]MIT
 
 [[center]]
 
-[[icon = linux, size
- = 64]][[br]]linux[[br]][[anchor, id=iconlinux]][[/anchor]][ION][[br]]MIT
+[[icon = linux, size = 64]][[br]]linux[[br]][[anchor, id=iconlinux]][[/anchor]][ION][[br]]MIT
 
 [[/center]]
 
@@ -637,8 +626,7 @@ or]][EVA][[br]]MIT
 
 [[center]]
 
-[[icon = messagesquare, size = 64]][[br]]messagesqu
-are[[br]][[anchor, id=iconmessagesquare]][[/anchor]][EVA][[br]]MIT
+[[icon = messagesquare, size = 64]][[br]]messagesquare[[br]][[anchor, id=iconmessagesquare]][[/anchor]][EVA][[br]]MIT
 
 [[/center]]
 
@@ -698,8 +686,7 @@ are[[br]][[anchor, id=iconmessagesquare]][[/anchor]][EVA][[br]]MIT
 
 [[center]]
 
-[[icon = navigation, size = 64]][[br]]navigation[[br]][[ancho
-r, id=iconnavigation]][[/anchor]][EVA][[br]]MIT
+[[icon = navigation, size = 64]][[br]]navigation[[br]][[anchor, id=iconnavigation]][[/anchor]][EVA][[br]]MIT
 
 [[/center]]
 
@@ -759,8 +746,7 @@ r, id=iconnavigation]][[/anchor]][EVA][[br]]MIT
 
 [[center]]
 
-[[icon = person, size = 64]][[br]]person[[br]][[anchor, id=iconpe
-rson]][[/anchor]][EVA][[br]]MIT
+[[icon = person, size = 64]][[br]]person[[br]][[anchor, id=iconperson]][[/anchor]][EVA][[br]]MIT
 
 [[/center]]
 
@@ -822,8 +808,7 @@ rson]][[/anchor]][EVA][[br]]MIT
 
 [[icon = radio, size = 64]][[br]]radio[[br]][[anchor, id=iconradio]][[/anchor]][EVA][[br]]MIT
 
-[[/cent
-er]]
+[[/center]]
 
 [[/box]]
 
@@ -948,8 +933,7 @@ er]]
 
 [[/box]]
 
-[[box, inline, widt
-h = medium]]
+[[box, inline, width = medium]]
 
 [[center]]
 
@@ -1009,8 +993,7 @@ h = medium]]
 
 [[/box]]
 
-[[box, inline, width
- = medium]]
+[[box, inline, width = medium]]
 
 [[center]]
 
@@ -1070,8 +1053,7 @@ h = medium]]
 
 [[/box]]
 
-[[box, inline, 
-width = medium]]
+[[box, inline, width = medium]]
 
 [[center]]
 
@@ -1131,8 +1113,7 @@ width = medium]]
 
 [[/box]]
 
-[[bo
-x, inline, width = medium]]
+[[box, inline, width = medium]]
 
 [[center]]
 
