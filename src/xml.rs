@@ -49,7 +49,16 @@ pub fn render_lazy_loaded_images(article_title: String) -> Result<(), Error> {
 
             match image.get_attribute("src".to_string()) {
                 Some(src) => {
+
                     // TODO: what if the image already has an id?
+                    match image.get_attribute("id".to_string()) {
+                        Some(id) => {
+                            println!("Warning!! It's overwritting an id of an image: {}", id);
+                        },
+                        _ => {}
+                    }
+
+
                     let img_id = format!("lazy-loaded-image-{}", index);
                     image.set_attribute("id".to_string(), img_id.clone());
                     image.set_attribute("src".to_string(), String::new());

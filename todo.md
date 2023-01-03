@@ -94,10 +94,6 @@ menu에 `save_settings` 추가하고 저 버튼에 tooltip으로 ~_Remember the 
 
 ---
 
-fenced code block에서 button 없이 무식하게 복붙하면 `'\n'`이 과하게 많이 들어감
-
----
-
 `<script>`에 `async`나 `defer` 넣고 싶은데 HXML이 저 문법을 허용을 안함
 
 큰 dilema긴 함... 저건 대놓고 XML이 아닌데? 근데 필요하긴 함...
@@ -158,7 +154,3 @@ fenced code block을 light/dark 선택 가능하게 할까?
 ---
 
 md가 여러개면 parallel하게 render할까?
-
----
-
-print할 때 header를 숨길까?
