@@ -22,7 +22,7 @@ html {
         }
 
         .topmenu.deactivated {
-            display: none;
+            border-bottom: none;
         }
 
         .topmenu {
@@ -33,6 +33,9 @@ html {
             top: $header-height - 0.5rem;
             background-color: var(--black);
             border-bottom: $border-medium solid var(--white);
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.5s ease-out;
 
             a {
                 padding: $padding-big;
