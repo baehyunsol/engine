@@ -36,3 +36,20 @@ function to_light() {
 
 var change_theme_button = document.getElementById("changethemebutton");
 change_theme_button.addEventListener("click", change_theme);
+
+function save_color_settings () {
+    window.localStorage.setItem("is_dark", is_dark);
+}
+
+document.getElementById("savesettingsbutton").addEventListener("click", save_color_settings);
+
+if (window.localStorage.getItem("settings") === 'true') {
+    is_dark = (window.localStorage.getItem("is_dark") === 'true');
+
+    if (!is_dark) {
+        console.log("3", is_dark);
+        to_light();
+        change_theme_button.innerHTML = "Set Dark Theme";
+    }
+
+}

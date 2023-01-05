@@ -74,3 +74,27 @@ function grow_font() {
 
 document.getElementById("growfontbutton").addEventListener("click", grow_font);
 document.getElementById("shrinkfontbutton").addEventListener("click", shrink_font);
+
+function save_settings () {
+    window.localStorage.setItem("horizontal_padding", horizontal_padding);
+    window.localStorage.setItem("font_size_portrait", font_size_portrait);
+    window.localStorage.setItem("font_size_landscape", font_size_landscape);
+    window.localStorage.setItem("settings", true);
+}
+
+function discard_settings() {
+    window.localStorage.clear();
+}
+
+document.getElementById("savesettingsbutton").addEventListener("click", save_settings);
+document.getElementById("discardsettingsbutton").addEventListener("click", discard_settings);
+
+if (window.localStorage.getItem("settings") === 'true') {
+    horizontal_padding = Number(window.localStorage.getItem("horizontal_padding"));
+    font_size_portrait = Number(window.localStorage.getItem("font_size_portrait"));
+    font_size_landscape = Number(window.localStorage.getItem("font_size_landscape"));
+
+    root_doc.style.setProperty("--horiz-padding", horizontal_padding + "px");
+    root_doc.style.setProperty("--font-size-landscape", font_size_landscape + "px");
+    root_doc.style.setProperty("--font-size-portrait", font_size_portrait + "px");
+}
