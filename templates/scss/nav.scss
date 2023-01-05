@@ -54,17 +54,37 @@ nav {
     }
 
     div#settingsmenu {
-        background-color: var(--black);
 
-        a {
-            font-size: $font-medium;
-            display: block;
-            margin: $margin-medium;
+        .align-right {
+            text-align: right;
         }
 
-        a#settingsclosebutton {
-            text-align: right;
-            background-color: var(--gray);
+        .align-left {
+            text-align: left;
+        }
+
+        .size-giant {
+            font-size: $font-giant;
+        }
+
+        background-color: var(--black);
+
+        font-size: $font-medium;
+        color: var(--white);
+
+        table {
+            border: none;
+            border-collapse: collapse;
+
+            th {
+                background-color: var(--gray);
+                text-align: right;
+            }
+
+            td {
+                padding: $padding-medium;
+            }
+
         }
 
     }
