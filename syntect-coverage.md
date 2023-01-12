@@ -73,4 +73,5 @@ Tcl: ["tcl"]
 Textile: ["textile"]
 XML: ["xml", "xsd", "xslt", "tld", "dtml", "rss", "opml", "svg"]
 YAML: ["yaml", "yml", "sublime-syntax"]
+Coq: ["coq", "v"]
 ```

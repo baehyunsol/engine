@@ -88,12 +88,6 @@ at least: todo들은 다 없앤 다음에!
 
 ---
 
-menu에 `save_settings` 추가하고 저 버튼에 tooltip으로 ~_Remember the current font size, horizontal padding and theme. It's written to the local storage._~라고 표시 ㄱㄱ
-
-`colors.js`랑 `nav.js`가 페이지 열 때마다 local storage에 해당 정보 있는지 확인, 있으면 그 값으로 설정 변경
-
----
-
 `<script>`에 `async`나 `defer` 넣고 싶은데 HXML이 저 문법을 허용을 안함
 
 큰 dilema긴 함... 저건 대놓고 XML이 아닌데? 근데 필요하긴 함...
@@ -111,18 +105,9 @@ javascript strict mode 추가하기!
 
 ---
 
-zola에 보면 extra syntax highlighting 있음 Coq 좀 추가하셈 제발
-
-https://packagecontrol.io/packages/Coq
-https://github.com/whitequark/Sublime-Coq
-
-쟤네 참고 ㄱㄱ
-
----
-
 syntect 문서 잘 뒤져보면 oniguruma 대신 fancy-regex 쓰는 법 나와있음. 웬만해선 pure rust가 나으니까 저거로 갈아타자! 해보고 performance 차이가 너무 심하다 싶으면 다시 돌아오고 그게 아니면 계속 유지 ㄱㄱ
 
-아니 근데 fancy-regex 최신 버전이 0.10.0인데 syntect는 0.7.0 쓰는데??? 이 쉐키들 관리 안하네...
+아니 근데 fancy-regex 최신 버전이 0.10.0인데 syntect는 0.7.0 쓰는데??? syntect가 최신 버전으로 갈아탈 때까지 일단 존버...
 
 ---
 
