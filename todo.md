@@ -10,8 +10,6 @@ script를 html 안에 넣지말고 외부에 .js 파일로 따로 만들기
 
 `/templates`, `/mdxts`, `/engine.exe`, `/configs` 이 4개만 옮기면 바로바로 사용가능하도록 하자!
 
-footnote에 tooltip 띄우고 싶음... 이건 구현하는데 한참 걸리겠지? 학기 끝나고 하자!
-
 ---
 
 지금 `render` 구현을 보면 `remove_results`를 가장 먼저 하고 시작하잖아? 저걸 조금 늦게할 순 없나? 그럼 파일이 없는 시간이 훨씬 줄어들텐데.
@@ -139,3 +137,14 @@ fenced code block을 light/dark 선택 가능하게 할까?
 ---
 
 md가 여러개면 parallel하게 render할까?
+
+`render_directory`랑 `copy_all`은 병렬로 하기 무지무지 쉬움.
+
+`template`에 있는 친구들을 병렬로 할 필요 없고, `mdxts` 크기만 대충 파악해서 크다 싶으면 병렬로 ㄱㄱ
+- 아니면 병렬 옵션은 유저가 주는 걸로 할까
+
+---
+
+어떤 code-fence의 X번 줄에 link 걸기. 그거 클릭하면 그 줄이 highlight되는 거임! 구현은 무지 쉬움. 해당 줄의 span tag에다가 `highlight`라는 class만 toggle 해주면 됨!!
+
+이거 하려면 각 code fence에도 이름을 붙여야 함... 쉬움?

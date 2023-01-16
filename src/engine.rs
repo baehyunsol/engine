@@ -161,6 +161,8 @@ pub fn render_directory(
             };
             options.xml = true;
             options.embed_js_for_collapsible_tables(false);
+            options.embed_js_for_tooltips(false);
+            options.set_footnote_tooltip(true);
 
             let mut article_info = Tera::default();
 
@@ -188,6 +190,7 @@ pub fn render_directory(
                             mut content,
                             has_collapsible_table,
                             metadata,
+                            has_tooltip,
                             fenced_code_contents: _
                         } = render_to_html(&mdxt, options.clone());
 
@@ -197,6 +200,7 @@ pub fn render_directory(
                         };
 
                         metadata = yaml_hash::insert(metadata, Yaml::from_str("has_collapsible_table"), Yaml::Boolean(has_collapsible_table));
+                        metadata = yaml_hash::insert(metadata, Yaml::from_str("has_tooltip"), Yaml::Boolean(has_tooltip));
 
                         // it renders article_info if the metadata has `date` or `tags`.
                         match render_article_info(&metadata, &article_info) {
@@ -246,13 +250,24 @@ pub fn render_directory(
                             xml::render_lazy_loaded_images(article_title.clone())?;
 
                             match articles_metadata.get(&article_title) {
-                                Some(metadata) => match yaml_hash::get(metadata, &Yaml::from_str("has_collapsible_table")) {
-                                    Some(has_collapsible_table) => {
-                                        if has_collapsible_table.as_bool().is_some()
-                                            && has_collapsible_table.as_bool().unwrap()
-                                        { xml::render_collapsible_tables(article_title.clone())?; }
-                                    },
-                                    None => {}
+                                Some(metadata) => {
+                                    match yaml_hash::get(metadata, &Yaml::from_str("has_collapsible_table")) {
+                                        Some(has_collapsible_table) => {
+                                            if has_collapsible_table.as_bool().is_some()
+                                                && has_collapsible_table.as_bool().unwrap()
+                                            { xml::render_collapsible_tables(article_title.clone())?; }
+                                        },
+                                        None => {}
+                                    }
+
+                                    match yaml_hash::get(metadata, &Yaml::from_str("has_tooltip")) {
+                                        Some(has_tooltip) => {
+                                            if has_tooltip.as_bool().is_some()
+                                                && has_tooltip.as_bool().unwrap()
+                                            { xml::render_tooltips(article_title.clone())?; }
+                                        },
+                                        None => {}
+                                    }
                                 },
                                 None if !article_title.starts_with("tag-") => {
                                     return Err(Error::RenderError(EngineType::XML, format!("error at `render_directory({:?}, {:?}, ...)`\n`articles_metadata` doesn't have metadata of `{}`!", dir_from, ext_from, article_title)));
