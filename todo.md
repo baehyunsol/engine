@@ -30,11 +30,7 @@ image processing도 추가하고 싶음.
 미리보기 tooltip. Article끼리 link를 걸면, link의 hover로 article 미리보기 tooltip을 띄우자! 이거 HXML로 할 수 있음. 해당 link가 inner link인지 보고, 그럼 해당 article의 html을 읽어서 `<body>`의 가장 앞부분 내용만 (태그들 다 벗겨서) 긁어와서 tooltip으로 만들면 될 듯!
 - 그럼 tooltip을 mdxt가 아니고 html로 구현해야하는데...
 
-footnote도 비슷하지만 더 쉬운 방식으로 구현하자. 걍 footnote cite의 내용들 tooltip에 다 넣어버리면 되지!
-
----
-
-이미지 확대한 거 닫는 버튼을 따로 만들자. 위에 `click 어쩌구저쩌구 close 얼씨구절씨구`는 날려버리고
+버그: 이름이 동일한 파일이 여러개 있으면 (ex: documents에도 index.md가 있고 articles에도 index.md가 있음) engine이 둘을 구분을 못함
 
 ---
 
@@ -83,6 +79,9 @@ css랑 js를 html 안에 embed해서 한 파일로 만드는 기능도 추가하
 이거는 좀 더 안정화가 되고 나서 하자. template들이 거의 바뀔 일이 없겠다 싶을 때 engine 안에 하드코딩으로 넣자.
 
 at least: todo들은 다 없앤 다음에!
+
+쟤네가 하드코딩 돼 있으면 추가적인 이점이 있음.
+- engine이 돌다가 `./templates/scss/markdown.tera`란 파일이 필요한데 없다?? 그럼 걍 하드코딩된 데이터에서 뽑아 쓰면 됨!!
 
 ---
 
