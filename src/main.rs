@@ -22,7 +22,6 @@ use yaml_rust::{
 
 fn main() {
     let mut only_docs = false;
-    let first_time = true;
 
     let args = std::env::args().collect::<Vec<String>>();
 
@@ -58,7 +57,6 @@ fn main() {
 }
 
 fn render(only_docs: bool) {
-
     remove_results();
 
     let article_configs = load_articles_config();
@@ -418,7 +416,6 @@ fn get_colors() -> tera::Context {
 }
 
 fn update_articles_metadata(mdxts_logs: Vec<Log>, save_to_file: bool) -> HashMap<String, Yaml> {
-
     let mut articles_metadata = HashMap::with_capacity(mdxts_logs.len());
 
     if save_to_file {
@@ -434,12 +431,11 @@ fn update_articles_metadata(mdxts_logs: Vec<Log>, save_to_file: bool) -> HashMap
         emitter.dump(&logs_hash).unwrap();
 
         write_to_file("./output/articles.yaml", yaml_hash_string.as_bytes()).unwrap();
-
     }
 
     else {
 
-        for Log { file_from, file_to, metadata } in mdxts_logs.into_iter() {
+        for Log { file_from, metadata, .. } in mdxts_logs.into_iter() {
             articles_metadata.insert(file_name(&file_from).unwrap(), metadata);
         }
     
@@ -449,7 +445,6 @@ fn update_articles_metadata(mdxts_logs: Vec<Log>, save_to_file: bool) -> HashMap
 }
 
 fn render_tag_pages(tags_graph: &graph::Graph) {
-
     let mut tera_instance = tera::Tera::default();
     tera_instance.add_template_file("./templates/pages/tag.tera", Some("tag_page")).unwrap();
     mkdir("./mdxts/tag_pages");
@@ -478,7 +473,6 @@ fn render_tag_pages(tags_graph: &graph::Graph) {
 }
 
 fn meta_article_context(articles: &HashMap<String, article::Article>, tags_graph: &graph::Graph) -> tera::Context {
-
     let mut context = tera::Context::new();
     let recent_articles = article::get_recent_articles(&articles, 5);
 

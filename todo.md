@@ -135,15 +135,10 @@ fenced code block을 light/dark 선택 가능하게 할까?
 
 ---
 
-md가 여러개면 parallel하게 render할까?
-
-`render_directory`랑 `copy_all`은 병렬로 하기 무지무지 쉬움.
-
-`template`에 있는 친구들을 병렬로 할 필요 없고, `mdxts` 크기만 대충 파악해서 크다 싶으면 병렬로 ㄱㄱ
-- 아니면 병렬 옵션은 유저가 주는 걸로 할까
-
----
-
 어떤 code-fence의 X번 줄에 link 걸기. 그거 클릭하면 그 줄이 highlight되는 거임! 구현은 무지 쉬움. 해당 줄의 span tag에다가 `highlight`라는 class만 toggle 해주면 됨!!
 
 이거 하려면 각 code fence에도 이름을 붙여야 함... 쉬움?
+
+---
+
+read_string(상수)는 한번만 한 다음에 static으로 쓰면 안됨?

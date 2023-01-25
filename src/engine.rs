@@ -7,6 +7,7 @@ use crate::xml;
 use crate::yaml_hash;
 use mdxt::{render_to_html, RenderOption, RenderResult};
 use std::collections::HashMap;
+use rayon::prelude::*;
 use tera::{Context, Tera};
 use yaml_rust::Yaml;
 
@@ -178,12 +179,38 @@ pub fn render_directory(
                 _ => {}
             }
 
-            for file in files.iter() {
+            let files = files.into_iter().filter(|file| !config.ignores.contains(&basename(file).unwrap())).collect::<Vec<String>>();
 
-                if config.ignores.contains(&basename(file).unwrap()) {
-                    continue;
+            if files.len() > 8 {
+                let results = files.par_iter().map(
+                    |file| render_mdxt(
+                        file,
+                        dir_from, ext_from,
+                        dir_to, ext_to,
+                        options.clone(), &article_info
+                    )
+                ).collect::<Vec<Result<Log, Error>>>();
+
+                for result in results.into_iter() {
+                    logs.push(result?);
                 }
 
+            }
+
+            else {
+
+                for file in files.iter() {
+                    logs.push(render_mdxt(
+                        file,
+                        dir_from, ext_from,
+                        dir_to, ext_to,
+                        options.clone(), &article_info
+                    )?);
+                }
+
+            }
+
+            for file in files.iter() {
                 let dest = get_dest_path(&file, dir_to, ext_to)?;
 
                 match read_string(file) {
@@ -519,23 +546,61 @@ pub fn copy_all(
 
     mkdir(dir_to);  // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
 
-    for file in files.iter() {
-        let dest = get_dest_path(&file, dir_to, ext_to)?;
+    if files.len () > 8 {
+        let results = files.par_iter().map(
+            |file| {
+                let dest = get_dest_path(&file, dir_to, ext_to)?;
 
-        match read_bytes(file) {
-            Ok(data) => {
-                match write_to_file(&dest, &data) {
-                    Err(_) => {
-                        return Err(Error::PathError(format!("error at `copy_all({:?}, {:?}, ...)`\n`write_to_file({:?}, ...)` failed", dir_from, ext_from, dest)));
-                    }
+                match read_bytes(file) {
+                    Ok(data) => {
+                        match write_to_file(&dest, &data) {
+                            Err(_) => {
+                                return Err(Error::PathError(format!("error at `copy_all({:?}, {:?}, ...)`\n`write_to_file({:?}, ...)` failed", dir_from, ext_from, dest)));
+                            }
+                            _ => {
+                                return Ok(Log::new(file, &dest, None));
+                            }
+                        }
+                    },
                     _ => {
-                        logs.push(Log::new(file, &dest, None));
+                        return Err(Error::PathError(format!("error at `copy_all({:?}, {:?}, ...)`\n`read_bytes({:?})` failed", dir_from, ext_from, file)));
                     }
                 }
-            },
-            _ => {
-                return Err(Error::PathError(format!("error at `copy_all({:?}, {:?}, ...)`\n`read_bytes({:?})` failed", dir_from, ext_from, file)));
             }
+        ).collect::<Vec<Result<Log, Error>>>();
+
+        for result in results.into_iter() {
+
+            match result {
+                Ok(l) => { logs.push(l); }
+                Err(e) => { return Err(e); }
+            }
+
+        }
+
+    }
+
+    else {
+
+        for file in files.iter() {
+            let dest = get_dest_path(&file, dir_to, ext_to)?;
+
+            match read_bytes(file) {
+                Ok(data) => {
+                    match write_to_file(&dest, &data) {
+                        Err(_) => {
+                            return Err(Error::PathError(format!("error at `copy_all({:?}, {:?}, ...)`\n`write_to_file({:?}, ...)` failed", dir_from, ext_from, dest)));
+                        }
+                        _ => {
+                            logs.push(Log::new(file, &dest, None));
+                        }
+                    }
+                },
+                _ => {
+                    return Err(Error::PathError(format!("error at `copy_all({:?}, {:?}, ...)`\n`read_bytes({:?})` failed", dir_from, ext_from, file)));
+                }
+            }
+
         }
 
     }
@@ -629,5 +694,50 @@ fn get_dest_path(curr_path: &str, dir_to: &str, ext_to: &str) -> Result<String, 
     match set_ext(&joined, ext_to) {
         Ok(s) => Ok(s),
         Err(_) => Err(Error::PathError(format!("error at `get_dest_path({:?}, {:?}, {:?})`\n`set_ext({:?}, {:?})` failed", curr_path, dir_to, ext_to, joined, ext_to)))
+    }
+}
+
+fn render_mdxt(
+    file: &str,
+    dir_from: &str, ext_from: &str,
+    dir_to: &str, ext_to: &str,
+    options: RenderOption, article_info: &Tera
+) -> Result<Log, Error> {
+    let dest = get_dest_path(&file, dir_to, ext_to)?;
+
+    match read_string(file) {
+        Ok(mdxt) => {
+            let RenderResult {
+                mut content,
+                has_collapsible_table,
+                metadata,
+                has_tooltip,
+                fenced_code_contents: _
+            } = render_to_html(&mdxt, options.clone());
+
+            let mut metadata = match metadata {
+                None => yaml_hash::new(),
+                Some(m) => yaml_hash::from_yaml(m)
+            };
+
+            metadata = yaml_hash::insert(metadata, Yaml::from_str("has_collapsible_table"), Yaml::Boolean(has_collapsible_table));
+            metadata = yaml_hash::insert(metadata, Yaml::from_str("has_tooltip"), Yaml::Boolean(has_tooltip));
+
+            // it renders article_info if the metadata has `date` or `tags`.
+            match render_article_info(&metadata, article_info) {
+                Some(info) => {
+                    content = vec![render_to_html(&info, options.clone()).content, content].concat();
+                }
+                _ => {}
+            }
+
+            match write_to_file(&dest, content.as_bytes()) {
+                Err(_) => {return Err(Error::PathError(format!("error at `render_directory({:?}, {:?}, ...)`\n`write_to_file({:?})` failed", dir_from, ext_from, dest)));}
+                _ => { return Ok(Log::new(file, &dest, Some(metadata))); }
+            }
+        },
+        _ => {
+            return Err(Error::PathError(format!("error at `render_directory({:?}, {:?}, ...)`\n`read_string({:?})` failed", dir_from, ext_from, file)));
+        }
     }
 }

@@ -1,4 +1,4 @@
-use std::collections::{HashMap, hash_map::Keys};
+use std::collections::HashMap;
 
 // matrix implementation
 // vertexes are the tags
