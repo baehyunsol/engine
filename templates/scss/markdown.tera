@@ -214,6 +214,7 @@ body .markdown {
         border-radius: $round-border-medium;
         padding: $padding-small;
         background-color: var(--gray);
+        max-width: 80%;
         opacity: 0;
         transition: opacity 0.5s;
     }
