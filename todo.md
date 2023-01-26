@@ -141,4 +141,10 @@ fenced code block을 light/dark 선택 가능하게 할까?
 
 ---
 
-read_string(상수)는 한번만 한 다음에 static으로 쓰면 안됨?
+병렬: 구현은 했는데 XML이 병렬화가 안 돼서 별 의미 X -> 빨랑 thread-safe하게 ㄱㄱ
+
+tera는 병렬로 돌려도 별 차이가 안 남... 막아놨나?
+
+---
+
+table 안의 code span은 background color를 다르게 처리하잖아? 근데 또 table 안의 tooltip 안의 code span은 한번 더 꼬아야함...

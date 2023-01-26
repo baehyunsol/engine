@@ -14,60 +14,122 @@ use lazy_static::lazy_static;
 use file_io::*;
 use log::Log;
 use std::collections::HashMap;
+use std::time::Instant;
 use yaml_rust::{
     Yaml,
     YamlEmitter,
     YamlLoader,
 };
 
+#[derive(Copy, Clone, PartialEq)]
+pub enum MultiCore {
+    Auto,
+    Enable,
+    Disable
+}
+
+pub const MULTICORE_THRESHOLD: usize = 24;
+
 fn main() {
     let mut only_docs = false;
+    let mut verbose = false;
+    let mut multi_core = MultiCore::Auto;
 
     let args = std::env::args().collect::<Vec<String>>();
 
-    if args.len() > 1 {
+    for arg in args[1..].iter() {
 
-        if args[1] == "--doc".to_string() || args[1] == "-d".to_string() {
+        if arg == "--doc" || arg == "-d" {
             only_docs = true;
         }
 
-        else if args[1] == "--all".to_string() || args[1] == "-a".to_string() {
+        else if arg == "--all" || arg == "-a" {
             only_docs = false;
         }
 
-        else if args[1] == "--clear".to_string() || args[1] == "-c".to_string() {
+        else if arg == "--clear" || arg == "-c" {
             clean_up_results();
             remove_results();
             return;
         }
 
-        else if args[1] == "--help".to_string() || args[1] == "-h".to_string(){
-            println!("Engine v 0.1.0 (c) Baehyunsol
+        else if arg == "--verbose" {
+            verbose = true;
+        }
 
---all -a : render docs and articles
---clear -c : clear results
---doc -d : render only docs
---help -h : help message");
+        else if arg == "-ma" {
+            multi_core = MultiCore::Auto;
+        }
+
+        else if arg == "-me" {
+            multi_core = MultiCore::Enable;
+        }
+
+        else if arg == "-md" {
+            multi_core = MultiCore::Disable;
+        }
+
+        else if arg == "--help" || arg == "-h" {
+            print_help_message();
+            return;
+        }
+
+        else {
+            println!("Invalid argument: {}\n", arg);
+            print_help_message();
             return;
         }
 
     }
 
-    render(only_docs);
+    render(only_docs, multi_core, verbose);
 }
 
-fn render(only_docs: bool) {
-    remove_results();
+fn print_help_message() {
+    println!("Engine v 0.1.0 (c) Baehyunsol
+
+--all -a : render docs and articles
+    it's -a by default
+
+--clear -c : clear results
+
+--doc -d : render only docs
+
+--help -h : help message
+
+--verbose: verbose
+
+-ma -me -md : configure multi core usage
+    -ma: enable multi core rendering when there're lots of files to render
+        it's -ma by default
+    -me: always enable multi core rendering
+    -md: always disable multi core rendering
+");
+}
+
+fn render(only_docs: bool, multi_core: MultiCore, verbose: bool) {
+    let start_time = Instant::now();
 
     let article_configs = load_articles_config();
     let doc_configs = load_documents_config();
+
+    if verbose { show_verbose_message(start_time.clone(), "Configs loaded"); }
+
     let mut doc_configs_context = doc_configs.to_tera_context();
     let color_context = get_colors();
 
     doc_configs_context.extend(color_context);
 
+    if verbose { show_verbose_message(start_time.clone(), "Doc Config context loaded"); }
+
+    remove_results();
+
+    if verbose { show_verbose_message(start_time.clone(), "`remove_result` complete"); }
+
     // docs & articles, images
-    copy_images(only_docs);
+    copy_images(only_docs, multi_core);
+
+    if verbose { show_verbose_message(start_time.clone(), "`copy_image` complete"); }
 
     // docs & articles, mdxt
 
@@ -79,8 +141,11 @@ fn render(only_docs: bool) {
         None,
         None,
         &doc_configs,
-        true
+        true,
+        multi_core,
     ).unwrap();
+
+    if verbose { show_verbose_message(start_time.clone(), "`render_directory(documents, MDxt)` complete"); }
 
     if !only_docs {
         let mdxts_logs_articles = render_directory(
@@ -91,8 +156,11 @@ fn render(only_docs: bool) {
             None,
             None,
             &article_configs,
-            true
+            true,
+            multi_core,
         ).unwrap();
+
+        if verbose { show_verbose_message(start_time.clone(), "`render_directory(articles, MDxt)` complete"); }
 
         mdxts_logs = vec![
             mdxts_logs,
@@ -112,14 +180,20 @@ fn render(only_docs: bool) {
         None,
         None,
         &doc_configs,
-        true
+        true,
+        multi_core,
     ).unwrap();
+
+    if verbose { show_verbose_message(start_time.clone(), "`render_directory(scss -> documents, Tera)` complete"); }
 
     copy_all(
         "./templates/scss", "scss",
         "./output/htmls/documents", "scss",
-        true
+        true,
+        multi_core,
     ).unwrap();
+
+    if verbose { show_verbose_message(start_time.clone(), "`copy_all(scss)` complete"); }
 
     render_directory(
         "./output/htmls/documents", "scss",
@@ -129,8 +203,11 @@ fn render(only_docs: bool) {
         None,
         None,
         &doc_configs,
-        true
+        true,
+        multi_core,
     ).unwrap();
+
+    if verbose { show_verbose_message(start_time.clone(), "`render_directory(documents, Scss)` complete"); }
 
     // docs, js
 
@@ -142,14 +219,20 @@ fn render(only_docs: bool) {
         None,
         None,
         &doc_configs,
-        true
+        true,
+        multi_core,
     ).unwrap();
+
+    if verbose { show_verbose_message(start_time.clone(), "`render_directory(js -> documents, Tera)` complete"); }
 
     copy_all(
         "./templates/js", "js",
         "./output/htmls/documents", "js",
-        true
+        true,
+        multi_core,
     ).unwrap();
+
+    if verbose { show_verbose_message(start_time.clone(), "`copy_all(js -> documents)` complete"); }
 
     // doc, page_templates
 
@@ -172,8 +255,11 @@ fn render(only_docs: bool) {
         None,
         None,
         &doc_configs,
-        true
+        true,
+        multi_core,
     ).unwrap();
+
+    if verbose { show_verbose_message(start_time.clone(), "`render_directory(template, MDxt)` complete"); }
 
     // docs, html_template
 
@@ -184,8 +270,11 @@ fn render(only_docs: bool) {
         None,
         Some(get_page_template_context(&doc_configs)),
         &doc_configs,
-        true
+        true,
+        multi_core,
     ).unwrap();
+
+    if verbose { show_verbose_message(start_time.clone(), "`render_templates(documents)` complete"); }
 
     // docs, xml
 
@@ -197,8 +286,11 @@ fn render(only_docs: bool) {
         None,
         Some(&articles_metadata),
         &doc_configs,
-        true
+        true,
+        multi_core,
     ).unwrap();
+
+    if verbose { show_verbose_message(start_time.clone(), "`render_directory(documents, XML)` complete"); }
 
     // articles
     if !only_docs {
@@ -216,14 +308,20 @@ fn render(only_docs: bool) {
             None,
             None,
             &article_configs,
-            true
+            true,
+            multi_core,
         ).unwrap();
+
+        if verbose { show_verbose_message(start_time.clone(), "`render_directory(scss -> articles, Tera)` complete"); }
 
         copy_all(
             "./templates/scss", "scss",
             "./output/htmls/articles", "scss",
-            true
+            true,
+            multi_core,
         ).unwrap();
+
+        if verbose { show_verbose_message(start_time.clone(), "`copy_all(scss -> articles)` complete"); }
 
         render_directory(
             "./output/htmls/articles", "scss",
@@ -233,8 +331,11 @@ fn render(only_docs: bool) {
             None,
             None,
             &article_configs,
-            true
+            true,
+            multi_core,
         ).unwrap();
+
+        if verbose { show_verbose_message(start_time.clone(), "`render_directory(articles, Scss)` complete"); }
 
         // articles, js
 
@@ -246,14 +347,20 @@ fn render(only_docs: bool) {
             None,
             None,
             &article_configs,
-            true
+            true,
+            multi_core,
         ).unwrap();
+
+        if verbose { show_verbose_message(start_time.clone(), "`render_directory(js -> articles, Tera)` complete"); }
 
         copy_all(
             "./templates/js", "js",
             "./output/htmls/articles", "js",
-            true
+            true,
+            multi_core,
         ).unwrap();
+
+        if verbose { show_verbose_message(start_time.clone(), "`copy_all(js -> articles)` complete"); }
 
         // articles, meta_articles
 
@@ -264,7 +371,11 @@ fn render(only_docs: bool) {
 
         let tags_graph = article::get_tags(&articles);
 
+        if verbose { show_verbose_message(start_time.clone(), "`articles.yaml` loaded"); }
+
         render_tag_pages(&tags_graph);
+
+        if verbose { show_verbose_message(start_time.clone(), "`render_tag_pages()` complete"); }
 
         render_directory(
             "./templates/articles", "tera",
@@ -274,8 +385,11 @@ fn render(only_docs: bool) {
             None,
             None,
             &article_configs,
-            true
+            true,
+            multi_core,
         ).unwrap();
+
+        if verbose { show_verbose_message(start_time.clone(), "`render_directory(articles, Tera)` complete"); }
 
         render_directory(
             "./mdxts/tag_pages", "md",
@@ -285,8 +399,11 @@ fn render(only_docs: bool) {
             None,
             None,
             &article_configs,
-            true
+            true,
+            multi_core,
         ).unwrap();
+
+        if verbose { show_verbose_message(start_time.clone(), "`render_directory(tag_pages, MDxt)` complete"); }
 
         // articles, page_templates
 
@@ -298,7 +415,8 @@ fn render(only_docs: bool) {
             Some(&article_configs_context),
             None,
             None,
-            true
+            true,
+            multi_core,
         ).unwrap();*/
 
         // since it's not configurable yet, mdxt files don't have to be rendered twice
@@ -309,7 +427,8 @@ fn render(only_docs: bool) {
             None,
             None,
             None,
-            true
+            true,
+            multi_core,
         ).unwrap();*/
 
         // articles, html_templates
@@ -321,8 +440,11 @@ fn render(only_docs: bool) {
             None,
             Some(get_page_template_context(&article_configs)),
             &article_configs,
-            true
+            true,
+            multi_core,
         ).unwrap();
+
+        if verbose { show_verbose_message(start_time.clone(), "`render_templates(articles)` complete"); }
 
         render_directory(
             "./output/htmls/articles", "html",
@@ -332,37 +454,46 @@ fn render(only_docs: bool) {
             None,
             Some(&articles_metadata),
             &article_configs,
-            true
+            true,
+            multi_core,
         ).unwrap();
+
+        if verbose { show_verbose_message(start_time.clone(), "`render_directory(articles, XML)` complete"); }
     }
 
     clean_up_results();
+
+    if verbose { show_verbose_message(start_time.clone(), "`clean_up_results` complete"); }
 }
 
-fn copy_images(only_docs: bool) {
+fn copy_images(only_docs: bool, multi_core: MultiCore) {
 
     copy_all(
         "./mdxts/documents", "jpg",
         "./output/htmls/documents", "jpg",
-        true
+        true,
+        multi_core,
     ).unwrap();
 
     copy_all(
         "./mdxts/documents", "png",
         "./output/htmls/documents", "png",
-        true
+        true,
+        multi_core,
     ).unwrap();
 
     if !only_docs {
         copy_all(
             "./mdxts/articles", "jpg",
             "./output/htmls/articles", "jpg",
-            true
+            true,
+            multi_core,
         ).unwrap();
         copy_all(
             "./mdxts/articles", "png",
             "./output/htmls/articles", "png",
-            true
+            true,
+            multi_core,
         ).unwrap();
     }
 
@@ -421,7 +552,7 @@ fn update_articles_metadata(mdxts_logs: Vec<Log>, save_to_file: bool) -> HashMap
     if save_to_file {
         let mut logs_hash = yaml_hash::new();
 
-        for Log { file_from, file_to, metadata } in mdxts_logs.into_iter() {
+        for Log { file_from, metadata, .. } in mdxts_logs.into_iter() {
             logs_hash = yaml_hash::insert(logs_hash, Yaml::from_str(&file_from), metadata.clone());
             articles_metadata.insert(file_name(&file_from).unwrap(), metadata);
         }
@@ -447,7 +578,7 @@ fn update_articles_metadata(mdxts_logs: Vec<Log>, save_to_file: bool) -> HashMap
 fn render_tag_pages(tags_graph: &graph::Graph) {
     let mut tera_instance = tera::Tera::default();
     tera_instance.add_template_file("./templates/pages/tag.tera", Some("tag_page")).unwrap();
-    mkdir("./mdxts/tag_pages");
+    mkdir("./mdxts/tag_pages");  // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
 
     for tag in tags_graph.iter() {
         let mut context = tera::Context::new();
@@ -519,6 +650,11 @@ fn meta_article_context(articles: &HashMap<String, article::Article>, tags_graph
     context.insert("tag_nums", &tag_nums);
 
     context
+}
+
+#[inline]
+fn show_verbose_message(start_time: Instant, message: &str) {
+    println!("{}: {}ms", message, Instant::now().duration_since(start_time).as_millis());
 }
 
 // DO NOT unwrap these!!

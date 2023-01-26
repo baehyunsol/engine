@@ -5,6 +5,7 @@ use crate::log::Log;
 use crate::MONTHS;
 use crate::xml;
 use crate::yaml_hash;
+use crate::{MultiCore, MULTICORE_THRESHOLD};
 use mdxt::{render_to_html, RenderOption, RenderResult};
 use std::collections::HashMap;
 use rayon::prelude::*;
@@ -28,9 +29,9 @@ pub fn render_directory(
     mdxt_option: Option<&RenderOption>,
     articles_metadata: Option<&HashMap<String, Yaml>>,
     config: &Config,
-    recursive: bool
+    recursive: bool,
+    multi_core: MultiCore
 ) -> Result<Vec<Log>, Error> {
-
     let mut files = match read_dir(dir_from) {
         Ok(f) => f,
         Err(_) => {
@@ -69,7 +70,8 @@ pub fn render_directory(
                 tera_context, mdxt_option,
                 articles_metadata,
                 config,
-                recursive
+                recursive,
+                multi_core,
             ) {
                 Ok(logs) => { recursive_logs.push(logs); }
                 Err(e) => { return Err(e); }
@@ -181,7 +183,7 @@ pub fn render_directory(
 
             let files = files.into_iter().filter(|file| !config.ignores.contains(&basename(file).unwrap())).collect::<Vec<String>>();
 
-            if files.len() > 8 {
+            if files.len() > MULTICORE_THRESHOLD && multi_core == MultiCore::Auto || multi_core == MultiCore::Enable {
                 let results = files.par_iter().map(
                     |file| render_mdxt(
                         file,
@@ -206,47 +208,6 @@ pub fn render_directory(
                         dir_to, ext_to,
                         options.clone(), &article_info
                     )?);
-                }
-
-            }
-
-            for file in files.iter() {
-                let dest = get_dest_path(&file, dir_to, ext_to)?;
-
-                match read_string(file) {
-                    Ok(mdxt) => {
-                        let RenderResult {
-                            mut content,
-                            has_collapsible_table,
-                            metadata,
-                            has_tooltip,
-                            fenced_code_contents: _
-                        } = render_to_html(&mdxt, options.clone());
-
-                        let mut metadata = match metadata {
-                            None => yaml_hash::new(),
-                            Some(m) => yaml_hash::from_yaml(m)
-                        };
-
-                        metadata = yaml_hash::insert(metadata, Yaml::from_str("has_collapsible_table"), Yaml::Boolean(has_collapsible_table));
-                        metadata = yaml_hash::insert(metadata, Yaml::from_str("has_tooltip"), Yaml::Boolean(has_tooltip));
-
-                        // it renders article_info if the metadata has `date` or `tags`.
-                        match render_article_info(&metadata, &article_info) {
-                            Some(info) => {
-                                content = vec![render_to_html(&info, options.clone()).content, content].concat();
-                            }
-                            _ => {}
-                        }
-
-                        match write_to_file(&dest, content.as_bytes()) {
-                            Err(_) => {return Err(Error::PathError(format!("error at `render_directory({:?}, {:?}, ...)`\n`write_to_file({:?})` failed", dir_from, ext_from, dest)));}
-                            _ => { logs.push(Log::new(file, &dest, Some(metadata))); }
-                        }
-                    },
-                    _ => {
-                        return Err(Error::PathError(format!("error at `render_directory({:?}, {:?}, ...)`\n`read_string({:?})` failed", dir_from, ext_from, file)));
-                    }
                 }
 
             }
@@ -350,7 +311,8 @@ pub fn render_templates(
     mut tera_instance: Option<Tera>,
     mut context: Option<Context>,
     config: &Config,
-    recursive: bool
+    recursive: bool,
+    multi_core: MultiCore
 ) -> Result<Vec<Log>, Error> {
 
     if tera_instance.is_none() {
@@ -414,7 +376,8 @@ pub fn render_templates(
                 tera_instance.clone(),
                 context.clone(),
                 config,
-                recursive
+                recursive,
+                multi_core,
             ) {
                 Ok(logs) => { recursive_logs.push(logs); }
                 Err(e) => { return Err(e); }
@@ -430,59 +393,98 @@ pub fn render_templates(
             _ => false
         }
     ).collect();
+
     mkdir(output_path);    // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
 
-    let mut context = context.unwrap();
+    let context = context.unwrap();
     let tera_instance = tera_instance.unwrap();
 
     let has_title = context.get("title").is_some();
 
-    for article in articles.iter() {
-        let dest = get_dest_path(&article, output_path, output_ext)?;
-        let article_data = match read_string(article) {
-            Ok(s) => s,
-            _ => {
-                return Err(Error::PathError(format!("error at `render_templates({:?}, {:?}, ...)`\n`read_string({:?})` failed", template_path, article_path, article)));
-            }
-        };
+    if articles.len() > MULTICORE_THRESHOLD && multi_core == MultiCore::Auto || multi_core == MultiCore::Enable {
+        let results = articles.par_iter().map(
+            |article| render_template(
+                article,
+                output_path, output_ext,
+                has_title, context.clone(),
+                template_path, article_path,
+                &tera_instance, config
+            )
+        ).collect::<Vec<Result<Log, Error>>>();
 
-        if !has_title {
-            let mut title = match file_name(article) {
-                Ok(t) => t,
-                _ => {
-                    return Err(Error::PathError(format!("error at `render_templates({:?}, {:?}, ...)`\n`file_name({:?})` failed", template_path, article_path, article)));
-                }
-            };
-
-            match config.titles.get(&title) {
-                Some(alt_title) => {
-                    title = alt_title.clone();
-                }
-                _ => {}
-            }
-
-            context.insert("title", &title);
+        for result in results.into_iter() {
+            logs.push(result?);
         }
 
-        context.insert("article", &article_data);
+    }
 
-        match tera_instance.render(template_path, &context) {
-            Ok(result) => {
-                match write_to_file(&dest, result.as_bytes()) {
-                    Err(_) => {return Err(Error::PathError(format!("error at `render_templates({:?}, {:?}, ...)`\n`write_to_file({:?})` failed", template_path, article_path, dest)));}
-                    _ => { logs.push(Log::new(article, &dest, None)); }
-                }
-            },
-            Err(e) => {
-                return Err(Error::RenderError(
-                    EngineType::Tera,
-                    format!("tera render error: failed to render {:?}, with error: {:?}", article, e)
-                ));
-            }
+    else {
+
+        for article in articles.iter() {
+            logs.push(render_template(
+                article,
+                output_path, output_ext,
+                has_title, context.clone(),
+                template_path, article_path,
+                &tera_instance, config
+            )?);
         }
+
     }
 
     Ok(logs)
+}
+
+fn render_template(
+    article: &str,
+    output_path: &str, output_ext: &str,
+    has_title: bool, mut context: Context,
+    template_path: &str, article_path: &str,
+    tera_instance: &Tera, config: &Config,
+) -> Result<Log, Error> {
+    let dest = get_dest_path(&article, output_path, output_ext)?;
+    let article_data = match read_string(article) {
+        Ok(s) => s,
+        _ => {
+            return Err(Error::PathError(format!("error at `render_templates({:?}, {:?}, ...)`\n`read_string({:?})` failed", template_path, article_path, article)));
+        }
+    };
+
+    if !has_title {
+        let mut title = match file_name(article) {
+            Ok(t) => t,
+            _ => {
+                return Err(Error::PathError(format!("error at `render_templates({:?}, {:?}, ...)`\n`file_name({:?})` failed", template_path, article_path, article)));
+            }
+        };
+
+        match config.titles.get(&title) {
+            Some(alt_title) => {
+                title = alt_title.clone();
+            }
+            _ => {}
+        }
+
+        context.insert("title", &title);
+    }
+
+    context.insert("article", &article_data);
+
+    match tera_instance.render(template_path, &context) {
+        Ok(result) => {
+            match write_to_file(&dest, result.as_bytes()) {
+                Err(_) => {return Err(Error::PathError(format!("error at `render_templates({:?}, {:?}, ...)`\n`write_to_file({:?})` failed", template_path, article_path, dest)));}
+                _ => { return Ok(Log::new(article, &dest, None)); }
+            }
+        },
+        Err(e) => {
+            return Err(Error::RenderError(
+                EngineType::Tera,
+                format!("tera render error: failed to render {:?}, with error: {:?}", article, e)
+            ));
+        }
+    }
+
 }
 
 pub fn copy_all(
@@ -490,7 +492,8 @@ pub fn copy_all(
     ext_from: &str,
     dir_to: &str,
     ext_to: &str,
-    recursive: bool
+    recursive: bool,
+    multi_core: MultiCore
 ) -> Result<Vec<Log>, Error> {
 
     let mut files = match read_dir(dir_from) {
@@ -527,7 +530,8 @@ pub fn copy_all(
             match copy_all(
                 &new_dir_from, ext_from,
                 &new_dir_to, ext_to,
-                recursive
+                recursive,
+                multi_core,
             ) {
                 Ok(logs) => { recursive_logs.push(logs); }
                 Err(e) => { return Err(e); }
@@ -546,7 +550,7 @@ pub fn copy_all(
 
     mkdir(dir_to);  // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
 
-    if files.len () > 8 {
+    if files.len() > MULTICORE_THRESHOLD && multi_core == MultiCore::Auto || multi_core == MultiCore::Enable {
         let results = files.par_iter().map(
             |file| {
                 let dest = get_dest_path(&file, dir_to, ext_to)?;
@@ -570,12 +574,7 @@ pub fn copy_all(
         ).collect::<Vec<Result<Log, Error>>>();
 
         for result in results.into_iter() {
-
-            match result {
-                Ok(l) => { logs.push(l); }
-                Err(e) => { return Err(e); }
-            }
-
+            logs.push(result?);
         }
 
     }
