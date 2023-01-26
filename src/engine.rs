@@ -267,7 +267,9 @@ pub fn render_directory(
                                 }
                             }
 
-                            match write_to_file(&dest, hxml::dom::to_string().as_bytes()) {
+                            let dom_to_string = hxml::dom::to_string();
+
+                            match write_to_file(&dest, dom_to_string.as_bytes()) {
                                 Ok(_) => {
                                     logs.push(Log::new(file, &dest, None));
                                 },
