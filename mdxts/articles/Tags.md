@@ -10,6 +10,7 @@
 - [#github](tag-github.html) (1)
 - [#html](tag-html.html) (1)
 - [#loc](tag-loc.html) (1)
+- [#rust](tag-rust.html) (1)
 - [#search_engine](tag-search_engine.html) (1)
 - [#stars](tag-stars.html) (1)
 - [#web](tag-web.html) (1)

@@ -9,6 +9,8 @@
 
 ### January 2023
 
+- [[giant]] [Lifetime-In-Rust](Lifetime-In-Rust.html) [[/giant]] [[blank=3]]- 31.January.2023
+  - Lifetime is one of the most important concept in the Rust world. It guarantees that a pointer is always pointing to a valid memory.
 - [[giant]] [MDxt-Reference](MDxt-Reference.html) [[/giant]] [[blank=3]]- 16.January.2023
   - MDxt Reference
 
