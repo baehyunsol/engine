@@ -532,6 +532,6 @@ For more information about this error, try `rustc --explain E0499`.
 error: could not compile `playground` due to 2 previous errors
 ```
 
-`bar` and `biz` are refused due to the overlapping lifetimes, `foo` and `baz` are accepted. It's because *reborrowing* a mutable reference is allowed. It's fine if the lifetime of the re-borrowed reference ends before the original reference is used.
+`bar` and `biz` are refused due to the overlapping lifetimes, `foo` and `baz` are accepted. It's because *reborrowing* a mutable reference is allowed. It's fine if the lifetime of the re-borrowed reference ends before the referent is used.
 
 One thing to note is that if we replace `v2` with `v` in line 3, 9, 15 and 21, every function will fail. It never allows multiple mutable reference of the same value.
