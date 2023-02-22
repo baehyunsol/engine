@@ -1,3 +1,5 @@
+"use strict";
+
 function collapse_table(n) {
     var head = document.getElementById("table-collapse-toggle-" + n);
     head.classList.toggle("collapsed");

@@ -1,3 +1,5 @@
+"use strict";
+
 let tooltips = document.querySelectorAll(".tooltip-container");
 
 for (let i = 0; i < tooltips.length; i++) {

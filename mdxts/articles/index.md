@@ -18,11 +18,11 @@ This blog is optimized for the Firefox browser. Well, I didn't mean it: my blog 
 ### Recent Articles
 
 
+- [Rust-Struct-Memory-Layout](Rust-Struct-Memory-Layout.html)
+- [RC-Counters-in-Rust](RC-Counters-in-Rust.html)
 - [Lifetime-In-Rust](Lifetime-In-Rust.html)
 - [MDxt-Reference](MDxt-Reference.html)
 - [MDxt-Icon-Reference](MDxt-Icon-Reference.html)
-- [Browser-Compatibility](Browser-Compatibility.html)
-- [MDxt-Character-Reference](MDxt-Character-Reference.html)
 
 [[right]]
 [See more](Articles.html)

@@ -1,3 +1,5 @@
+"use strict";
+
 let topmenu = document.querySelector("div.topmenu");
 
 function toggle_header() {

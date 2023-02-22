@@ -1,3 +1,5 @@
+"use strict";
+
 var settings = document.getElementById("settingsmenubg");
 
 function open_settings() {

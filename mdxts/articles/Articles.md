@@ -7,6 +7,13 @@
 ## All articles
 
 
+### Feburary 2023
+
+- [[giant]] [Rust-Struct-Memory-Layout](Rust-Struct-Memory-Layout.html) [[/giant]] [[blank=3]]- 19.Feburary.2023
+  - Rust is a low-level language. That means you can (and have to) manipulate the data at the byte level when using the language.
+- [[giant]] [RC-Counters-in-Rust](RC-Counters-in-Rust.html) [[/giant]] [[blank=3]]- 18.Feburary.2023
+  - Reference-counting pointers are one of the most widely used smart pointers. It dynamically tracks the lifetime of an object, and decides when to destruct the item.
+
 ### January 2023
 
 - [[giant]] [Lifetime-In-Rust](Lifetime-In-Rust.html) [[/giant]] [[blank=3]]- 31.January.2023

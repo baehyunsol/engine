@@ -1,3 +1,5 @@
+"use strict";
+
 var root_doc = document.querySelector(":root");
 var is_dark = true;
 

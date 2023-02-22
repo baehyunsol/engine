@@ -30,6 +30,8 @@ image processing도 추가하고 싶음.
 미리보기 tooltip. Article끼리 link를 걸면, link의 hover로 article 미리보기 tooltip을 띄우자! 이거 HXML로 할 수 있음. 해당 link가 inner link인지 보고, 그럼 해당 article의 html을 읽어서 `<body>`의 가장 앞부분 내용만 (태그들 다 벗겨서) 긁어와서 tooltip으로 만들면 될 듯!
 - 그럼 tooltip을 mdxt가 아니고 html로 구현해야하는데...
 
+---
+
 버그: 이름이 동일한 파일이 여러개 있으면 (ex: documents에도 index.md가 있고 articles에도 index.md가 있음) engine이 둘을 구분을 못함
 
 ---
@@ -45,6 +47,12 @@ image processing도 추가하고 싶음.
 ```
 
 selection 해서 색깔 제대로 나오는지 확인하기! 저러면 안쪽의 selection은 gold::selection랑 red::selection이 충돌하잖아? 그럼 항상 gold가 이기더라... css 파일에 정의된 순서대로인 듯! 둘중에 더 가까운 거 적용되도록 하려면 어떻게 해야하지...
+
+아이디어 1:
+- `.color-gold { .color-red { color: red; } }` 이런 식으로 모든 경우의 수를 다 넣는 거임!
+- 저거 만드는 거야 tera가 만드니까 상관없고,
+- CSS 최적화 도구 있으면 필요한 것만 남길테니까 상관없음!
+  - 이거 만드는게 우선이네
 
 ---
 
@@ -148,3 +156,7 @@ tera는 병렬로 돌려도 별 차이가 안 남... 막아놨나?
 ---
 
 table 안의 code span은 background color를 다르게 처리하잖아? 근데 또 table 안의 tooltip 안의 code span은 한번 더 꼬아야함...
+
+---
+
+문서들이 sub dir이 있으면 문서들만 복사가 되고 CSS는 복사가 안됨
