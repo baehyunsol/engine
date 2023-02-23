@@ -8,6 +8,7 @@ mod log;
 mod xml;
 mod yaml_hash;
 
+use rayon::prelude::*;
 use config::*;
 use engine::*;
 use lazy_static::lazy_static;
@@ -459,7 +460,16 @@ fn render(only_docs: bool, multi_core: MultiCore, verbose: bool) {
         ).unwrap();
 
         if verbose { show_verbose_message(start_time.clone(), "`render_directory(articles, XML)` complete"); }
+
+        propagate_css_js("./output/htmls/articles", multi_core);
+
+        if verbose { show_verbose_message(start_time.clone(), "`propagate_css_js(articles)` complete"); }
+
     }
+
+    propagate_css_js("./output/htmls/documents", multi_core);
+
+    if verbose { show_verbose_message(start_time.clone(), "`propagate_css_js(documents)` complete"); }
 
     clean_up_results();
 
@@ -495,6 +505,57 @@ fn copy_images(only_docs: bool, multi_core: MultiCore) {
             true,
             multi_core,
         ).unwrap();
+    }
+
+}
+
+fn propagate_css_js(path:&str, multi_core: MultiCore) {
+    let mut files = read_dir(path).unwrap();
+
+    files = files.into_iter().filter(
+        |f| match extension(f) {
+            Ok(ext) => {
+                let ext_low = ext.to_lowercase();
+
+                ext_low == "css" || ext_low == "js"
+            },
+            _ => false
+        }
+    ).collect();
+
+    let sub_dirs = get_sub_directories_recursive(path);
+
+    if sub_dirs.is_empty() {
+        return;
+    }
+
+    if files.len() > MULTICORE_THRESHOLD && multi_core == MultiCore::Auto || multi_core == MultiCore::Enable {
+        files.par_iter().map(
+            |file| {
+
+                for sub_dir in sub_dirs.iter() {
+                    let file_name = basename(file).unwrap();
+                    let file_dest = join(sub_dir, &file_name).unwrap();
+                    write_to_file(&file_dest, &read_bytes(file).unwrap()).unwrap();
+                }
+
+                ()
+            }
+        ).collect::<Vec<()>>();
+    }
+
+    else {
+
+        for file in files.iter() {
+
+            for sub_dir in sub_dirs.iter() {
+                let file_name = basename(file).unwrap();
+                let file_dest = join(sub_dir, &file_name).unwrap();
+                write_to_file(&file_dest, &read_bytes(file).unwrap()).unwrap();
+            }
+
+        }
+
     }
 
 }

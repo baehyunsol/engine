@@ -99,10 +99,6 @@ at least: todo들은 다 없앤 다음에!
 
 ---
 
-javascript strict mode 추가하기!
-
----
-
 `[[gold]]D1[[/gold]]이 [[red]]D3[[/red]]보다 크지? 아까 말한 queue 때문에 그래.`를 select하면 색깔 다른 부분이 크기도 달라짐... 왜 그럴까
 - chrome에선 안 그러고 firefox에서만 그럼... CSS 고친다고 해결될 문제가 아닌 듯?
 - 로마자랑 한글이 원래 크기가 다른가 싶었는데 그것도 아님,,, 색깔 macro 없애니까 크기 동일함
@@ -156,7 +152,3 @@ tera는 병렬로 돌려도 별 차이가 안 남... 막아놨나?
 ---
 
 table 안의 code span은 background color를 다르게 처리하잖아? 근데 또 table 안의 tooltip 안의 code span은 한번 더 꼬아야함...
-
----
-
-문서들이 sub dir이 있으면 문서들만 복사가 되고 CSS는 복사가 안됨
