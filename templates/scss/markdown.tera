@@ -136,6 +136,10 @@ body .markdown {
         }
     }
 
+    .line-height-{{size}} {
+        line-height: $line-height-{{size}};
+    }
+
     .box.width-{{size}} {
         width: $box-{{size}};
     }

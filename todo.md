@@ -8,7 +8,7 @@ script를 html 안에 넣지말고 외부에 .js 파일로 따로 만들기
 - 사진/표/코드 등등은 페이지 중간에서 잘리지 않게 하기!
 - 페이지 바꾸는 매크로 만들기..??
 
-`/templates`, `/mdxts`, `/engine.exe`, `/configs` 이 4개만 옮기면 바로바로 사용가능하도록 하자!
+`/templates`, `/mdxts`, `/engine.exe`, `/configs` 이 4개만 옮기면 바로바로 사용가능하도록 하자! -> `/extra_syntaxes`도 옮겨야 할 듯?? 이건 있어도 그만이고 없어도 그만
 
 ---
 
@@ -152,3 +152,11 @@ tera는 병렬로 돌려도 별 차이가 안 남... 막아놨나?
 ---
 
 table 안의 code span은 background color를 다르게 처리하잖아? 근데 또 table 안의 tooltip 안의 code span은 한번 더 꼬아야함...
+
+---
+
+toc -> 왼쪽에 collapsible bar로 보일 수 있게 하기!
+
+---
+
+header-less table
