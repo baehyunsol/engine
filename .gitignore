@@ -12,3 +12,6 @@ Cargo.lock
 /htmls/
 /output/
 /mdxts/tag_pages
+
+# pre-built binary for my personal use
+run

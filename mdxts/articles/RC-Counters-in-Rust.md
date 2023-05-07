@@ -1,6 +1,6 @@
 ---
 date: [2023, 2, 18]
-tags: [rust]
+tags: [rust, smart-pointers]
 preview: Reference-counting pointers are one of the most widely used smart pointers. It dynamically tracks the lifetime of an object, and decides when to destruct the item.
 ---
 
