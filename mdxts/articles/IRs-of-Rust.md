@@ -4,7 +4,7 @@ tags: [rust, compiler]
 preview: The Rust compiler is very complicated. It consists of many modules, and it takes multiple steps to translate a human-readable programming language to a machine code. Though it's not necessary for typical programmers to know the internals of the compiler, it'd be very helpful if we understand how the language works.
 ---
 
-# IRs of the Rust language
+# IRs of Rust
 
 The Rust compiler is very complicated. It consists of many modules, and it takes multiple steps to translate a human-readable programming language to a machine code. Though it's not necessary for typical programmers to know the internals of the compiler, it'd be very helpful if we understand how the language works. In this article, I'll take a closer look at the steps the compiler takes.
 
