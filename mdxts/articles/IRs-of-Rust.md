@@ -1,5 +1,5 @@
 ---
-date: [2023, 5, 7]
+date: [2023, 5, 13]
 tags: [rust, compiler]
 preview: The Rust compiler is very complicated. It consists of many modules, and it takes multiple steps to translate a human-readable programming language to a machine code. Though it's not necessary for typical programmers to know the internals of the compiler, it'd be very helpful if we understand how the language works.
 ---
@@ -166,6 +166,8 @@ It turns `vec!` into `into_vec(Box::new())`. See the documents of [Box](https://
 
 Below is the MIR of the above code, generated in Debug mode.
 
+[[anchor, id=mir ex1]][[/anchor]]
+
 ```rust, line_num
 // WARNING: This output format is intended for human consumers only
 // and is subject to change without notice. Knock yourself out.
@@ -259,13 +261,25 @@ Then you see basic blocks. They represent the control flow of the code. The flow
 
 `bb0` allocates memory for `a` using [exchange_malloc](https://github.com/rust-lang/rust/blob/master/library/alloc/src/alloc.rs)[^nolineno] and stores the pointer at `_5`. `-> bb1` after the terminator means it should go to `bb1` after executing `bb0`.
 
-`bb1` creates a pointer for `[i32; 4]`, stores it at `_9`, and checks whether the pointer is well aligned. If so, it goes to `bb7`. Otherwise, it terminates. The two successors are in squared brackets after the terminator.
+`bb1` initializes a `Box` pointer using the pointer from the previous block and checks whether the pointer is well aligned. If so, it goes to `bb7`. Otherwise, it terminates. The two successors are in squared brackets after the terminator.
 
 `bb7` initializes the vector, and `bb2` pushes an element. After everything is done, the runtime calls the destructor of the vector by dropping it, then terminates.
+
+Most statements in basic blocks are assignments of an [RValue] to a [Place]. A [Place] is a location in memory. It consists of a local and [Projection]s. A projection can be a deref, index, field, .. etc. Anything that comes at the right-hand side of `=` can be an [RValue]. Note that it only defines simple forms. For complex operations like `*_2 + *_3 + *_4`, it uses multiple statements and temporary variables.
+
+Let's look at [RValue] more closely. One of the most frequently used variant is [BinaryOp](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.Rvalue.html#variant.BinaryOp). You'll see it throughout this article. You already saw them at line 41 and 43 above. The variant consists of a [BinOp] and two [Operand]s. The [BinOp] enum defines primitive arithmetic operators including add, sub, mul and div. The [Operand] enum is literally an operand of all the operations of [RValue]. There are 3 kinds of [Operand]s: Copy, Move and Constant. Copy and Move represents the copy semantics and the move semantics of Rust. All the [Place]s appear in [RValue] must be either copy, move or constant. You can see that many operands in the above MIR are prefixed with `const` or `move`. Operands without any prefix are copied ones. For example, the first operand of line 41 (`_12`) is copied and the second one (`const 1_usize`) is a constant.
+
+[RValue]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.Rvalue.html
+[Place]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/struct.Place.html
+[Operand]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.Operand.html
+[BinOp]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/syntax/enum.BinOp.html
+[Projection]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.ProjectionElem.html
 
 [[br]]
 
 What if we run the same code in release mode?
+
+[[anchor, id=mir ex2]][[/anchor]]
 
 ```rust, line_num
 // WARNING: This output format is intended for human consumers only
@@ -364,6 +378,8 @@ fn foo(a: i32, b: i32) -> i32 {
 
 We don't need HIR this time: it's (almost) identical to the original code. Let's go directly to the MIR.
 
+[[anchor, id=mir ex3]][[/anchor]]
+
 ```rust, line_num
 // WARNING: This output format is intended for human consumers only
 // and is subject to change without notice. Knock yourself out.
@@ -431,6 +447,8 @@ After that, it goes to `bb2` or `bb4` where it moves the result to `_0` and retu
 
 In release mode, it's way simpler. See below.
 
+[[anchor, id=mir ex4]][[/anchor]]
+
 ```rust, line_num
 // WARNING: This output format is intended for human consumers only
 // and is subject to change without notice. Knock yourself out.
@@ -482,3 +500,339 @@ fn foo(_1: i32, _2: i32) -> i32 {
 ```
 
 I have no idea why `StorageLive` and `StorageDead` only appear in release mode. It's almost identical to the previous MIR, except that it doesn't check the overflow.
+
+### Example 3: Hello World
+
+```rust
+fn main() {
+    println!("Hello World!");
+}
+```
+
+Let's go straight to the MIR.
+
+```rust, line_num
+// WARNING: This output format is intended for human consumers only
+// and is subject to change without notice. Knock yourself out.
+fn main() -> () {
+    let mut _0: ();                      // return place in scope 0 at src/main.rs:1:11: 1:11
+    let _1: ();                          // in scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/std/src/macros.rs:137:9: 137:62
+    let mut _2: std::fmt::Arguments<'_>; // in scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/std/src/macros.rs:137:28: 137:61
+    let mut _3: &[&str];                 // in scope 0 at src/main.rs:2:14: 2:28
+    let mut _4: &[core::fmt::ArgumentV1<'_>]; // in scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/std/src/macros.rs:137:28: 137:61
+    let mut _5: &[core::fmt::ArgumentV1<'_>; 0]; // in scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/std/src/macros.rs:137:28: 137:61
+    let mut _6: &[&str; 1];              // in scope 0 at src/main.rs:2:14: 2:28
+
+    bb0: {
+        _6 = const _;                    // scope 0 at src/main.rs:2:14: 2:28
+                                         // mir::Constant
+                                         // + span: src/main.rs:2:14: 2:28
+                                         // + literal: Const { ty: &[&str; 1], val: Unevaluated(main, [], Some(promoted[1])) }
+        _3 = _6 as &[&str] (Pointer(Unsize)); // scope 0 at src/main.rs:2:14: 2:28
+        _5 = const _;                    // scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/std/src/macros.rs:137:28: 137:61
+                                         // mir::Constant
+                                         // + span: /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/std/src/macros.rs:137:28: 137:61
+                                         // + literal: Const { ty: &[core::fmt::ArgumentV1<'_>; 0], val: Unevaluated(main, [], Some(promoted[0])) }
+        _4 = _5 as &[core::fmt::ArgumentV1<'_>] (Pointer(Unsize)); // scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/std/src/macros.rs:137:28: 137:61
+        _2 = Arguments::<'_>::new_v1(move _3, move _4) -> bb1; // scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/std/src/macros.rs:137:28: 137:61
+                                         // mir::Constant
+                                         // + span: /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/std/src/macros.rs:137:28: 137:61
+                                         // + user_ty: UserType(0)
+                                         // + literal: Const { ty: fn(&[&'static str], &[core::fmt::ArgumentV1<'_>]) -> Arguments<'_> {Arguments::<'_>::new_v1}, val: Value(<ZST>) }
+    }
+
+    bb1: {
+        _1 = _print(move _2) -> bb2;     // scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/std/src/macros.rs:137:9: 137:62
+                                         // mir::Constant
+                                         // + span: /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/std/src/macros.rs:137:9: 137:27
+                                         // + literal: Const { ty: for<'a> fn(Arguments<'a>) {_print}, val: Value(<ZST>) }
+    }
+
+    bb2: {
+        return;                          // scope 0 at src/main.rs:3:2: 3:2
+    }
+}
+
+promoted[0] in main: &[core::fmt::ArgumentV1<'_>; 0] = {
+    let mut _0: &[core::fmt::ArgumentV1<'_>; 0]; // return place in scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/std/src/macros.rs:137:28: 137:61
+    let mut _1: [core::fmt::ArgumentV1<'_>; 0]; // in scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/std/src/macros.rs:137:28: 137:61
+
+    bb0: {
+        _1 = [];                         // scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/std/src/macros.rs:137:28: 137:61
+        _0 = &_1;                        // scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/std/src/macros.rs:137:28: 137:61
+        return;                          // scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/std/src/macros.rs:137:28: 137:61
+    }
+}
+
+promoted[1] in main: &[&str; 1] = {
+    let mut _0: &[&str; 1];              // return place in scope 0 at src/main.rs:2:14: 2:28
+    let mut _1: [&str; 1];               // in scope 0 at src/main.rs:2:14: 2:28
+
+    bb0: {
+        _1 = [const "Hello World!\n"];   // scope 0 at src/main.rs:2:14: 2:28
+                                         // mir::Constant
+                                         // + span: src/main.rs:2:14: 2:28
+                                         // + literal: Const { ty: &str, val: Value(Slice(..)) }
+        _0 = &_1;                        // scope 0 at src/main.rs:2:14: 2:28
+        return;                          // scope 0 at src/main.rs:2:14: 2:28
+    }
+}
+```
+
+Interesting that Hello World generates this long MIR. There are `promoted` blocks which we haven't seen before. Constants in MIR are stored in a `promoted` vector. The `promoted` blocks initialize the constants. For example, line 13 above assigns a constant to `_6`, but it doesn't tell us what the constant is. If you read the comments carefully, it says the value can be found in `promoted[1]`. In the `promoted[1]` block, it initializes `const "Hello World!\n"`.
+
+### Example 4: Drop Elaboration
+
+```rust, line_num
+fn main() {
+    let mut y = vec![1, 2, 3, 4];
+
+    {
+        let x = vec![5, 6, 7, 8];
+
+        if std::process::id() % 2 == 0 {
+            y = x;
+        }
+
+    }
+}
+```
+
+The code above is from [rustc-dev-guide](https://rustc-dev-guide.rust-lang.org/mir/drop-elaboration.html). MIR implements a special flag called "drop flag". It's used to track dynamic drops. In the above code, the compiler cannot know whether `y = x;` will be executed or not. That means the compiler does not know when to drop `[1, 2, 3, 4]`. Let's see how the compiler deals with this problem. Below is the MIR of the above code in release mode.
+
+```rust, line_num
+// WARNING: This output format is intended for human consumers only
+// and is subject to change without notice. Knock yourself out.
+fn main() -> () {
+    let mut _0: ();                      // return place in scope 0 at src/main.rs:1:11: 1:11
+    let mut _1: std::vec::Vec<i32>;      // in scope 0 at src/main.rs:2:9: 2:14
+    let mut _2: std::boxed::Box<[i32]>;  // in scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+    let mut _3: usize;                   // in scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+    let mut _4: usize;                   // in scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+    let mut _5: *mut u8;                 // in scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+    let mut _6: std::boxed::Box<[i32; 4]>; // in scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+    let mut _8: std::boxed::Box<[i32]>;  // in scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+    let mut _9: usize;                   // in scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+    let mut _10: usize;                  // in scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+    let mut _11: *mut u8;                // in scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+    let mut _12: std::boxed::Box<[i32; 4]>; // in scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+    let mut _13: u32;                    // in scope 0 at src/main.rs:7:12: 7:34
+    let mut _14: u32;                    // in scope 0 at src/main.rs:7:12: 7:30
+    let mut _15: std::vec::Vec<i32>;     // in scope 0 at src/main.rs:8:17: 8:18
+    let mut _16: bool;                   // in scope 0 at src/main.rs:11:5: 11:6
+    let mut _17: *const [i32; 4];        // in scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+    let mut _18: *const [i32; 4];        // in scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+    scope 1 {
+        debug y => _1;                   // in scope 1 at src/main.rs:2:9: 2:14
+        let _7: std::vec::Vec<i32>;      // in scope 1 at src/main.rs:5:13: 5:14
+        scope 3 {
+            debug x => _7;               // in scope 3 at src/main.rs:5:13: 5:14
+        }
+        scope 4 {
+        }
+        scope 6 (inlined slice::<impl [i32]>::into_vec::<std::alloc::Global>) { // at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:50:36: 55:10
+            debug self => _8;            // in scope 6 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/slice.rs:461:35: 461:39
+        }
+    }
+    scope 2 {
+    }
+    scope 5 (inlined slice::<impl [i32]>::into_vec::<std::alloc::Global>) { // at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:50:36: 55:10
+        debug self => _2;                // in scope 5 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/slice.rs:461:35: 461:39
+    }
+
+    bb0: {
+        StorageLive(_1);                 // scope 0 at src/main.rs:2:9: 2:14
+        StorageLive(_2);                 // scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+        _3 = const 16_usize;             // scope 2 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+        _4 = const 4_usize;              // scope 2 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+        _5 = alloc::alloc::exchange_malloc(move _3, move _4) -> bb1; // scope 2 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+                                         // mir::Constant
+                                         // + span: /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+                                         // + literal: Const { ty: unsafe fn(usize, usize) -> *mut u8 {alloc::alloc::exchange_malloc}, val: Value(<ZST>) }
+    }
+
+    bb1: {
+        _6 = ShallowInitBox(move _5, [i32; 4]); // scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+        _17 = (((_6.0: std::ptr::Unique<[i32; 4]>).0: std::ptr::NonNull<[i32; 4]>).0: *const [i32; 4]); // scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:37: 54:46
+        (*_17) = [const 1_i32, const 2_i32, const 3_i32, const 4_i32]; // scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:37: 54:46
+        _2 = move _6 as std::boxed::Box<[i32]> (Pointer(Unsize)); // scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+        _1 = slice::hack::into_vec::<i32, std::alloc::Global>(move _2) -> bb16; // scope 5 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/slice.rs:463:9: 463:29
+                                         // mir::Constant
+                                         // + span: /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/slice.rs:463:9: 463:23
+                                         // + literal: Const { ty: fn(Box<[i32]>) -> Vec<i32> {slice::hack::into_vec::<i32, std::alloc::Global>}, val: Value(<ZST>) }
+    }
+
+    bb2: {
+        _12 = ShallowInitBox(move _11, [i32; 4]); // scope 1 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+        _18 = (((_12.0: std::ptr::Unique<[i32; 4]>).0: std::ptr::NonNull<[i32; 4]>).0: *const [i32; 4]); // scope 1 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:37: 54:46
+        (*_18) = [const 5_i32, const 6_i32, const 7_i32, const 8_i32]; // scope 1 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:37: 54:46
+        _8 = move _12 as std::boxed::Box<[i32]> (Pointer(Unsize)); // scope 1 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+        _7 = slice::hack::into_vec::<i32, std::alloc::Global>(move _8) -> [return: bb17, unwind: bb9]; // scope 6 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/slice.rs:463:9: 463:29
+                                         // mir::Constant
+                                         // + span: /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/slice.rs:463:9: 463:23
+                                         // + literal: Const { ty: fn(Box<[i32]>) -> Vec<i32> {slice::hack::into_vec::<i32, std::alloc::Global>}, val: Value(<ZST>) }
+    }
+
+    bb3: {
+        _13 = Rem(move _14, const 2_u32); // scope 3 at src/main.rs:7:12: 7:34
+        StorageDead(_14);                // scope 3 at src/main.rs:7:33: 7:34
+        switchInt(move _13) -> [0: bb4, otherwise: bb5]; // scope 3 at src/main.rs:7:12: 7:39
+    }
+
+    bb4: {
+        StorageDead(_13);                // scope 3 at src/main.rs:7:12: 7:39
+        StorageLive(_15);                // scope 3 at src/main.rs:8:17: 8:18
+        _16 = const false;               // scope 3 at src/main.rs:8:17: 8:18
+        _15 = move _7;                   // scope 3 at src/main.rs:8:17: 8:18
+        drop(_1) -> [return: bb12, unwind: bb11]; // scope 3 at src/main.rs:8:13: 8:14
+    }
+
+    bb5: {
+        StorageDead(_13);                // scope 3 at src/main.rs:7:12: 7:39
+        goto -> bb6;                     // scope 3 at src/main.rs:7:9: 9:10
+    }
+
+    bb6: {
+        switchInt(_16) -> [0: bb7, otherwise: bb13]; // scope 1 at src/main.rs:11:5: 11:6
+    }
+
+    bb7: {
+        StorageDead(_7);                 // scope 1 at src/main.rs:11:5: 11:6
+        drop(_1) -> bb8;                 // scope 0 at src/main.rs:12:1: 12:2
+    }
+
+    bb8: {
+        StorageDead(_1);                 // scope 0 at src/main.rs:12:1: 12:2
+        return;                          // scope 0 at src/main.rs:12:2: 12:2
+    }
+
+    bb9 (cleanup): {
+        drop(_1) -> bb10;                // scope 0 at src/main.rs:12:1: 12:2
+    }
+
+    bb10 (cleanup): {
+        resume;                          // scope 0 at src/main.rs:1:1: 12:2
+    }
+
+    bb11 (cleanup): {
+        _1 = move _15;                   // scope 3 at src/main.rs:8:13: 8:14
+        goto -> bb15;                    // scope 3 at src/main.rs:8:13: 8:14
+    }
+
+    bb12: {
+        _1 = move _15;                   // scope 3 at src/main.rs:8:13: 8:14
+        StorageDead(_15);                // scope 3 at src/main.rs:8:17: 8:18
+        goto -> bb6;                     // scope 3 at src/main.rs:7:9: 9:10
+    }
+
+    bb13: {
+        drop(_7) -> [return: bb7, unwind: bb9]; // scope 1 at src/main.rs:11:5: 11:6
+    }
+
+    bb14 (cleanup): {
+        drop(_7) -> bb9;                 // scope 1 at src/main.rs:11:5: 11:6
+    }
+
+    bb15 (cleanup): {
+        switchInt(_16) -> [0: bb9, otherwise: bb14]; // scope 1 at src/main.rs:11:5: 11:6
+    }
+
+    bb16: {
+        StorageDead(_2);                 // scope 0 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:55:9: 55:10
+        StorageLive(_7);                 // scope 1 at src/main.rs:5:13: 5:14
+        StorageLive(_8);                 // scope 1 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+        _9 = const 16_usize;             // scope 4 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+        _10 = const 4_usize;             // scope 4 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+        _11 = alloc::alloc::exchange_malloc(move _9, move _10) -> [return: bb2, unwind: bb9]; // scope 4 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+                                         // mir::Constant
+                                         // + span: /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:54:13: 54:47
+                                         // + literal: Const { ty: unsafe fn(usize, usize) -> *mut u8 {alloc::alloc::exchange_malloc}, val: Value(<ZST>) }
+    }
+
+    bb17: {
+        _16 = const true;                // scope 1 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:55:9: 55:10
+        StorageDead(_8);                 // scope 1 at /rustc/84c898d65adf2f39a5a98507f1fe0ce10a2b8dbc/library/alloc/src/macros.rs:55:9: 55:10
+        StorageLive(_13);                // scope 3 at src/main.rs:7:12: 7:34
+        StorageLive(_14);                // scope 3 at src/main.rs:7:12: 7:30
+        _14 = id() -> [return: bb3, unwind: bb15]; // scope 3 at src/main.rs:7:12: 7:30
+                                         // mir::Constant
+                                         // + span: src/main.rs:7:12: 7:28
+                                         // + literal: Const { ty: fn() -> u32 {id}, val: Value(<ZST>) }
+    }
+}
+```
+
+`_16` is the key here. The comment says `_16` is at `main.rs:11:5: 11:6`, but we don't see anything there. It's the special flag that MIR created to track the lifetime of `y` dynamically. You can see how it works in the Control Flow Graph below.
+
+```
+╭─────────────────────────────╮
+│  bb0 -> bb1 -> bb16 -> bb2  │
+│         init x and y        │
+╰─────────────────────────────╯
+           │
+           V
+╭────────────────────╮            ╭────────────────╮
+│     bb17 -> bb3    │    true    │       bb4      │
+│  _16 = true;       │ ─────────> │  _16 = false;  │
+│  if id() % 2 == 0  │            │  drop(y);      │
+╰────────────────────╯            ╰────────────────╯
+         │                             │
+         │ false                       │
+         V                             V
+     ╭───────╮                    ╭──────────╮
+     │  bb5  │                    │   bb12   │
+     ╰───────╯                    │  y = x;  │
+         │                        ╰──────────╯
+         │                             │
+         │                             │
+         │   ╭──────────────────╮      │
+         ╰─> │        bb6       │ <────╯
+             │  if _16 == true  │
+             ╰──────────────────╯
+                 │          │ false
+            true │          ╰─────╮
+                 V                V
+      ╭────────────╮          ╭────────────╮
+      │     bb7    │ <─────── │    bb13    │
+      │  drop(y);  │          │  drop(x);  │
+      ╰────────────╯          ╰────────────╯
+               │
+               │
+               V
+            ╭──────────╮
+            │    bb8   │
+            │  return  │
+            ╰──────────╯
+```
+
+It sets `_16` to `false` when `y` is dropped. It checks `_16` before exiting the function.
+
+### Terminators
+
+So far, we have seen many kinds of terminators. A statement is a terminator if and only if it's the last statement of a basic block. You can see the exhaustive list of terminator kinds [here](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html).
+
+[[anchor, id = terminator kind]][[/anchor]]
+
+If a block has only one successor, it has a [Goto](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html#variant.Goto) terminator (line 35 of [this](#mirex4) example). A condtion of an `if` branch usually uses a [switchInt](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html#variant.SwitchInt) terminator (line 30 of [this](#mirex4) example). [Return](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html#variant.Return) literally returns from the current function (line 45 of [this](#mirex4) example). A function call in MIR always terminates a basic block. It uses [this](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/enum.TerminatorKind.html#variant.Call) terminator (line 9 of [this](#mirex4) example and line 67 of [this](#mirex2) example). If a basic block terminates with a function call, it may have 1 or 2 successors. If the function panics, it has to unwind the stack and call destructors. For panic-able functions, the terminator has a successor for stack unwinding.
+
+[[br]]
+
+### Appendix: implementation of MIR
+
+[GlobalCtxt] is the central data structure that contains all the information of a compilation. It's such a gigantic type and looking at the details of the type is way beyond this article's topic. I'll focus on types that are related to this article.
+
+[Body] is the type that contains all the information of a function, including the [basic_blocks](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/struct.Body.html#structfield.basic_blocks). A basic block has [BasicBlockData], which literally contains the data of it. A [BasicBlockData] consists of [Statement]s and a [Terminator].
+
+[StatementKind] and [TerminatorKind] lists all the possible kinds of statements and terminators. [StatementKind] includes [assignment](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/syntax/enum.StatementKind.html#variant.Assign), [StorageLive](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/syntax/enum.StatementKind.html#variant.StorageLive) and [StorageDead](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/syntax/enum.StatementKind.html#variant.StorageDead). We've seen them in this article. I explained [TerminatorKind] [here](#terminatorkind).
+
+Locals of a [Body] are stored in [local_decls](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/struct.Body.html#structfield.local_decls). Information of a local is defined in [LocalDecl](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/struct.LocalDecl.html).
+
+Debug information (like the one at line 22 of [this](#mirex4) example) of user defined variables are stored [here](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/struct.Body.html#structfield.var_debug_info). [VarDebugInfo](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/struct.VarDebugInfo.html) is the structing containing the debug info.
+
+[GlobalCtxt]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/ty/context/struct.GlobalCtxt.html
+[Body]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/struct.Body.html
+[BasicBlockData]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/struct.BasicBlockData.html
+[Statement]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/struct.Statement.html
+[Terminator]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/terminator/struct.Terminator.html
+[TerminatorKind]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/syntax/enum.TerminatorKind.html
+[StatementKind]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/mir/syntax/enum.StatementKind.html
