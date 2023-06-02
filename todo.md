@@ -74,6 +74,8 @@ fenced code block::selection
 
 config로 mdxt render_options도 설정하고 싶음...
 
+문서 제목도 metadata로 설정하고 싶음...
+
 ---
 
 css랑 js를 html 안에 embed해서 한 파일로 만드는 기능도 추가하고 싶음!

@@ -96,7 +96,12 @@ impl Graph {
     pub fn get_articles(&self, tag: String) -> Vec<String> {
 
         match self.vertex_indexes.get(&tag) {
-            Some(tag_index) => self.tag_articles[*tag_index].clone(),
+            Some(tag_index) => {
+                let mut articles = self.tag_articles[*tag_index].clone();
+                articles.sort_unstable();
+
+                articles
+            },
             _ => vec![]
         }
 

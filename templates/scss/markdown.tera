@@ -273,7 +273,7 @@ body .markdown {
         background-color: $black;
         width: 90%;
         overflow: auto;
-        line-height: 1.0;
+        line-height: 1.0;  /* TODO: it's not affected by [[line height]], but I want it to */
         margin-top: $margin-big;
         margin-bottom: $margin-big;
 
@@ -305,6 +305,7 @@ body .markdown {
         span.code-fence-row {
             display: inline-block;
             width: 100%;
+            min-width: max-content;  /* Thank you Chat GPT */
         }
 
         span.code-fence-row:hover {
