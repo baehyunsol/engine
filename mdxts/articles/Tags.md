@@ -3,9 +3,6 @@
 
 - [#rust](tag-rust.html) (6)
 - [#comparison](tag-comparison.html) (4)
-- [#documentation](tag-documentation.html) (4)
-- [#mdxt](tag-mdxt.html) (4)
-- [#reference](tag-reference.html) (4)
 - [#opensource](tag-opensource.html) (2)
 - [#smart-pointers](tag-smart-pointers.html) (2)
 - [#browser](tag-browser.html) (1)

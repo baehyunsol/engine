@@ -7,17 +7,6 @@
 ## All articles
 
 
-### June 2023
-
-- [[giant]] [MDxt-Icon-Reference](MDxt-Icon-Reference.html) [[/giant]] [[blank=3]]- 9.June.2023
-  - There's no preview for this article.
-- [[giant]] [MDxt-Math-Reference](MDxt-Math-Reference.html) [[/giant]] [[blank=3]]- 9.June.2023
-  - There's no preview for this article.
-- [[giant]] [MDxt-Reference](MDxt-Reference.html) [[/giant]] [[blank=3]]- 9.June.2023
-  - MDxt Reference
-- [[giant]] [MDxt-Character-Reference](MDxt-Character-Reference.html) [[/giant]] [[blank=3]]- 9.June.2023
-  - There's no preview for this article.
-
 ### May 2023
 
 - [[giant]] [IRs-of-Rust](IRs-of-Rust.html) [[/giant]] [[blank=3]]- 13.May.2023

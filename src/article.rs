@@ -33,6 +33,14 @@ pub fn from_yaml(yaml: Yaml) -> HashMap<String, Article> {
 
             for (name, article) in hash.iter() {
 
+                if let Some(b) = yaml_hash::get(&article, &Yaml::from_str("hide")) {
+
+                    if let Some(true) = b.as_bool() {
+                        continue;
+                    }
+
+                }
+
                 let date = match yaml_hash::get(&article, &Yaml::from_str("date")) {
                     Some(d) => match d.as_vec() {
                         Some(v) if v.len() == 3 => {

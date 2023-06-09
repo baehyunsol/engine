@@ -99,6 +99,8 @@ at least: todo들은 다 없앤 다음에!
 
 큰 dilema긴 함... 저건 대놓고 XML이 아닌데? 근데 필요하긴 함...
 
+이제 더 큰 문제!! video나 audio 태그에서 대놓고 HXML이랑 충돌함!
+
 ---
 
 `[[gold]]D1[[/gold]]이 [[red]]D3[[/red]]보다 크지? 아까 말한 queue 때문에 그래.`를 select하면 색깔 다른 부분이 크기도 달라짐... 왜 그럴까

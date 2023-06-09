@@ -18,11 +18,11 @@ This blog is optimized for the Firefox browser. Well, I didn't mean it: my blog 
 ### Recent Articles
 
 
-- [MDxt-Icon-Reference](MDxt-Icon-Reference.html)
-- [MDxt-Math-Reference](MDxt-Math-Reference.html)
-- [MDxt-Reference](MDxt-Reference.html)
-- [MDxt-Character-Reference](MDxt-Character-Reference.html)
 - [IRs-of-Rust](IRs-of-Rust.html)
+- [Attributes-in-Rust](Attributes-in-Rust.html)
+- [Vectors-in-Rust](Vectors-in-Rust.html)
+- [Rust-Struct-Memory-Layout](Rust-Struct-Memory-Layout.html)
+- [RC-Counters-in-Rust](RC-Counters-in-Rust.html)
 
 [[right]]
 [See more](Articles.html)
@@ -33,7 +33,7 @@ This blog is optimized for the Firefox browser. Well, I didn't mean it: my blog 
 
 - [#rust](tag-rust.html) (6)
 - [#comparison](tag-comparison.html) (4)
-- [#documentation](tag-documentation.html) (4)
+- [#opensource](tag-opensource.html) (2)
 
 [[right]]
 [See more](Tags.html)
