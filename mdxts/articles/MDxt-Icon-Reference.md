@@ -1,5 +1,5 @@
 ---
-date: [2022, 12, 29]
+date: [2023, 6, 9]
 tags: [mdxt, reference, documentation]
 ---
 
@@ -55,9 +55,9 @@ tags: [mdxt, reference, documentation]
 
 ## Icons Table
 
-Total 109 icons.
+Total 113 icons.
 
- [airplane](#iconairplane)  [alert](#iconalert)  [arrowback](#iconarrowback)  [arrowdown](#iconarrowdown)  [arrowforward](#iconarrowforward)  [arrowheaddown](#iconarrowheaddown)  [arrowheadleft](#iconarrowheadleft)  [arrowheadright](#iconarrowheadright)  [arrowheadup](#iconarrowheadup)  [arrowupward](#iconarrowupward)  [at](#iconat)  [attach](#iconattach)  [award](#iconaward)  [beer](#iconbeer)  [bell](#iconbell)  [belloff](#iconbelloff)  [bug](#iconbug)  [bulb](#iconbulb)  [c](#iconc)  [camera](#iconcamera)  [car](#iconcar)  [cart](#iconcart)  [chip](#iconchip)  [clock](#iconclock)  [close](#iconclose)  [cpp](#iconcpp)  [css](#iconcss)  [document](#icondocument)  [electricity](#iconelectricity)  [eye](#iconeye)  [eyeoff](#iconeyeoff)  [facebook](#iconfacebook)  [fish](#iconfish)  [folder](#iconfolder)  [forest](#iconforest)  [game](#icongame)  [gift](#icongift)  [github](#icongithub)  [glasses](#iconglasses)  [google](#icongoogle)  [happy](#iconhappy)  [hash](#iconhash)  [heart](#iconheart)  [home](#iconhome)  [html](#iconhtml)  [image](#iconimage)  [info](#iconinfo)  [instagram](#iconinstagram)  [javascript](#iconjavascript)  [key](#iconkey)  [linux](#iconlinux)  [liquor](#iconliquor)  [list](#iconlist)  [lock](#iconlock)  [maximize](#iconmaximize)  [menu](#iconmenu)  [messagesquare](#iconmessagesquare)  [mic](#iconmic)  [micoff](#iconmicoff)  [minimize](#iconminimize)  [monitor](#iconmonitor)  [music](#iconmusic)  [navigation](#iconnavigation)  [nuclear](#iconnuclear)  [options](#iconoptions)  [palette](#iconpalette)  [pen](#iconpen)  [people](#iconpeople)  [person](#iconperson)  [phone](#iconphone)  [pin](#iconpin)  [power](#iconpower)  [python](#iconpython)  [question](#iconquestion)  [radio](#iconradio)  [refresh](#iconrefresh)  [rocket](#iconrocket)  [run](#iconrun)  [rust](#iconrust)  [save](#iconsave)  [scissors](#iconscissors)  [search](#iconsearch)  [settings](#iconsettings)  [share](#iconshare)  [shield](#iconshield)  [shieldoff](#iconshieldoff)  [skull](#iconskull)  [slash](#iconslash)  [smoke](#iconsmoke)  [smokefree](#iconsmokefree)  [soccer](#iconsoccer)  [star](#iconstar)  [terminal](#iconterminal)  [thumbdown](#iconthumbdown)  [thumbup](#iconthumbup)  [trophy](#icontrophy)  [tv](#icontv)  [twitter](#icontwitter)  [umbrella](#iconumbrella)  [university](#iconuniversity)  [video](#iconvideo)  [videooff](#iconvideooff)  [volumeoff](#iconvolumeoff)  [volumeup](#iconvolumeup)  [water](#iconwater)  [wifi](#iconwifi)  [wifioff](#iconwifioff)  [wine](#iconwine)  [youtube](#iconyoutube) 
+ [airplane](#iconairplane)  [alert](#iconalert)  [arrowback](#iconarrowback)  [arrowdown](#iconarrowdown)  [arrowforward](#iconarrowforward)  [arrowheaddown](#iconarrowheaddown)  [arrowheadleft](#iconarrowheadleft)  [arrowheadright](#iconarrowheadright)  [arrowheadup](#iconarrowheadup)  [arrowupward](#iconarrowupward)  [at](#iconat)  [attach](#iconattach)  [award](#iconaward)  [beer](#iconbeer)  [bell](#iconbell)  [belloff](#iconbelloff)  [bug](#iconbug)  [bulb](#iconbulb)  [c](#iconc)  [camera](#iconcamera)  [car](#iconcar)  [cart](#iconcart)  [chip](#iconchip)  [clock](#iconclock)  [close](#iconclose)  [cpp](#iconcpp)  [css](#iconcss)  [document](#icondocument)  [electricity](#iconelectricity)  [eye](#iconeye)  [eyeoff](#iconeyeoff)  [facebook](#iconfacebook)  [fire](#iconfire)  [fish](#iconfish)  [flower](#iconflower)  [folder](#iconfolder)  [forest](#iconforest)  [game](#icongame)  [gift](#icongift)  [github](#icongithub)  [glasses](#iconglasses)  [google](#icongoogle)  [happy](#iconhappy)  [hash](#iconhash)  [heart](#iconheart)  [home](#iconhome)  [html](#iconhtml)  [image](#iconimage)  [info](#iconinfo)  [instagram](#iconinstagram)  [javascript](#iconjavascript)  [key](#iconkey)  [linux](#iconlinux)  [liquor](#iconliquor)  [list](#iconlist)  [lock](#iconlock)  [maximize](#iconmaximize)  [menu](#iconmenu)  [messagesquare](#iconmessagesquare)  [mic](#iconmic)  [micoff](#iconmicoff)  [minimize](#iconminimize)  [monitor](#iconmonitor)  [music](#iconmusic)  [navigation](#iconnavigation)  [nuclear](#iconnuclear)  [options](#iconoptions)  [palette](#iconpalette)  [pen](#iconpen)  [people](#iconpeople)  [person](#iconperson)  [phone](#iconphone)  [pin](#iconpin)  [power](#iconpower)  [python](#iconpython)  [question](#iconquestion)  [radio](#iconradio)  [refresh](#iconrefresh)  [rocket](#iconrocket)  [run](#iconrun)  [rust](#iconrust)  [save](#iconsave)  [scissors](#iconscissors)  [search](#iconsearch)  [settings](#iconsettings)  [share](#iconshare)  [shield](#iconshield)  [shieldoff](#iconshieldoff)  [skull](#iconskull)  [slash](#iconslash)  [smoke](#iconsmoke)  [smokefree](#iconsmokefree)  [soccer](#iconsoccer)  [star](#iconstar)  [swords](#iconswords)  [terminal](#iconterminal)  [thumbdown](#iconthumbdown)  [thumbup](#iconthumbup)  [tree](#icontree)  [trophy](#icontrophy)  [tv](#icontv)  [twitter](#icontwitter)  [umbrella](#iconumbrella)  [university](#iconuniversity)  [video](#iconvideo)  [videooff](#iconvideooff)  [volumeoff](#iconvolumeoff)  [volumeup](#iconvolumeup)  [water](#iconwater)  [wifi](#iconwifi)  [wifioff](#iconwifioff)  [wine](#iconwine)  [youtube](#iconyoutube) 
 
 
 
@@ -74,7 +74,6 @@ Total 109 icons.
 [[box, inline, width = medium]]
 
 [[center]]
-
 
 [[icon = alert, size = 64]][[br]]alert[[br]][[anchor, id=iconalert]][[/anchor]][EVA][[br]]MIT
 
@@ -386,7 +385,27 @@ Total 109 icons.
 
 [[center]]
 
+[[icon = fire, size = 64]][[br]]fire[[br]][[anchor, id=iconfire]][[/anchor]][ION][[br]]MIT
+
+[[/center]]
+
+[[/box]]
+
+[[box, inline, width = medium]]
+
+[[center]]
+
 [[icon = fish, size = 64]][[br]]fish[[br]][[anchor, id=iconfish]][[/anchor]][ION][[br]]MIT
+
+[[/center]]
+
+[[/box]]
+
+[[box, inline, width = medium]]
+
+[[center]]
+
+[[icon = flower, size = 64]][[br]]flower[[br]][[anchor, id=iconflower]][[/anchor]][MATERIAL][[br]]Apache 2.0
 
 [[/center]]
 
@@ -872,7 +891,6 @@ Total 109 icons.
 
 [[/box]]
 
-
 [[box, inline, width = medium]]
 
 [[center]]
@@ -987,6 +1005,16 @@ Total 109 icons.
 
 [[center]]
 
+[[icon = swords, size = 64]][[br]]swords[[br]][[anchor, id=iconswords]][[/anchor]][MATERIAL][[br]]Apache 2.0
+
+[[/center]]
+
+[[/box]]
+
+[[box, inline, width = medium]]
+
+[[center]]
+
 [[icon = terminal, size = 64]][[br]]terminal[[br]][[anchor, id=iconterminal]][[/anchor]][ION][[br]]MIT
 
 [[/center]]
@@ -1008,6 +1036,16 @@ Total 109 icons.
 [[center]]
 
 [[icon = thumbup, size = 64]][[br]]thumbup[[br]][[anchor, id=iconthumbup]][[/anchor]][MATERIAL][[br]]Apache 2.0
+
+[[/center]]
+
+[[/box]]
+
+[[box, inline, width = medium]]
+
+[[center]]
+
+[[icon = tree, size = 64]][[br]]tree[[br]][[anchor, id=icontree]][[/anchor]][BOOTSTRAP][[br]]MIT
 
 [[/center]]
 
@@ -1152,7 +1190,6 @@ Total 109 icons.
 [[/center]]
 
 [[/box]]
-
 [EVA]: https://akveo.github.io/eva-icons
 [ION]: https://ionic.io/ionicons
 [DEV]: https://devicon.dev

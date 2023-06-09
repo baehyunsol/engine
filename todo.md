@@ -127,6 +127,8 @@ variables
   - 저래도 error는 아닌 듯? 저렇게 하면 `--yellow`라는 변수가 새로 생김
   - 걍 js DOM에 있는 `--yellow`까지 날려버리는게 best기는 함. 근데 그러려면 js까지 이해하는 engine을 만들어야함...ㅠㅠ
 
+좀 더 coarse하게 할까? css 파일을 여러개 만드는 거임! code_fence.css, table.css처럼..!! 이러면 파일 여러개 로드하느라 오히려 오래 걸리려나? 근데 css를 html 안에 embed하는 기능을 쓴다고 치면 이게 더 효율적일 수도 있음!
+
 ---
 
 cache system
@@ -158,7 +160,3 @@ table 안의 code span은 background color를 다르게 처리하잖아? 근데 
 ---
 
 toc -> 왼쪽에 collapsible bar로 보일 수 있게 하기!
-
----
-
-header-less table

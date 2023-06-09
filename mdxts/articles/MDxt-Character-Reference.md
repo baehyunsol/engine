@@ -1,5 +1,5 @@
 ---
-date: [2022, 8, 26]
+date: [2023, 6, 9]
 tags: [mdxt, reference, documentation]
 ---
 
@@ -45,6 +45,7 @@ tags: [mdxt, reference, documentation]
 | \[[char=cup]] | [[char=cup]] |
 | \[[char=darr]] | [[char=darr]] |
 | \[[char=delta]] | [[char=delta]] |
+| \[[char=divide]] | [[char=divide]] |
 | \[[char=empty]] | [[char=empty]] |
 | \[[char=epsilon]] | [[char=epsilon]] |
 | \[[char=equiv]] | [[char=equiv]] |
@@ -54,6 +55,7 @@ tags: [mdxt, reference, documentation]
 | \[[char=forall]] | [[char=forall]] |
 | \[[char=gamma]] | [[char=gamma]] |
 | \[[char=ge]] | [[char=ge]] |
+| \[[char=inf]] | [[char=inf]] |
 | \[[char=infin]] | [[char=infin]] |
 | \[[char=int]] | [[char=int]] |
 | \[[char=intint]] | [[char=intint]] |
@@ -64,6 +66,7 @@ tags: [mdxt, reference, documentation]
 | \[[char=larr]] | [[char=larr]] |
 | \[[char=le]] | [[char=le]] |
 | \[[char=mu]] | [[char=mu]] |
+| \[[char=music]] | [[char=music]] |
 | \[[char=nabla]] | [[char=nabla]] |
 | \[[char=ne]] | [[char=ne]] |
 | \[[char=ni]] | [[char=ni]] |
@@ -96,6 +99,7 @@ tags: [mdxt, reference, documentation]
 | \[[char=there4]] | [[char=there4]] |
 | \[[char=therefore]] | [[char=therefore]] |
 | \[[char=theta]] | [[char=theta]] |
+| \[[char=times]] | [[char=times]] |
 | \[[char=trade]] | [[char=trade]] |
 | \[[char=uarr]] | [[char=uarr]] |
 | \[[char=upsilon]] | [[char=upsilon]] |

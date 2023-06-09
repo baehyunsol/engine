@@ -20,7 +20,7 @@ body .markdown {
         text-decoration-color: var(--white-compl);
     }
 
-    img {
+    img, video, iframe {
         max-width: $image-medium;
         max-height: $image-medium;
     }
@@ -130,7 +130,7 @@ body .markdown {
     .size-{{size}} {
         font-size: $font-{{size}};
 
-        img {
+        img, video, iframe {
             max-width: $image-{{size}};
             max-height: $image-{{size}};
         }
@@ -157,7 +157,7 @@ body .markdown {
     .align-center {
         text-align: center;
 
-        table, img, .box, blockquote, svg {
+        table, img, video, iframe, .box, blockquote, svg {
             margin-left: auto;
             margin-right: auto;
         }
@@ -167,7 +167,7 @@ body .markdown {
     .align-right {
         text-align: right;
 
-        table, img, .box, blockquote, svg {
+        table, img, video, iframe, .box, blockquote, svg {
             margin-left: auto;
             margin-right: 0;
         }
@@ -177,7 +177,7 @@ body .markdown {
     .align-left {
         text-align: left;
 
-        table, img, .box, blockquote, svg {
+        table, img, video, iframe, .box, blockquote, svg {
             margin-left: 0;
             margin-right: auto;
         }
@@ -383,6 +383,10 @@ body .markdown {
 
 /* Table */
 .markdown {
+
+    table.headless-table {
+        border: $border-medium solid var(--white);
+    }
 
     table {
         border-collapse: collapse;

@@ -1,8 +1,9 @@
 ---
-date: [2022, 8, 7]
+date: [2023, 6, 9]
 tags: [mdxt, reference, documentation]
 ---
 
+# Math in MDxt
 
 | Table of Contents |
 |-|
@@ -16,18 +17,13 @@ tags: [mdxt, reference, documentation]
 |-|-|
 |\[[math]]sum{n=1}{+inf} frac{1}{sup{n}{2}} = frac{sup{pi}{2}}{6}[[/math]]|[[math]]sum{n=1}{+inf} frac{1}{sup{n}{2}} = frac{sup{pi}{2}}{6}[[/math]]|
 |\[[math]]frac{-b pm sqrt{sup{b}{2} - 4 a c}}{2 a}[[/math]]|[[math]]frac{-b pm sqrt{sup{b}{2} - 4 a c}}{2 a}[[/math]]|
-|\[[math]]lim{n rightarrow +inf} sup{(1 + frac{1}{n})}{n} = e simeq 2.718[[/math]]|[[math]]lim{n rightarrow +inf} sup{(1 + frac{1}{n})}{n} = e simeq 2.718[[/math]]|   
+|\[[math]]lim{n rightarrow +inf} sup{(1 + frac{1}{n})}{n} = e simeq 2.718[[/math]]|[[math]]lim{n rightarrow +inf} sup{(1 + frac{1}{n})}{n} = e simeq 2.718[[/math]]|
 |\[[math]](bincoeff{5}{2}) = multiscript{C}{}{}{5}{2} = frac{5!}{2!3!} = 10[[/math]]|[[math]](bincoeff{5}{2}) = multiscript{C}{}{}{5}{2} = frac{5!}{2!3!} = 10[[/math]]|
 |\[[math]]a circ b = \|a\| space \|b\| space cos theta[[/math]]|[[math]]a circ b = |a| space |b| space cos theta[[/math]]|
 |\[[math]]alpha beta gamma Alpha Beta Gamma[[/math]]|[[math]]alpha beta gamma Alpha Beta Gamma[[/math]]|
-|\[[math]]broken sqrt{1[[/math]]|[[math]]broken sqrt{1[[/math]]|
-|\[[math]]text{delta} delta[[/math]]|[[math]]text{delta} delta[[/math]]|
 |\[[math]]sub{Phi}{E} = oint{S}{} E circ d A[[/math]]|[[math]]sub{Phi}{E} = oint{S}{} E circ d A[[/math]]|
-|\[[math]]1+1=2[[/math]]|[[math]]1+1=2[[/math]]|
-|\[[math]]a space b sspace c ssspace d[[/math]]|[[math]]a space b sspace c ssspace d[[/math]]|
 |\[[math]]root{4}{sup{\|a\|}{4} + sup{\|b\|}{4} + sup{\|c\|}{4} + sup{\|d\|}{4}} leq sup{(a+b+c+d)}{4} < inf[[/math]]|[[math]]root{4}{sup{|a|}{4} + sup{|b|}{4} + sup{|c|}{4} + sup{|d|}{4}} leq sup{(a+b+c+d)}{4} < inf[[/math]]|
 |\[[math]]hat{1} bar{1} dot{1} tilde{1} vec{1}[[/math]]|[[math]]hat{1} bar{1} dot{1} tilde{1} vec{1}[[/math]]|
-|\[[math]][[/math]]|[[math]][[/math]]|
 
 
 ## Special Entities
