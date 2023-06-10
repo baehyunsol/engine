@@ -30,9 +30,10 @@ pub fn render_directory(
     articles_metadata: Option<&HashMap<String, Yaml>>,
     config: &Config,
     recursive: bool,
-    multi_core: MultiCore
+    multi_core: MultiCore,
+    cache_read_dir: bool,
 ) -> Result<Vec<Log>, Error> {
-    let mut files = match read_dir(dir_from) {
+    let mut files = match read_dir(dir_from, cache_read_dir) {
         Ok(f) => f,
         Err(_) => {
             return Err(Error::PathError(format!("error at `render_directory({:?}, {:?}, ...)`\n`read_dir({:?})` failed", dir_from, ext_from, dir_from)));
@@ -72,6 +73,7 @@ pub fn render_directory(
                 config,
                 recursive,
                 multi_core,
+                cache_read_dir
             ) {
                 Ok(logs) => { recursive_logs.push(logs); }
                 Err(e) => { return Err(e); }
@@ -338,7 +340,7 @@ pub fn render_templates(
         context = Some(context_);
     }
 
-    let mut articles = match read_dir(article_path) {
+    let mut articles = match read_dir(article_path, false) {
         Ok(f) => f,
         Err(_) => {
             return Err(Error::PathError(format!("error at `render_templates({:?}, {:?}, ...)`\n`read_dir({:?})` failed", template_path, article_path, article_path)));
@@ -498,7 +500,7 @@ pub fn copy_all(
     multi_core: MultiCore
 ) -> Result<Vec<Log>, Error> {
 
-    let mut files = match read_dir(dir_from) {
+    let mut files = match read_dir(dir_from, true) {
         Ok(f) => f,
         Err(_) => {
             return Err(Error::PathError(format!("error at `copy_all({:?}, {:?}, ...)`\n`read_dir({:?})` failed", dir_from, ext_from, dir_from)));

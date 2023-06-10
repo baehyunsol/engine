@@ -127,11 +127,6 @@ fn render(only_docs: bool, multi_core: MultiCore, verbose: bool) {
 
     if verbose { show_verbose_message(start_time.clone(), "`remove_result` complete"); }
 
-    // docs & articles, images
-    copy_images(only_docs, multi_core);
-
-    if verbose { show_verbose_message(start_time.clone(), "`copy_image` complete"); }
-
     // docs & articles, mdxt
 
     let mut mdxts_logs = render_directory(
@@ -142,8 +137,9 @@ fn render(only_docs: bool, multi_core: MultiCore, verbose: bool) {
         None,
         None,
         &doc_configs,
-        true,
+        true,  // recursive
         multi_core,
+        true,  // cache_read_dir
     ).unwrap();
 
     if verbose { show_verbose_message(start_time.clone(), "`render_directory(documents, MDxt)` complete"); }
@@ -157,8 +153,9 @@ fn render(only_docs: bool, multi_core: MultiCore, verbose: bool) {
             None,
             None,
             &article_configs,
-            true,
+            true,  // recursive
             multi_core,
+            true,  // cache_read_dir
         ).unwrap();
 
         if verbose { show_verbose_message(start_time.clone(), "`render_directory(articles, MDxt)` complete"); }
@@ -181,8 +178,9 @@ fn render(only_docs: bool, multi_core: MultiCore, verbose: bool) {
         None,
         None,
         &doc_configs,
-        true,
+        true,  // recursive
         multi_core,
+        true,  // cache_read_dir
     ).unwrap();
 
     if verbose { show_verbose_message(start_time.clone(), "`render_directory(scss -> documents, Tera)` complete"); }
@@ -204,8 +202,9 @@ fn render(only_docs: bool, multi_core: MultiCore, verbose: bool) {
         None,
         None,
         &doc_configs,
-        true,
+        true,  // recursive
         multi_core,
+        false,  // cache_read_dir
     ).unwrap();
 
     if verbose { show_verbose_message(start_time.clone(), "`render_directory(documents, Scss)` complete"); }
@@ -220,8 +219,9 @@ fn render(only_docs: bool, multi_core: MultiCore, verbose: bool) {
         None,
         None,
         &doc_configs,
-        true,
+        true,  // recursive
         multi_core,
+        true,  // cache_read_dir
     ).unwrap();
 
     if verbose { show_verbose_message(start_time.clone(), "`render_directory(js -> documents, Tera)` complete"); }
@@ -256,8 +256,9 @@ fn render(only_docs: bool, multi_core: MultiCore, verbose: bool) {
         None,
         None,
         &doc_configs,
-        true,
+        true,  // recursive
         multi_core,
+        false,  // cache_read_dir
     ).unwrap();
 
     if verbose { show_verbose_message(start_time.clone(), "`render_directory(template, MDxt)` complete"); }
@@ -287,8 +288,9 @@ fn render(only_docs: bool, multi_core: MultiCore, verbose: bool) {
         None,
         Some(&articles_metadata),
         &doc_configs,
-        true,
+        true,  // recursive
         multi_core,
+        false,  // cache_read_dir
     ).unwrap();
 
     if verbose { show_verbose_message(start_time.clone(), "`render_directory(documents, XML)` complete"); }
@@ -309,8 +311,9 @@ fn render(only_docs: bool, multi_core: MultiCore, verbose: bool) {
             None,
             None,
             &article_configs,
-            true,
+            true,  // recursive
             multi_core,
+            true,  // cache_read_dir
         ).unwrap();
 
         if verbose { show_verbose_message(start_time.clone(), "`render_directory(scss -> articles, Tera)` complete"); }
@@ -332,8 +335,9 @@ fn render(only_docs: bool, multi_core: MultiCore, verbose: bool) {
             None,
             None,
             &article_configs,
-            true,
+            true,  // recursive
             multi_core,
+            false,  // cache_read_dir
         ).unwrap();
 
         if verbose { show_verbose_message(start_time.clone(), "`render_directory(articles, Scss)` complete"); }
@@ -348,8 +352,9 @@ fn render(only_docs: bool, multi_core: MultiCore, verbose: bool) {
             None,
             None,
             &article_configs,
-            true,
+            true,  // recursive
             multi_core,
+            true,  // cache_read_dir
         ).unwrap();
 
         if verbose { show_verbose_message(start_time.clone(), "`render_directory(js -> articles, Tera)` complete"); }
@@ -386,8 +391,9 @@ fn render(only_docs: bool, multi_core: MultiCore, verbose: bool) {
             None,
             None,
             &article_configs,
-            true,
+            true,  // recursive
             multi_core,
+            false,  // cache_read_dir
         ).unwrap();
 
         if verbose { show_verbose_message(start_time.clone(), "`render_directory(articles, Tera)` complete"); }
@@ -400,8 +406,9 @@ fn render(only_docs: bool, multi_core: MultiCore, verbose: bool) {
             None,
             None,
             &article_configs,
-            true,
+            true,  // recursive
             multi_core,
+            false,  // cache_read_dir
         ).unwrap();
 
         if verbose { show_verbose_message(start_time.clone(), "`render_directory(tag_pages, MDxt)` complete"); }
@@ -455,8 +462,9 @@ fn render(only_docs: bool, multi_core: MultiCore, verbose: bool) {
             None,
             Some(&articles_metadata),
             &article_configs,
-            true,
+            true,  // recursive
             multi_core,
+            false,  // cache_read_dir
         ).unwrap();
 
         if verbose { show_verbose_message(start_time.clone(), "`render_directory(articles, XML)` complete"); }
@@ -471,37 +479,43 @@ fn render(only_docs: bool, multi_core: MultiCore, verbose: bool) {
 
     if verbose { show_verbose_message(start_time.clone(), "`propagate_css_js(documents)` complete"); }
 
+    // docs & articles: images, videos, and audios
+    copy_media_files(only_docs, multi_core);
+
+    if verbose { show_verbose_message(start_time.clone(), "`copy_media_files` complete"); }
+
     clean_up_results();
 
     if verbose { show_verbose_message(start_time.clone(), "`clean_up_results` complete"); }
 }
 
-fn copy_images(only_docs: bool, multi_core: MultiCore) {
+fn copy_media_files(only_docs: bool, multi_core: MultiCore) {
+    copy_media_files_ext("jpg", only_docs, multi_core);
+    copy_media_files_ext("jpeg", only_docs, multi_core);
+    copy_media_files_ext("png", only_docs, multi_core);
+    copy_media_files_ext("svg", only_docs, multi_core);
+    copy_media_files_ext("gif", only_docs, multi_core);
+    copy_media_files_ext("m4a", only_docs, multi_core);
+    copy_media_files_ext("mp4", only_docs, multi_core);
+    copy_media_files_ext("mp3", only_docs, multi_core);
+    copy_media_files_ext("wav", only_docs, multi_core);
+    copy_media_files_ext("ogg", only_docs, multi_core);
+    copy_media_files_ext("webm", only_docs, multi_core);
+}
+
+fn copy_media_files_ext(ext: &str, only_docs: bool, multi_core: MultiCore) {
 
     copy_all(
-        "./mdxts/documents", "jpg",
-        "./output/htmls/documents", "jpg",
-        true,
-        multi_core,
-    ).unwrap();
-
-    copy_all(
-        "./mdxts/documents", "png",
-        "./output/htmls/documents", "png",
+        "./mdxts/documents", ext,
+        "./output/htmls/documents", ext,
         true,
         multi_core,
     ).unwrap();
 
     if !only_docs {
         copy_all(
-            "./mdxts/articles", "jpg",
-            "./output/htmls/articles", "jpg",
-            true,
-            multi_core,
-        ).unwrap();
-        copy_all(
-            "./mdxts/articles", "png",
-            "./output/htmls/articles", "png",
+            "./mdxts/articles", ext,
+            "./output/htmls/articles", ext,
             true,
             multi_core,
         ).unwrap();
@@ -509,8 +523,8 @@ fn copy_images(only_docs: bool, multi_core: MultiCore) {
 
 }
 
-fn propagate_css_js(path:&str, multi_core: MultiCore) {
-    let mut files = read_dir(path).unwrap();
+fn propagate_css_js(path: &str, multi_core: MultiCore) {
+    let mut files = read_dir(path, false).unwrap();
 
     files = files.into_iter().filter(
         |f| match extension(f) {

@@ -1,4 +1,4 @@
-#![allow(dead_code)]
+// #![allow(dead_code)]
 
 use std::str::FromStr;
 use std::fs::{self, File, read};
@@ -27,22 +27,6 @@ pub fn basename(path: &str) -> Result<String, ()> {
     match PathBuf::from_str(path) {
         Err(_) => Err(()),
         Ok(path) => match path.file_name() {
-            None => Err(()),
-            Some(s) => match s.to_str() {
-                None => Err(()),
-                Some(ext) => Ok(ext.to_string())
-            }
-        }
-    }
-
-}
-
-// `a/b/c.d` -> `a/b`
-pub fn parent(path: &str) -> Result<String, ()> {
-
-    match PathBuf::from_str(path) {
-        Err(_) => Err(()),
-        Ok(path) => match path.parent() {
             None => Err(()),
             Some(s) => match s.to_str() {
                 None => Err(()),
@@ -110,25 +94,6 @@ pub fn set_ext(path: &str, ext: &str) -> Result<String, ()> {
 
 }
 
-// `a/b/c.d, e.f` -> `a/b/e.f`
-pub fn set_file_name(path: &str, file: &str) -> Result<String, ()> {
-
-    match PathBuf::from_str(path) {
-        Err(_) => Err(()),
-        Ok(mut path) => {
-            path.set_file_name(file);
-
-            match path.to_str() {
-                None => Err(()),
-                Some(result) => Ok(result.to_string())
-            }
-
-        }
-
-    }
-
-}
-
 pub fn is_dir(path: &str) -> bool {
 
     match PathBuf::from_str(path) {
@@ -138,16 +103,11 @@ pub fn is_dir(path: &str) -> bool {
 
 }
 
-pub fn is_file(path: &str) -> bool {
+use std::collections::HashMap;
+pub const READ_DIR_CACHE: *mut HashMap<String, Vec<String>> = std::ptr::null_mut();
 
-    match PathBuf::from_str(path) {
-        Err(_) => false,
-        Ok(path) => path.is_file()
-    }
-
-}
-
-pub fn read_dir(path: &str) -> Result<Vec<String>, ()> {
+// set `cache` to true if the directory is read-only
+pub fn read_dir(path: &str, cache: bool) -> Result<Vec<String>, ()> {
 
     match fs::read_dir(path) {
         Err(_) => Err(()),
@@ -221,7 +181,7 @@ pub fn mkdir(path: &str) -> Result<(), ()> {
 
 pub fn rmdir(path: &str) {
 
-    match read_dir(path) {
+    match read_dir(path, false) {
         Ok(cur_dir) => {
 
             for dir in cur_dir.iter() {
@@ -243,18 +203,9 @@ pub fn rmdir(path: &str) {
 
 }
 
-pub fn get_sub_directories(path: &str) -> Vec<String> {
-
-    match read_dir(path) {
-        Err(_) => vec![],
-        Ok(files) => files.into_iter().filter(|f| is_dir(f)).collect()
-    }
-
-}
-
 pub fn get_sub_directories_recursive(path: &str) -> Vec<String> {
 
-    match read_dir(path) {
+    match read_dir(path, false) {
         Err(_) => vec![],
         Ok(files) => {
             let sub_dirs = files.into_iter().filter(|f| is_dir(f)).collect::<Vec<String>>();
