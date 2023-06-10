@@ -111,6 +111,8 @@ fn print_help_message() {
 fn render(only_docs: bool, multi_core: MultiCore, verbose: bool) {
     let start_time = Instant::now();
 
+    file_io::init_dir_cache();
+
     let article_configs = load_articles_config();
     let doc_configs = load_documents_config();
 

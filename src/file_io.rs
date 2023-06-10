@@ -104,10 +104,26 @@ pub fn is_dir(path: &str) -> bool {
 }
 
 use std::collections::HashMap;
-pub const READ_DIR_CACHE: *mut HashMap<String, Vec<String>> = std::ptr::null_mut();
+static mut READ_DIR_CACHE: *mut HashMap<String, Vec<String>> = std::ptr::null_mut();
+
+pub fn init_dir_cache() {
+    unsafe {
+        let mut c = HashMap::new();
+        READ_DIR_CACHE = &mut c as *mut HashMap<_, _>;
+        std::mem::forget(c);
+    }
+}
 
 // set `cache` to true if the directory is read-only
 pub fn read_dir(path: &str, cache: bool) -> Result<Vec<String>, ()> {
+
+    unsafe {
+        if cache {
+            if let Some(v) = READ_DIR_CACHE.as_mut().unwrap().get(path) {
+                return Ok(v.to_vec());
+            }
+        }
+    }
 
     match fs::read_dir(path) {
         Err(_) => Err(()),
@@ -130,6 +146,13 @@ pub fn read_dir(path: &str, cache: bool) -> Result<Vec<String>, ()> {
             }
 
             result.sort();
+
+            unsafe {
+                if cache {
+                    READ_DIR_CACHE.as_mut().unwrap().insert(path.to_string(), result.clone());
+                }
+            }
+
             Ok(result)
         }
     }
