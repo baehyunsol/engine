@@ -1,5 +1,6 @@
 use crate::engine::EngineType;
 use crate::error::Error;
+use hxml::Content;
 
 pub fn render_clickable_image(image_box: String, article_title: String) -> Result<(), Error> {
     let mut images = hxml::dom::get_elements_by_tag_name(None, "img".to_string());
@@ -99,13 +100,27 @@ pub fn render_collapsible_tables(article_title: String) -> Result<(), Error> {
 }
 
 pub fn render_tooltips(article_title: String) -> Result<(), Error> {
-    let body = match hxml::dom::get_element_by_tag_name(None, "body".to_string()){
+    let body = match hxml::dom::get_element_by_tag_name(None, "body".to_string()) {
         Some(body) => body,
         None => {
             return Err(Error::RenderError(EngineType::XML, format!("error at `render_tooltips()`\n`{}` doesn't have a `<body>` tag!", article_title)));
         }
     };
     body.add_element_ptr(hxml::Element::from_string("<script src=\"tooltips.js\"></script>".to_string()).unwrap());
+
+    Ok(())
+}
+
+pub fn set_title(old_title: String, new_title: String) -> Result<(), Error> {
+    let title_tag = match hxml::dom::get_element_by_tag_name(None, "title".to_string()) {
+        Some(title) => title,
+        None => {
+            return Err(Error::RenderError(EngineType::XML, format!("error at `set_title()`\n`{}` doesn't have a `<title>` tag!", old_title)));
+        }
+    };
+
+    let contents = title_tag.get_contents_mut();
+    *contents = vec![Content::new_char_data(new_title)];
 
     Ok(())
 }

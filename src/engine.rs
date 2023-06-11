@@ -243,23 +243,31 @@ pub fn render_directory(
 
                             match articles_metadata.get(&article_title) {
                                 Some(metadata) => {
-                                    match yaml_hash::get(metadata, &Yaml::from_str("has_collapsible_table")) {
-                                        Some(has_collapsible_table) => {
-                                            if has_collapsible_table.as_bool().is_some()
-                                                && has_collapsible_table.as_bool().unwrap()
-                                            { xml::render_collapsible_tables(article_title.clone())?; }
-                                        },
-                                        None => {}
+
+                                    if let Some(has_collapsible_table) = yaml_hash::get(metadata, &Yaml::from_str("has_collapsible_table")) {
+
+                                        if let Some(true) = has_collapsible_table.as_bool() {
+                                            xml::render_collapsible_tables(article_title.clone())?;
+                                        }
+
                                     }
 
-                                    match yaml_hash::get(metadata, &Yaml::from_str("has_tooltip")) {
-                                        Some(has_tooltip) => {
-                                            if has_tooltip.as_bool().is_some()
-                                                && has_tooltip.as_bool().unwrap()
-                                            { xml::render_tooltips(article_title.clone())?; }
-                                        },
-                                        None => {}
+                                    if let Some(has_tooltip) = yaml_hash::get(metadata, &Yaml::from_str("has_tooltip")) {
+
+                                        if let Some(true) = has_tooltip.as_bool() {
+                                            xml::render_tooltips(article_title.clone())?;
+                                        }
+
                                     }
+
+                                    if let Some(title) = yaml_hash::get(metadata, &Yaml::from_str("title")) {
+
+                                        if let Some(title) = title.as_str() {
+                                            xml::set_title(article_title.clone(), title.to_string())?;
+                                        }
+
+                                    }
+
                                 },
                                 None if !article_title.starts_with("tag-") => {
                                     return Err(Error::RenderError(EngineType::XML, format!("error at `render_directory({:?}, {:?}, ...)`\n`articles_metadata` doesn't have metadata of `{}`!", dir_from, ext_from, article_title)));
@@ -439,6 +447,7 @@ pub fn render_templates(
     Ok(logs)
 }
 
+// worker for `render_templates`
 fn render_template(
     article: &str,
     output_path: &str, output_ext: &str,
