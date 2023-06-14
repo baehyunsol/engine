@@ -605,19 +605,19 @@ fn get_page_template_context(config: &Config) -> tera::Context {
 
 }
 
-use mdxt::COLORS;
+use mdxt::colors;
 
 fn get_colors() -> tera::Context {
 
     let mut context = tera::Context::new();
 
-    let color_names = COLORS.iter().map(|color| color.name.clone()).collect::<Vec<String>>();
+    let color_names = colors().iter().map(|color| color.name.clone()).collect::<Vec<String>>();
     context.insert("colors", &color_names);
 
-    let hex = COLORS.iter().map(|color| color.to_hex()).collect::<Vec<String>>();
+    let hex = colors().iter().map(|color| color.to_hex()).collect::<Vec<String>>();
     context.insert("hex", &hex);
 
-    let compl_hex = COLORS.iter().map(|color| color.complement().to_hex()).collect::<Vec<String>>();
+    let compl_hex = colors().iter().map(|color| color.complement().to_hex()).collect::<Vec<String>>();
     context.insert("compl_hex", &compl_hex);
 
     context

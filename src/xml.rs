@@ -87,26 +87,30 @@ pub fn render_lazy_loaded_images(article_title: String) -> Result<(), Error> {
     Ok(())
 }
 
-pub fn render_collapsible_tables(article_title: String) -> Result<(), Error> {
-    let body = match hxml::dom::get_element_by_tag_name(None, "body".to_string()){
+pub fn add_js(article_title: String, collapsible_tables: bool, tooltips: bool, sidebar: bool) -> Result<(), Error> {
+
+    if !collapsible_tables && !tooltips && !sidebar {
+        return Ok(());
+    }
+
+    let body = match hxml::dom::get_element_by_tag_name(None, "body".to_string()) {
         Some(body) => body,
         None => {
             return Err(Error::RenderError(EngineType::XML, format!("error at `render_collapsible_tables()`\n`{}` doesn't have a `<body>` tag!", article_title)));
         }
     };
-    body.add_element_ptr(hxml::Element::from_string("<script src=\"collapsible_tables.js\"></script>".to_string()).unwrap());
 
-    Ok(())
-}
+    if collapsible_tables {
+        body.add_element_ptr(hxml::Element::from_string("<script src=\"collapsible_tables.js\"></script>".to_string()).unwrap());
+    }
 
-pub fn render_tooltips(article_title: String) -> Result<(), Error> {
-    let body = match hxml::dom::get_element_by_tag_name(None, "body".to_string()) {
-        Some(body) => body,
-        None => {
-            return Err(Error::RenderError(EngineType::XML, format!("error at `render_tooltips()`\n`{}` doesn't have a `<body>` tag!", article_title)));
-        }
-    };
-    body.add_element_ptr(hxml::Element::from_string("<script src=\"tooltips.js\"></script>".to_string()).unwrap());
+    if collapsible_tables {
+        body.add_element_ptr(hxml::Element::from_string("<script src=\"tooltips.js\"></script>".to_string()).unwrap());
+    }
+
+    if collapsible_tables {
+        body.add_element_ptr(hxml::Element::from_string("<script src=\"sidebar.js\"></script>".to_string()).unwrap());
+    }
 
     Ok(())
 }

@@ -243,22 +243,10 @@ pub fn render_directory(
 
                             match articles_metadata.get(&article_title) {
                                 Some(metadata) => {
-
-                                    if let Some(has_collapsible_table) = yaml_hash::get(metadata, &Yaml::from_str("has_collapsible_table")) {
-
-                                        if let Some(true) = has_collapsible_table.as_bool() {
-                                            xml::render_collapsible_tables(article_title.clone())?;
-                                        }
-
-                                    }
-
-                                    if let Some(has_tooltip) = yaml_hash::get(metadata, &Yaml::from_str("has_tooltip")) {
-
-                                        if let Some(true) = has_tooltip.as_bool() {
-                                            xml::render_tooltips(article_title.clone())?;
-                                        }
-
-                                    }
+                                    let has_collapsible_table = yaml_hash::get(metadata, &Yaml::from_str("has_collapsible_table")).unwrap_or(&Yaml::Boolean(false)).clone().into_bool().unwrap_or(false);
+                                    let has_tooltip = yaml_hash::get(metadata, &Yaml::from_str("has_tooltip")).unwrap_or(&Yaml::Boolean(false)).clone().into_bool().unwrap_or(false);
+                                    let has_sidebar = yaml_hash::get(metadata, &Yaml::from_str("has_sidebar")).unwrap_or(&Yaml::Boolean(false)).clone().into_bool().unwrap_or(false);
+                                    xml::add_js(article_title.clone(), has_collapsible_table, has_tooltip, has_sidebar)?;
 
                                     if let Some(title) = yaml_hash::get(metadata, &Yaml::from_str("title")) {
 
@@ -724,6 +712,7 @@ fn render_mdxt(
                 has_collapsible_table,
                 metadata,
                 has_tooltip,
+                has_sidebar,
                 fenced_code_contents: _
             } = render_to_html(&mdxt, options.clone());
 
@@ -734,6 +723,7 @@ fn render_mdxt(
 
             metadata = yaml_hash::insert(metadata, Yaml::from_str("has_collapsible_table"), Yaml::Boolean(has_collapsible_table));
             metadata = yaml_hash::insert(metadata, Yaml::from_str("has_tooltip"), Yaml::Boolean(has_tooltip));
+            metadata = yaml_hash::insert(metadata, Yaml::from_str("has_sidebar"), Yaml::Boolean(has_sidebar));
 
             // it renders article_info if the metadata has `date` or `tags`.
             match render_article_info(&metadata, article_info) {
