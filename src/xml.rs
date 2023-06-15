@@ -104,11 +104,11 @@ pub fn add_js(article_title: String, collapsible_tables: bool, tooltips: bool, s
         body.add_element_ptr(hxml::Element::from_string("<script src=\"collapsible_tables.js\"></script>".to_string()).unwrap());
     }
 
-    if collapsible_tables {
+    if tooltips {
         body.add_element_ptr(hxml::Element::from_string("<script src=\"tooltips.js\"></script>".to_string()).unwrap());
     }
 
-    if collapsible_tables {
+    if sidebar {
         body.add_element_ptr(hxml::Element::from_string("<script src=\"sidebar.js\"></script>".to_string()).unwrap());
     }
 
