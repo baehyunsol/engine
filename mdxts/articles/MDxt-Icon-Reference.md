@@ -1,5 +1,5 @@
 ---
-date: [2023, 6, 9]
+date: [2023, 6, 15]
 hide: true
 ---
 
@@ -11,7 +11,7 @@ hide: true
 
 `[[icon=github, size = 16]]`: [[icon=github, size = 16]]
 
-`[[icon=github, size = 32]]`: [[icon=github, size = 32]]
+`[[icon=github, size = 32]]`: [[icon=github, size = 32]] (default size)
 
 `[[icon=github, size = 64]]`: [[icon=github, size = 64]]
 
@@ -25,6 +25,8 @@ hide: true
 
 `[[blue]]       [[icon=github]]       [[/blue]]`: [[blue]][[icon=github]][[/blue]]
 
+`[[brown]]      [[icon=github]]      [[/brown]]`: [[brown]][[icon=github]][[/brown]]
+
 `[[aqua]]       [[icon=github]]       [[/aqua]]`: [[aqua]][[icon=github]][[/aqua]]
 
 `[[emerald]]    [[icon=github]]    [[/emerald]]`: [[emerald]][[icon=github]][[/emerald]]
@@ -34,6 +36,12 @@ hide: true
 `[[pink]]       [[icon=github]]       [[/pink]]`: [[pink]][[icon=github]][[/pink]]
 
 `[[grassgreen]] [[icon=github]] [[/grassgreen]]`: [[grassgreen]][[icon=github]][[/grassgreen]]
+
+`[[slateblue]]  [[icon=github]]  [[/slateblue]]`: [[slateblue]][[icon=github]][[/slateblue]]
+
+`[[turquoise]]  [[icon=github]]  [[/turquoise]]`: [[turquoise]][[icon=github]][[/turquoise]]
+
+`[[seagreen]]   [[icon=github]]   [[/seagreen]]`: [[seagreen]][[icon=github]][[/seagreen]]
 
 `[[gold]]       [[icon=github]]       [[/gold]]`: [[gold]][[icon=github]][[/gold]]
 
