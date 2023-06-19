@@ -214,12 +214,12 @@ pub fn rmdir(path: &str) {
                 }
         
                 else {
-                    fs::remove_file(dir);
+                    let _ = fs::remove_file(dir);  // it sometimes fails, but doesn't make problems...
                 }
         
             }
         
-            fs::remove_dir(path);
+            let _ = fs::remove_dir(path);  // it sometimes fails, but doesn't make problems...
         },
         _ => {}
     }

@@ -655,7 +655,7 @@ fn update_articles_metadata(mdxts_logs: Vec<Log>, save_to_file: bool) -> HashMap
 fn render_tag_pages(tags_graph: &graph::Graph) {
     let mut tera_instance = tera::Tera::default();
     tera_instance.add_template_file("./templates/pages/tag.tera", Some("tag_page")).unwrap();
-    mkdir("./mdxts/tag_pages");  // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
+    let _ = mkdir("./mdxts/tag_pages");  // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
 
     for tag in tags_graph.iter() {
         let mut context = tera::Context::new();
