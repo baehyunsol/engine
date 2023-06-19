@@ -243,10 +243,6 @@ pub fn render_directory(
 
                             match articles_metadata.get(&article_title) {
                                 Some(metadata) => {
-                                    let has_collapsible_table = yaml_hash::get(metadata, &Yaml::from_str("has_collapsible_table")).unwrap_or(&Yaml::Boolean(false)).clone().into_bool().unwrap_or(false);
-                                    let has_tooltip = yaml_hash::get(metadata, &Yaml::from_str("has_tooltip")).unwrap_or(&Yaml::Boolean(false)).clone().into_bool().unwrap_or(false);
-                                    let has_sidebar = yaml_hash::get(metadata, &Yaml::from_str("has_sidebar")).unwrap_or(&Yaml::Boolean(false)).clone().into_bool().unwrap_or(false);
-                                    xml::add_js(article_title.clone(), has_collapsible_table, has_tooltip, has_sidebar)?;
 
                                     if let Some(title) = yaml_hash::get(metadata, &Yaml::from_str("title")) {
 
@@ -254,6 +250,34 @@ pub fn render_directory(
                                             xml::set_title(article_title.clone(), title.to_string())?;
                                         }
 
+                                    }
+
+                                    let mut extra_scripts = yaml_hash::get(metadata, &Yaml::from_str("extra_scripts"))
+                                        .unwrap_or(&Yaml::Array(vec![])).clone().into_vec().unwrap_or(vec![]).iter().map(
+                                            |script| script.clone().into_string().unwrap_or(String::new())
+                                        ).filter(
+                                            |script| script.len() > 0
+                                        ).collect::<Vec<String>>();
+                                    let extra_styles = yaml_hash::get(metadata, &Yaml::from_str("extra_styles"))
+                                        .unwrap_or(&Yaml::Array(vec![])).clone().into_vec().unwrap_or(vec![]).iter().map(
+                                            |style| style.clone().into_string().unwrap_or(String::new())
+                                        ).filter(
+                                            |style| style.len() > 0
+                                        ).collect::<Vec<String>>();
+
+                                    let has_collapsible_table = yaml_hash::get(metadata, &Yaml::from_str("has_collapsible_table"))
+                                        .unwrap_or(&Yaml::Boolean(false)).clone().into_bool().unwrap_or(false);
+                                    let has_tooltip = yaml_hash::get(metadata, &Yaml::from_str("has_tooltip"))
+                                        .unwrap_or(&Yaml::Boolean(false)).clone().into_bool().unwrap_or(false);
+                                    let has_sidebar = yaml_hash::get(metadata, &Yaml::from_str("has_sidebar"))
+                                        .unwrap_or(&Yaml::Boolean(false)).clone().into_bool().unwrap_or(false);
+
+                                    if has_collapsible_table { extra_scripts.push("collapsible_tables.js".to_string()); }
+                                    if has_tooltip { extra_scripts.push("tooltips.js".to_string()); }
+                                    if has_sidebar { extra_scripts.push("sidebar.js".to_string()); }
+
+                                    if extra_scripts.len() + extra_styles.len() > 0 {
+                                        xml::import_extra_files(article_title.clone(), extra_scripts, extra_styles)?;
                                     }
 
                                 },

@@ -138,6 +138,10 @@ body .markdown {
 
     .line-height-{{size}} {
         line-height: $line-height-{{size}};
+
+        pre.fenced-code-block {
+            line-height: $line-height-{{size}};
+        }
     }
 
     .box.width-{{size}} {
@@ -188,7 +192,7 @@ body .markdown {
 /* Headers */
 .markdown {
 
-    {% for header_level in [1, 2, 3, 4, 5] %}
+    {% for header_level in [1, 2, 3, 4, 5, 6] %}
     h{{header_level}} {
         font-size: $h{{header_level}}-font-size;
         margin-top: $h{{header_level}}-margin;
