@@ -1,0 +1,15 @@
+/* Cursors for fenced code blocks (mostly for asciigraph) */
+.markdown {
+
+    div.cursorbox span.cursor {
+        position: absolute;
+        visibility: hidden;
+        width: 4px;
+        background-color: var(--green-trans);
+    }
+
+    div.cursorbox:hover span.cursor {
+        visibility: visible;
+    }
+
+}
