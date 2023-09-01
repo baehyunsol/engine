@@ -161,8 +161,8 @@ table 안의 code span은 background color를 다르게 처리하잖아? 근데 
 
 ---
 
-toc -> 왼쪽에 collapsible bar로 보일 수 있게 하기!
+reference들을 전부 날려버리니까 `#mdxt` 태그 페이지가 죽음... 레퍼런스 보다가 저기로 가려고 하면 바로 죽음!
 
 ---
 
-reference들을 전부 날려버리니까 `#mdxt` 태그 페이지가 죽음... 레퍼런스 보다가 저기로 가려고 하면 바로 죽음!
+table -> 항목별로 정렬하는 기능 넣기

@@ -16,11 +16,11 @@ This blog uses [MDxt], my custom Markdown Extension. If you wanna know more abou
 ### Recent Articles
 
 
+- [reykjavik](reykjavik.html)
 - [IRs-of-Rust](IRs-of-Rust.html)
 - [Attributes-in-Rust](Attributes-in-Rust.html)
 - [Vectors-in-Rust](Vectors-in-Rust.html)
 - [Rust-Struct-Memory-Layout](Rust-Struct-Memory-Layout.html)
-- [RC-Counters-in-Rust](RC-Counters-in-Rust.html)
 
 [[right]]
 [See more](Articles.html)
