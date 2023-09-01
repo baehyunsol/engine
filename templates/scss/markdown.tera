@@ -21,7 +21,7 @@ body .markdown {
     }
 
     img, video, iframe {
-        max-width: $image-medium;
+        max-width: min($image-medium, 90%);
         max-height: $image-medium;
     }
 
@@ -131,7 +131,7 @@ body .markdown {
         font-size: $font-{{size}};
 
         img, video, iframe {
-            max-width: $image-{{size}};
+            max-width: min($image-{{size}}, 90%);
             max-height: $image-{{size}};
         }
     }
