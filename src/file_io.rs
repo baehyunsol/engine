@@ -212,6 +212,13 @@ pub fn is_dir(path: &str) -> bool {
     }
 }
 
+pub fn exists(path: &str) -> bool {
+    match PathBuf::from_str(path) {
+        Err(_) => false,
+        Ok(path) => path.exists(),
+    }
+}
+
 use std::collections::HashMap;
 static mut READ_DIR_CACHE: *mut HashMap<String, Vec<String>> = std::ptr::null_mut();
 static mut READ_DIR_CACHE_INIT: bool = false;

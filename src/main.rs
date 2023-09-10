@@ -111,6 +111,16 @@ fn render(only_docs: bool, multi_core: MultiCore, verbose: bool) {
 
     unsafe { file_io::init_dir_cache(); }
 
+    if verbose { show_verbose_message(start_time.clone(), "Dir Cache Created"); }
+
+    if !only_docs && !exists("./mdxts/articles") {
+        make_dir("./mdxts/articles").unwrap();
+    }
+
+    if !exists("./mdxts/documents") {
+        make_dir("./mdxts/documents").unwrap();
+    }
+
     let article_configs = load_articles_config();
     let doc_configs = load_documents_config();
 
@@ -504,7 +514,6 @@ fn copy_media_files(only_docs: bool, multi_core: MultiCore) {
 }
 
 fn copy_media_files_ext(ext: &str, only_docs: bool, multi_core: MultiCore) {
-
     copy_all(
         "./mdxts/documents", ext,
         "./output/htmls/documents", ext,
@@ -520,7 +529,6 @@ fn copy_media_files_ext(ext: &str, only_docs: bool, multi_core: MultiCore) {
             multi_core,
         ).unwrap();
     }
-
 }
 
 fn propagate_css_js(path: &str, multi_core: MultiCore) {
