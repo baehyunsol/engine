@@ -89,22 +89,18 @@ fn main() {
 fn print_help_message() {
     println!("Engine v 0.1.0 (c) Baehyunsol
 
---all -a : render docs and articles
-    it's -a by default
+For general documentation, visit https://github.com/baehyunsol/engine
 
---clear -c : clear results
-
---doc -d : render only docs
-
---help -h : help message
-
---verbose: verbose
-
--ma -me -md : configure multi core usage
-    -ma: enable multi core rendering when there're lots of files to render
-        it's -ma by default
-    -me: always enable multi core rendering
-    -md: always disable multi core rendering
+Options:
+  --all, -a            render docs and articles, it's enabled by default
+  --clear, -c          clear results
+  --doc, -d            render only docs
+  --help, -h           print help message
+  --verbose            show verbose message
+  -ma, -me, -md        configure multicore usage
+    -ma                enable multicore rendering when there're lots of files to render, it's enabled by default
+    -me                always enable multicore rendering
+    -md                always disable multicore rendering
 ");
 }
 

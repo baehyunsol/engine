@@ -167,6 +167,7 @@ pub fn render_directory(
             options.xml = true;
             options.embed_js_for_collapsible_tables(false);
             options.embed_js_for_tooltips(false);
+            options.embed_js_for_sidebar(false);
 
             // TODO: make it configurable
             options.set_footnote_tooltip(true);

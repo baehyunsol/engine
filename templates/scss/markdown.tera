@@ -285,11 +285,15 @@ body .markdown {
         code {
             color: $white;
 
+            ::selection {
+                background-color: $dark-compl;
+            }
+
             {% for color in colors %}
             .color-{{color}} {
                 color: ${{color}};
             }
-        
+
             .color-{{color}}::selection {
                 color: ${{color}}-compl;
             }
@@ -383,6 +387,10 @@ body .markdown {
         background-color: $gray;
     }
 
+    table tr .tooltip-message code.inline-code-span {
+        background-color: $black;
+    }
+
 }
 
 /* Table */
@@ -430,22 +438,22 @@ body .markdown {
         tr:nth-last-child(even) {
             background-color: var(--dark);
         }
-    
+
         thead.collapsible {
             cursor: pointer;
         }
-    
+
         thead.collapsed th {
             padding: $padding-small;
             transition: padding 0.5s ease-out;
         }
 
         .invisible {
-    
+
             th, td {
                 display: none;
             }
-    
+
         }
 
     }

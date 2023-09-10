@@ -102,7 +102,7 @@ pub fn import_extra_files(article_title: String, extra_scripts: Vec<String>, ext
     };
 
     for script in extra_scripts.iter() {
-        body.add_element_ptr(hxml::Element::from_string(format!("<script src=\"{script}\"></script>")).unwrap());
+        body.add_element_ptr(hxml::Element::from_string(format!("<script src=\"{script}\" defer=\"defer\"></script>")).unwrap());
     }
 
     for style in extra_styles.iter() {
