@@ -32,6 +32,8 @@ pub enum MultiCore {
 pub const MULTICORE_THRESHOLD: usize = 24;
 
 fn main() {
+    std::env::set_var("RUST_BACKTRACE", "1");
+
     let mut only_docs = false;
     let mut verbose = false;
     let mut multi_core = MultiCore::Auto;
@@ -107,7 +109,7 @@ Options:
 fn render(only_docs: bool, multi_core: MultiCore, verbose: bool) {
     let start_time = Instant::now();
 
-    file_io::init_dir_cache();
+    unsafe { file_io::init_dir_cache(); }
 
     let article_configs = load_articles_config();
     let doc_configs = load_documents_config();
@@ -522,11 +524,11 @@ fn copy_media_files_ext(ext: &str, only_docs: bool, multi_core: MultiCore) {
 }
 
 fn propagate_css_js(path: &str, multi_core: MultiCore) {
-    let mut files = read_dir(path, false).unwrap();
+    let mut files = read_dir(path).unwrap();
 
     files = files.into_iter().filter(
         |f| match extension(f) {
-            Ok(ext) => {
+            Ok(Some(ext)) => {
                 let ext_low = ext.to_lowercase();
 
                 ext_low == "css" || ext_low == "js"
@@ -548,7 +550,7 @@ fn propagate_css_js(path: &str, multi_core: MultiCore) {
                 for sub_dir in sub_dirs.iter() {
                     let file_name = basename(file).unwrap();
                     let file_dest = join(sub_dir, &file_name).unwrap();
-                    write_to_file(&file_dest, &read_bytes(file).unwrap()).unwrap();
+                    write_bytes(&file_dest, &read_bytes(file).unwrap(), WriteMode::CreateOrTruncate).unwrap();
                 }
 
                 ()
@@ -563,7 +565,7 @@ fn propagate_css_js(path: &str, multi_core: MultiCore) {
             for sub_dir in sub_dirs.iter() {
                 let file_name = basename(file).unwrap();
                 let file_dest = join(sub_dir, &file_name).unwrap();
-                write_to_file(&file_dest, &read_bytes(file).unwrap()).unwrap();
+                write_bytes(&file_dest, &read_bytes(file).unwrap(), WriteMode::CreateOrTruncate).unwrap();
             }
 
         }
@@ -634,7 +636,7 @@ fn update_articles_metadata(mdxts_logs: Vec<Log>, save_to_file: bool) -> HashMap
         let mut emitter = YamlEmitter::new(&mut yaml_hash_string);
         emitter.dump(&logs_hash).unwrap();
 
-        write_to_file("./output/articles.yaml", yaml_hash_string.as_bytes()).unwrap();
+        write_bytes("./output/articles.yaml", yaml_hash_string.as_bytes(), WriteMode::CreateOrTruncate).unwrap();
     }
 
     else {
@@ -651,7 +653,7 @@ fn update_articles_metadata(mdxts_logs: Vec<Log>, save_to_file: bool) -> HashMap
 fn render_tag_pages(tags_graph: &graph::Graph) {
     let mut tera_instance = tera::Tera::default();
     tera_instance.add_template_file("./templates/pages/tag.tera", Some("tag_page")).unwrap();
-    let _ = mkdir("./mdxts/tag_pages");  // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
+    let _ = make_dir("./mdxts/tag_pages");  // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
 
     for tag in tags_graph.iter() {
         let mut context = tera::Context::new();
@@ -671,7 +673,7 @@ fn render_tag_pages(tags_graph: &graph::Graph) {
 
         let rendered = tera_instance.render("tag_page", &context).unwrap();
         let save_to = join("./mdxts/tag_pages", &format!("tag-{}.md", tag)).unwrap();
-        write_to_file(&save_to, rendered.as_bytes()).unwrap();
+        write_bytes(&save_to, rendered.as_bytes(), WriteMode::CreateOrTruncate).unwrap();
     }
 
 }
@@ -730,19 +732,17 @@ fn show_verbose_message(start_time: Instant, message: &str) {
     println!("{}: {}ms", message, Instant::now().duration_since(start_time).as_millis());
 }
 
-// DO NOT unwrap these!!
 fn remove_results() {
-    rmdir("./htmls");
-    rmdir("./output/htmls/articles");
-    rmdir("./output/htmls/documents");
-    rmdir("./mdxts/tag_pages");
+    remove_dir("./htmls").unwrap();
+    remove_dir("./output/htmls/articles").unwrap();
+    remove_dir("./output/htmls/documents").unwrap();
+    remove_dir("./mdxts/tag_pages").unwrap();
 }
 
-// DO NOT unwrap these!!
 fn clean_up_results() {
-    rmdir("./htmls/tag_pages");
-    rmdir("./mdxts/tag_pages");
-    rmdir("./output/htmls/tag_pages");
+    remove_dir("./htmls/tag_pages").unwrap();
+    remove_dir("./mdxts/tag_pages").unwrap();
+    remove_dir("./output/htmls/tag_pages").unwrap();
 }
 
 lazy_static! {

@@ -33,10 +33,16 @@ pub fn render_directory(
     multi_core: MultiCore,
     cache_read_dir: bool,
 ) -> Result<Vec<Log>, Error> {
-    let mut files = match read_dir(dir_from, cache_read_dir) {
+    let files = if cache_read_dir {
+        read_dir_cached(dir_from)
+    } else {
+        read_dir(dir_from)
+    };
+
+    let mut files = match files {
         Ok(f) => f,
-        Err(_) => {
-            return Err(Error::PathError(format!("error at `render_directory({:?}, {:?}, ...)`\n`read_dir({:?})` failed", dir_from, ext_from, dir_from)));
+        Err(e) => {
+            return Err(Error::PathError(format!("error {:?} at `render_directory({:?}, {:?}, ...)`\n`read_dir({:?})` failed", e.render_err(), dir_from, ext_from, dir_from)));
         }
     };
 
@@ -85,12 +91,12 @@ pub fn render_directory(
 
     files = files.into_iter().filter(
         |f| match extension(f) {
-            Ok(ext) if ext.to_lowercase() == ext_from.to_lowercase() => true,
+            Ok(Some(ext)) if ext.to_lowercase() == ext_from.to_lowercase() => true,
             _ => false
         }
     ).collect();
 
-    let _ = mkdir(dir_to);    // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
+    let _ = make_dir(dir_to);    // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
 
     match engine {
 
@@ -117,8 +123,8 @@ pub fn render_directory(
 
                 match tera.render(file, &context) {
                     Ok(result) => {
-                        match write_to_file(&dest, result.as_bytes()) {
-                            Err(_) => { return Err(Error::PathError(format!("error at `render_directory({:?}, {:?}, ...)`\n`write_to_file({:?})` failed", dir_from, ext_from, dest))); }
+                        match write_bytes(&dest, result.as_bytes(), WriteMode::CreateOrTruncate) {
+                            Err(e) => { return Err(Error::PathError(format!("error {:?} at `render_directory({:?}, {:?}, ...)`\n`write_to_file({:?})` failed", e.render_err(), dir_from, ext_from, dest))); }
                             _ => { logs.push(Log::new(file, &dest, None)); }
                         }
                     },
@@ -142,8 +148,8 @@ pub fn render_directory(
 
                 match grass::from_path(file, &scss_option) {
                     Ok(result) => {
-                        match write_to_file(&dest, result.as_bytes()) {
-                            Err(_) => {return Err(Error::PathError(format!("error at `render_directory({:?}, {:?}, ...)`\n`write_to_file({:?})` failed", dir_from, ext_from, dest)));}
+                        match write_bytes(&dest, result.as_bytes(), WriteMode::CreateOrTruncate) {
+                            Err(e) => {return Err(Error::PathError(format!("error {:?} at `render_directory({:?}, {:?}, ...)`\n`write_to_file({:?})` failed", e.render_err(), dir_from, ext_from, dest)));}
                             _ => { logs.push(Log::new(file, &dest, None)); }
                         }
                     },
@@ -292,12 +298,12 @@ pub fn render_directory(
 
                             let dom_to_string = hxml::dom::to_string();
 
-                            match write_to_file(&dest, dom_to_string.as_bytes()) {
+                            match write_bytes(&dest, dom_to_string.as_bytes(), WriteMode::CreateOrTruncate) {
                                 Ok(_) => {
                                     logs.push(Log::new(file, &dest, None));
                                 },
-                                Err(_) => {
-                                    return Err(Error::PathError(format!("error at `render_directory({:?}, {:?}, ...)`\n`write_to_file({:?})` failed", dir_from, ext_from, dest)));
+                                Err(e) => {
+                                    return Err(Error::PathError(format!("error {:?} at `render_directory({:?}, {:?}, ...)`\n`write_to_file({:?})` failed", e.render_err(), dir_from, ext_from, dest)));
                                 }
                             }
 
@@ -361,10 +367,10 @@ pub fn render_templates(
         context = Some(context_);
     }
 
-    let mut articles = match read_dir(article_path, false) {
+    let mut articles = match read_dir(article_path) {
         Ok(f) => f,
-        Err(_) => {
-            return Err(Error::PathError(format!("error at `render_templates({:?}, {:?}, ...)`\n`read_dir({:?})` failed", template_path, article_path, article_path)));
+        Err(e) => {
+            return Err(Error::PathError(format!("error {:?} at `render_templates({:?}, {:?}, ...)`\n`read_dir({:?})` failed", e.render_err(), template_path, article_path, article_path)));
         }
     };
 
@@ -414,12 +420,12 @@ pub fn render_templates(
 
     articles = articles.into_iter().filter(
         |f| match extension(f) {
-            Ok(ext) if ext.to_lowercase() == article_ext.to_lowercase() => true,
+            Ok(Some(ext)) if ext.to_lowercase() == article_ext.to_lowercase() => true,
             _ => false
         }
     ).collect();
 
-    let _ = mkdir(output_path);    // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
+    let _ = make_dir(output_path);    // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
 
     let context = context.unwrap();
     let tera_instance = tera_instance.unwrap();
@@ -498,8 +504,8 @@ fn render_template(
 
     match tera_instance.render(template_path, &context) {
         Ok(result) => {
-            match write_to_file(&dest, result.as_bytes()) {
-                Err(_) => {return Err(Error::PathError(format!("error at `render_templates({:?}, {:?}, ...)`\n`write_to_file({:?})` failed", template_path, article_path, dest)));}
+            match write_bytes(&dest, result.as_bytes(), WriteMode::CreateOrTruncate) {
+                Err(e) => {return Err(Error::PathError(format!("error {:?} at `render_templates({:?}, {:?}, ...)`\n`write_to_file({:?})` failed", e.render_err(), template_path, article_path, dest)));}
                 _ => { return Ok(Log::new(article, &dest, None)); }
             }
         },
@@ -522,10 +528,10 @@ pub fn copy_all(
     multi_core: MultiCore
 ) -> Result<Vec<Log>, Error> {
 
-    let mut files = match read_dir(dir_from, true) {
+    let mut files = match read_dir_cached(dir_from) {
         Ok(f) => f,
-        Err(_) => {
-            return Err(Error::PathError(format!("error at `copy_all({:?}, {:?}, ...)`\n`read_dir({:?})` failed", dir_from, ext_from, dir_from)));
+        Err(e) => {
+            return Err(Error::PathError(format!("error {:?} at `copy_all({:?}, {:?}, ...)`\n`read_dir({:?})` failed", e.render_err(), dir_from, ext_from, dir_from)));
         }
     };
 
@@ -569,12 +575,12 @@ pub fn copy_all(
 
     files = files.into_iter().filter(
         |f| match extension(f) {
-            Ok(ext) if ext.to_lowercase() == ext_from.to_lowercase() => true,
+            Ok(Some(ext)) if ext.to_lowercase() == ext_from.to_lowercase() => true,
             _ => false
         }
     ).collect();
 
-    let _ = mkdir(dir_to);  // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
+    let _ = make_dir(dir_to);  // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
 
     if files.len() > MULTICORE_THRESHOLD && multi_core == MultiCore::Auto || multi_core == MultiCore::Enable {
         let results = files.par_iter().map(
@@ -583,9 +589,9 @@ pub fn copy_all(
 
                 match read_bytes(file) {
                     Ok(data) => {
-                        match write_to_file(&dest, &data) {
-                            Err(_) => {
-                                return Err(Error::PathError(format!("error at `copy_all({:?}, {:?}, ...)`\n`write_to_file({:?}, ...)` failed", dir_from, ext_from, dest)));
+                        match write_bytes(&dest, &data, WriteMode::CreateOrTruncate) {
+                            Err(e) => {
+                                return Err(Error::PathError(format!("error {:?} at `copy_all({:?}, {:?}, ...)`\n`write_to_file({:?}, ...)` failed", e.render_err(), dir_from, ext_from, dest)));
                             }
                             _ => {
                                 return Ok(Log::new(file, &dest, None));
@@ -612,17 +618,17 @@ pub fn copy_all(
 
             match read_bytes(file) {
                 Ok(data) => {
-                    match write_to_file(&dest, &data) {
-                        Err(_) => {
-                            return Err(Error::PathError(format!("error at `copy_all({:?}, {:?}, ...)`\n`write_to_file({:?}, ...)` failed", dir_from, ext_from, dest)));
+                    match write_bytes(&dest, &data, WriteMode::CreateOrTruncate) {
+                        Err(e) => {
+                            return Err(Error::PathError(format!("error {:?} at `copy_all({:?}, {:?}, ...)`\n`write_to_file({:?}, ...)` failed", e.render_err(), dir_from, ext_from, dest)));
                         }
                         _ => {
                             logs.push(Log::new(file, &dest, None));
                         }
                     }
                 },
-                _ => {
-                    return Err(Error::PathError(format!("error at `copy_all({:?}, {:?}, ...)`\n`read_bytes({:?})` failed", dir_from, ext_from, file)));
+                Err(e) => {
+                    return Err(Error::PathError(format!("error {:?} at `copy_all({:?}, {:?}, ...)`\n`read_bytes({:?})` failed", e.render_err(), dir_from, ext_from, file)));
                 }
             }
 
@@ -758,8 +764,8 @@ fn render_mdxt(
                 _ => {}
             }
 
-            match write_to_file(&dest, content.as_bytes()) {
-                Err(_) => {return Err(Error::PathError(format!("error at `render_directory({:?}, {:?}, ...)`\n`write_to_file({:?})` failed", dir_from, ext_from, dest)));}
+            match write_bytes(&dest, content.as_bytes(), WriteMode::CreateOrTruncate) {
+                Err(e) => {return Err(Error::PathError(format!("error {:?} at `render_directory({:?}, {:?}, ...)`\n`write_to_file({:?})` failed", e.render_err(), dir_from, ext_from, dest)));}
                 _ => { return Ok(Log::new(file, &dest, Some(metadata))); }
             }
         },
