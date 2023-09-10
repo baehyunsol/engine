@@ -252,11 +252,9 @@ pub fn render_directory(
                                 Some(metadata) => {
 
                                     if let Some(title) = yaml_hash::get(metadata, &Yaml::from_str("title")) {
-
                                         if let Some(title) = title.as_str() {
                                             xml::set_title(article_title.clone(), title.to_string())?;
                                         }
-
                                     }
 
                                     let mut extra_scripts = yaml_hash::get(metadata, &Yaml::from_str("extra_scripts"))
@@ -287,6 +285,11 @@ pub fn render_directory(
                                         xml::import_extra_files(article_title.clone(), extra_scripts, extra_styles)?;
                                     }
 
+                                    if let Some(one_file) = yaml_hash::get(metadata, &Yaml::from_str("one_file")) {
+                                        if let Some(true) = one_file.as_bool() {
+                                            xml::load_external_files(article_title.clone(), dir_to)?;
+                                        }
+                                    }
                                 },
                                 None if !article_title.starts_with("tag-") => {
                                     return Err(Error::RenderError(EngineType::XML, format!("error at `render_directory({:?}, {:?}, ...)`\n`articles_metadata` doesn't have metadata of `{}`!", dir_from, ext_from, article_title)));
@@ -312,8 +315,8 @@ pub fn render_directory(
                             return Err(Error::RenderError(EngineType::XML, format!("{:?} is not a valid xml!\nerrors: {:?}", file, errors)));
                         }
                     },
-                    _ => {
-                        return Err(Error::PathError(format!("error at `render_directory({:?}, {:?}, ...)`\n`read_string({:?})` failed", dir_from, ext_from, file)));
+                    Err(e) => {
+                        return Err(Error::PathError(format!("error {:?} at `render_directory({:?}, {:?}, ...)`\n`read_string({:?})` failed", e.render_err(), dir_from, ext_from, file)));
                     }
                 }
 

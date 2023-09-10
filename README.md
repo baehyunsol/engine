@@ -39,6 +39,10 @@ It uses yaml syntax.
 // if true, it's not on the articles list
 hide: bool;
 
+// if true, it loads all the script files and style sheets into the html file.
+// it cannot load img files tho
+one_file: bool;
+
 // only for articles
 // example: [2023, 6, 19]
 date: [i32; 3];

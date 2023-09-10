@@ -1,5 +1,6 @@
 use crate::engine::EngineType;
 use crate::error::Error;
+use crate::file_io::*;
 use hxml::Content;
 
 pub fn render_clickable_image(image_box: String, article_title: String) -> Result<(), Error> {
@@ -91,13 +92,13 @@ pub fn import_extra_files(article_title: String, extra_scripts: Vec<String>, ext
     let body = match hxml::dom::get_element_by_tag_name(None, "body".to_string()) {
         Some(body) => body,
         None => {
-            return Err(Error::RenderError(EngineType::XML, format!("error at `render_collapsible_tables()`\n`{}` doesn't have a `<body>` tag!", article_title)));
+            return Err(Error::RenderError(EngineType::XML, format!("error at `import_extra_files({:?})`\n`{}` doesn't have a `<body>` tag!", article_title, article_title)));
         }
     };
     let head = match hxml::dom::get_element_by_tag_name(None, "head".to_string()) {
         Some(head) => head,
         None => {
-            return Err(Error::RenderError(EngineType::XML, format!("error at `render_collapsible_tables()`\n`{}` doesn't have a `<head>` tag!", article_title)));
+            return Err(Error::RenderError(EngineType::XML, format!("error at `import_extra_files({:?})`\n`{}` doesn't have a `<head>` tag!", article_title, article_title)));
         }
     };
 
@@ -122,6 +123,71 @@ pub fn set_title(old_title: String, new_title: String) -> Result<(), Error> {
 
     let contents = title_tag.get_contents_mut();
     *contents = vec![Content::new_char_data(new_title)];
+
+    Ok(())
+}
+
+pub fn load_external_files(title: String, path: &str) -> Result<(), Error> {
+    let links = hxml::dom::get_elements_by_tag_name(None, "link".to_string());
+    let scripts = hxml::dom::get_elements_by_tag_name(None, "script".to_string());
+    let body = match hxml::dom::get_element_by_tag_name(None, "body".to_string()) {
+        Some(body) => body,
+        None => {
+            return Err(Error::RenderError(EngineType::XML, format!("error at `load_external_files({:?}, {:?}, ...)`\n`{}` doesn't have a `<body>` tag!", title, path, title)));
+        }
+    };
+
+    for link in links.iter() {
+        match link.get_attribute("href".to_string()) {
+            Some(href) => {
+                hxml::dom::delete(*link);
+
+                match extension(&href) {
+                    Ok(Some(ext)) if ext == "css".to_string() => {
+                        match read_string(&join(path, &href).unwrap()) {
+                            Ok(css) => {
+                                body.add_element_ptr(hxml::Element::from_string(format!("<style>/*<![CDATA[*/{css}/*]]>*/</style>")).unwrap());
+                            },
+                            Err(e) => {
+                                return Err(Error::PathError(format!("error {:?} at `load_external_files({:?}, {:?}, ...)`\n`read_string({:?})` failed", e.render_err(), title, path, join(path, &href).unwrap())));
+                            }
+                        }
+                    },
+                    Err(e) => {
+                        return Err(Error::PathError(format!("error {:?} at `load_external_files({:?}, {:?}, ...)`\n`extension({:?})` failed", e.render_err(), title, path, &href)));
+                    },
+                    _ => {}
+                }
+            },
+            _ => {}
+        }
+    }
+
+    for script in scripts.iter() {
+        match script.get_attribute("src".to_string()) {
+            Some(src) => {
+                hxml::dom::delete(*script);
+
+                match extension(&src) {
+                    Ok(Some(ext)) if ext == "js" => {
+                        match read_string(&join(path, &src).unwrap()) {
+                            Ok(js) => {
+                                body.add_element_ptr(hxml::Element::from_string(format!("<script>/*<![CDATA[*/{js}/*]]>*/</script>")).unwrap());
+                            },
+                            Err(e) => {
+                                return Err(Error::PathError(format!("error {:?} at `load_external_files({:?}, {:?}, ...)`\n`read_string({:?})` failed", e.render_err(), title, path, join(path, &src).unwrap())));
+                            }
+                        }
+                    },
+                    Err(e) => {
+                        return Err(Error::PathError(format!("error {:?} at `load_external_files({:?}, {:?}, ...)`\n`extension({:?})` failed", e.render_err(), title, path, src)));
+                    },
+                    _ => {},
+                }
+            },
+            _ => {}
+        }
+    }
 
     Ok(())
 }
