@@ -62,7 +62,6 @@ pub struct Config {
 }
 
 impl Config {
-
     pub fn to_tera_context(&self) -> Context {
         let mut context = Context::new();
 
@@ -87,7 +86,6 @@ impl Config {
     }
 
     fn merge_yaml(&mut self, yaml: Yaml) {
-
         if !yaml_hash::is_hash(&yaml) {
             return;
         }
@@ -296,7 +294,6 @@ impl Config {
             },
             _ => {}
         }
-
     }
 
     fn default_article() -> Self {
@@ -347,5 +344,4 @@ impl Config {
             ignores: HashSet::new()
         }
     }
-
 }

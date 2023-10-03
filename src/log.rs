@@ -9,9 +9,7 @@ pub struct Log {
 }
 
 impl Log {
-
     pub fn new(file_from: &str, file_to: &str, metadata: Option<Yaml>) -> Self {
-
         let metadata = match metadata {
             Some(y) => match y.as_hash() {
                 None => yaml_hash::new(),
@@ -25,7 +23,5 @@ impl Log {
             file_to: file_to.to_string(),
             metadata
         }
-
     }
-
 }

@@ -96,7 +96,7 @@ pub fn render_directory(
         }
     ).collect();
 
-    let _ = make_dir(dir_to);    // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
+    make_dir(dir_to).unwrap();
 
     match engine {
 
@@ -428,7 +428,7 @@ pub fn render_templates(
         }
     ).collect();
 
-    let _ = make_dir(output_path);    // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
+    make_dir(output_path).unwrap();
 
     let context = context.unwrap();
     let tera_instance = tera_instance.unwrap();
@@ -583,7 +583,7 @@ pub fn copy_all(
         }
     ).collect();
 
-    let _ = make_dir(dir_to);  // don't unwrap this. If the path already exists, it'd raise an error, but that's fine.
+    make_dir(dir_to).unwrap();
 
     if files.len() > MULTICORE_THRESHOLD && multi_core == MultiCore::Auto || multi_core == MultiCore::Enable {
         let results = files.par_iter().map(

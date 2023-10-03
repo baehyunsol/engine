@@ -13,7 +13,6 @@ pub struct Article {
 }
 
 impl Article {
-
     pub fn new(name: String, date: [usize; 3], tags: Vec<String>, preview: String) -> Self {
         Article { name, date, tags, preview }
     }
@@ -21,11 +20,9 @@ impl Article {
     pub fn date_to_int(&self) -> usize {
         self.date[0] * 1_0000 + self.date[1] * 100 + self.date[2]
     }
-
 }
 
 pub fn from_yaml(yaml: Yaml) -> HashMap<String, Article> {
-
     match yaml.as_hash() {
         None => HashMap::new(),
         Some(hash) => {
@@ -91,11 +88,9 @@ pub fn from_yaml(yaml: Yaml) -> HashMap<String, Article> {
             result
         }
     }
-
 }
 
 pub fn get_recent_articles(articles: &HashMap<String, Article>, length: usize) -> Vec<String> {
-
     let mut articles_vec = articles.values().collect::<Vec<&Article>>();
     articles_vec.sort_unstable_by_key(|article| usize::MAX - article.date_to_int());
 
@@ -105,7 +100,6 @@ pub fn get_recent_articles(articles: &HashMap<String, Article>, length: usize) -
 }
 
 pub fn get_articles_by_month(articles: &HashMap<String, Article>) -> Vec<([usize; 3], String, String)> {  // Vec<([year, month, day], name, preview)>
-
     let mut articles_vec = articles.values().collect::<Vec<&Article>>();
     articles_vec.sort_unstable_by_key(|article| usize::MAX - article.date_to_int());
 
@@ -115,7 +109,6 @@ pub fn get_articles_by_month(articles: &HashMap<String, Article>) -> Vec<([usize
 }
 
 pub fn get_tags(articles: &HashMap<String, Article>) -> Graph {
-
     let mut graph = Graph::new();
 
     for article in articles.values() {
