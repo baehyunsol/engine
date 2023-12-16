@@ -134,6 +134,8 @@ The first change we notice is an import of preludes. It includes very frequently
 
 ## MIR
 
+You'll see many function-like things in this section. For example, you'll see `ShallowInitBox()` many times. They're some kinda built-in functions in MIR. All the definitions and explanations on them can be found in [this](https://github.com/rust-lang/rust/blob/master/compiler/rustc_middle/src/mir/syntax.rs) file. For example, search `ShallowInitBox` in that page will lead you to the explanation of the function.
+
 ### Example 1: Push an element to a vector
 
 I tried MIR with the fizz-buzz code above, but it was too long. I don't want you guys to suffer scrolling the endless code, so I'll use shorter code.

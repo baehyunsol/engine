@@ -337,8 +337,8 @@ impl Config {
             article_bottom_margin_portrait: "0px".to_string(),
             article_left_margin_portrait: "3%".to_string(),
             article_right_margin_portrait: "3%".to_string(),
-            font_size_landscape: 21,
-            font_size_portrait: 16,
+            font_size_landscape: 19,
+            font_size_portrait: 14,
             default_horiz_padding: 96,
             titles: HashMap::new(),
             ignores: HashSet::new()

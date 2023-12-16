@@ -228,8 +228,8 @@ pub unsafe fn init_dir_cache() {
         return;
     }
 
-    let mut c = HashMap::new();
-    READ_DIR_CACHE = &mut c as *mut HashMap<_, _>;
+    let mut c = Box::new(HashMap::new());
+    READ_DIR_CACHE = c.as_mut() as *mut HashMap<_, _>;
     std::mem::forget(c);
     READ_DIR_CACHE_INIT = true;
 }

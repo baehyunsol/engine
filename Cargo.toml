@@ -7,10 +7,10 @@ edition = "2021"
 
 [dependencies]
 mdxt = "0.7.3"
-tera = "1.19"
+tera = "1.19.1"
 grass = "0.13.1"
 yaml-rust = "0.4.5"
 lazy_static = "1.4.0"
 linked-hash-map = "*"
 hxml = "0.3.3"
-rayon = "1.7.0"
+rayon = "1.8.0"
