@@ -1,4 +1,7 @@
+"use strict";
+
 var mdxt_sidebar_open = false;
+
 function mdxt_toggle_sidebar() {
 
   if (mdxt_sidebar_open) {

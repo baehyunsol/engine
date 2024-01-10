@@ -13,7 +13,6 @@ function toggle_header() {
     else {
         topmenu.style.maxHeight = topmenu.scrollHeight + "px";
     }
-
 }
 
 document.getElementById("navbutton").addEventListener("click", toggle_header);

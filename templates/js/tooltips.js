@@ -6,7 +6,6 @@ for (let i = 0; i < tooltips.length; i++) {
     let child = document.getElementById("tooltip-message-" + i);
 
     document.getElementById("tooltip-container-" + i).addEventListener("mousemove", e => {
-
         if (e.clientX + child.clientWidth > window.innerWidth) {
             child.style.left = e.clientX - child.clientWidth + "px";
         }
@@ -22,6 +21,5 @@ for (let i = 0; i < tooltips.length; i++) {
         else {
             child.style.top = (e.clientY - child.clientHeight - 8) + "px";
         }
-
     });
 }

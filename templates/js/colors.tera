@@ -4,7 +4,6 @@ var root_doc = document.querySelector(":root");
 var is_dark = true;
 
 function change_theme() {
-
     if (is_dark) {
         to_light();
         change_theme_button.innerHTML = "Set Dark Theme";
@@ -53,5 +52,4 @@ if (window.localStorage.getItem("settings") === 'true') {
         to_light();
         change_theme_button.innerHTML = "Set Dark Theme";
     }
-
 }

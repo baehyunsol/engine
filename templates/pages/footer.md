@@ -6,6 +6,6 @@
 
 [[center]]
 
-2021 ~ 2023 [[char=copy]] Baehyunsol
+2021 ~ 2024 [[char=copy]] Baehyunsol
 
 [[/center]]
