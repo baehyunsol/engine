@@ -5,6 +5,8 @@
 - [#comparison](tag-comparison.html) (4)
 - [#opensource](tag-opensource.html) (2)
 - [#smart-pointers](tag-smart-pointers.html) (2)
+- [#bitcoin](tag-bitcoin.html) (1)
+- [#blockchain](tag-blockchain.html) (1)
 - [#browser](tag-browser.html) (1)
 - [#compiler](tag-compiler.html) (1)
 - [#github](tag-github.html) (1)
